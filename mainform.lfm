@@ -1,46 +1,44 @@
 object Form1: TForm1
-  Left = -92
-  Height = 519
-  Top = -979
-  Width = 528
-  Caption = 'Form1'
-  ClientHeight = 519
-  ClientWidth = 528
-  OnShow = FormShow
+  Left = 377
+  Height = 70
+  Top = -701
+  Width = 485
+  Caption = 'Open Sleep Timer v0.1'
+  ClientHeight = 70
+  ClientWidth = 485
+  OnCreate = FormCreate
   LCLVersion = '1.6.0.4'
-  object Button1: TButton
-    Left = 400
-    Height = 25
-    Top = 176
-    Width = 75
-    Caption = 'Button1'
-    OnClick = Button1Click
-    TabOrder = 0
-  end
-  object Edit1: TEdit
-    Left = 272
-    Height = 23
-    Top = 176
-    Width = 80
-    TabOrder = 1
-    Text = 'Edit1'
-  end
-  object TrackBar1: TTrackBar
-    Left = 32
-    Height = 25
-    Top = 48
-    Width = 440
-    OnChange = TrackBar1Change
-    Position = 0
-    TabOrder = 2
-  end
   object btnStart: TButton
-    Left = 424
+    Left = 293
     Height = 25
-    Top = 456
+    Top = 24
     Width = 75
     Caption = 'Start'
     OnClick = btnStartClick
-    TabOrder = 3
+    TabOrder = 0
+  end
+  object btnStop: TButton
+    Left = 381
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Stop'
+    OnClick = btnStopClick
+    TabOrder = 1
+  end
+  object edMinutesUntilStop: TSpinEdit
+    Left = 160
+    Height = 23
+    Top = 25
+    Width = 64
+    TabOrder = 2
+  end
+  object lblMinutesUntilStop: TLabel
+    Left = 16
+    Height = 15
+    Top = 28
+    Width = 134
+    Caption = 'Gesamtdauer in Minuten:'
+    ParentColor = False
   end
 end

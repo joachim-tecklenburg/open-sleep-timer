@@ -6,21 +6,23 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ComCtrls, ExtCtrls, VolumeControl;
+  StdCtrls, ExtCtrls, Spin, Menus, VolumeControl;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    Button1: TButton;
+    btnStop: TButton;
     btnStart: TButton;
-    Edit1: TEdit;
-    TrackBar1: TTrackBar;
+    lblMinutesUntilStop: TLabel;
+    edMinutesUntilStop: TSpinEdit;
     procedure btnStartClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure TrackBar1Change(Sender: TObject);
+    procedure btnStopClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    function IsStopped:Boolean;
+    function AdjustVolume(iMinutesUntilStop: Integer):Boolean;
+    procedure UpdateButtons;
   private
     { private declarations }
   public
@@ -29,6 +31,7 @@ type
 
 var
   Form1: TForm1;
+  bIsStopped: Boolean = False;
 
 implementation
 
@@ -36,36 +39,96 @@ implementation
 
 { TForm1 }
 
-procedure TForm1.Button1Click(Sender: TObject);
-var
-  dVolume: double;
+function TForm1.IsStopped: Boolean;
 begin
-  dVolume := StrToFloat(Edit1.Text) / 100;
-  VolumeControl.Setmastervolume(dVolume);
+  Application.ProcessMessages;
+  Result := bIsStopped;
 end;
 
+
+//Form Create
+//******************************************
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  edMinutesUntilStop.Increment := 5;
+  edMinutesUntilStop.Value := 60;
+end;
+
+//Start Button
+//******************************************
 procedure TForm1.btnStartClick(Sender: TObject);
+var
+  iCounter: Double = 0;
 begin
-  //Loop until time is over
+  bIsStopped := False;
+  btnStart.Enabled := False;
+  btnStop.Enabled := True;
+
+  //Loop until Stop Button clicked
+  while True do
+    begin
+      sleep(100);
+      iCounter := iCounter + 0.1;
+      if iCounter > 60 then //every minute
+      begin
+        iCounter := 0;
+        edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1;
+        if AdjustVolume(edMinutesUntilStop.Value) then begin //if Volume at final value
+          bIsStopped := True;
+          UpdateButtons;
+          Exit;
+        end;
+      end;
+      if IsStopped then Exit;
+    end;
+end;
+
+
+//Stop Button
+//***************************************
+procedure TForm1.btnStopClick(Sender: TObject);
+begin
+    bIsStopped:= True;
+    UpdateButtons;
+end;
+
+//Update Buttons
+//***************************************
+procedure TForm1.UpdateButtons;
+begin
+  btnStart.Enabled := bIsStopped;
+  btnStop.Enabled := not bIsStopped;
+end;
+
+//Adjust Volume
+//****************************************
+function TForm1.AdjustVolume(iMinutesUntilStop: Integer):Boolean;
+var
+  dCurrentVolume: Double;
+  dVolumeStepSize: Double;
+  dNewVolumeLevel: Double;
+begin
+
   //read current audio volume from system
-    ShowMessage(FloatToStr(VolumeControl.GetMasterVolume()));
-  //calculate steps for volume reduction
-  //Decrease audio volume one step
-  //sleep one minute
+  dCurrentVolume := VolumeControl.GetMasterVolume();
 
+  //calculate new volume level
+  if iMinutesUntilStop > 0 then
+  begin
+    dVolumeStepSize := dCurrentVolume / iMinutesUntilStop;
+  end;
+  dNewVolumeLevel := dCurrentVolume - dVolumeStepSize;
 
+  //set new volume level
+  if dNewVolumeLevel >= 0.0 then
+  begin
+    VolumeControl.SetMasterVolume(dNewVolumeLevel);
+  end
+  else begin //TODO: move "End-Detection" to StartButton procedure (Based on minutes left instead of volume)
+    result := True; //at the end
+  end;
 end;
 
-procedure TForm1.FormShow(Sender: TObject);
-begin
- Trackbar1.Max:=100;
- Trackbar1.Min:=0;
-end;
-
-procedure TForm1.TrackBar1Change(Sender: TObject);
-begin
-  Edit1.Text := IntToStr(TrackBar1.Position);
-end;
 
 end.
 
