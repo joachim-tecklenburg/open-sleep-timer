@@ -6,13 +6,13 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, VolumeControl;
+  StdCtrls, ExtCtrls, Spin, Menus, VolumeControl, PopUp;
 
 type
 
-  { TForm1 }
+  { TfMainform }
 
-  TForm1 = class(TForm)
+  TfMainform = class(TForm)
     btnStop: TButton;
     btnStart: TButton;
     lblMinutesUntilStop: TLabel;
@@ -23,6 +23,7 @@ type
     function IsStopped:Boolean;
     function AdjustVolume(iMinutesUntilStop: Integer):Boolean;
     procedure UpdateButtons;
+    procedure TimeIsUp;
   private
     { private declarations }
   public
@@ -30,16 +31,21 @@ type
   end;
 
 var
-  Form1: TForm1;
+  fMainform: TfMainform;
   bIsStopped: Boolean = False;
+  iDefaultMinutes: Integer = 60;
+  iMinutesAtStart: Integer;
+  dVolumeLevelAtStart: Double;
+  //TODO: Default values as constants
+
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TfMainform }
 
-function TForm1.IsStopped: Boolean;
+function TfMainform.IsStopped: Boolean;
 begin
   Application.ProcessMessages;
   Result := bIsStopped;
@@ -48,21 +54,23 @@ end;
 
 //Form Create
 //******************************************
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfMainform.FormCreate(Sender: TObject);
 begin
-  edMinutesUntilStop.Increment := 5;
+  edMinutesUntilStop.Increment := 15;
   edMinutesUntilStop.Value := 60;
 end;
 
 //Start Button
 //******************************************
-procedure TForm1.btnStartClick(Sender: TObject);
+procedure TfMainform.btnStartClick(Sender: TObject);
 var
   iCounter: Double = 0;
 begin
   bIsStopped := False;
   btnStart.Enabled := False;
   btnStop.Enabled := True;
+  dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
+  iMinutesAtStart := edMinutesUntilStop.Value;
 
   //Loop until Stop Button clicked
   while True do
@@ -76,6 +84,7 @@ begin
         if AdjustVolume(edMinutesUntilStop.Value) then begin //if Volume at final value
           bIsStopped := True;
           UpdateButtons;
+          TimeIsUp;
           Exit;
         end;
       end;
@@ -86,7 +95,7 @@ end;
 
 //Stop Button
 //***************************************
-procedure TForm1.btnStopClick(Sender: TObject);
+procedure TfMainform.btnStopClick(Sender: TObject);
 begin
     bIsStopped:= True;
     UpdateButtons;
@@ -94,7 +103,7 @@ end;
 
 //Update Buttons
 //***************************************
-procedure TForm1.UpdateButtons;
+procedure TfMainform.UpdateButtons;
 begin
   btnStart.Enabled := bIsStopped;
   btnStop.Enabled := not bIsStopped;
@@ -102,7 +111,7 @@ end;
 
 //Adjust Volume
 //****************************************
-function TForm1.AdjustVolume(iMinutesUntilStop: Integer):Boolean;
+function TfMainform.AdjustVolume(iMinutesUntilStop: Integer):Boolean;
 var
   dCurrentVolume: Double;
   dVolumeStepSize: Double;
@@ -129,6 +138,14 @@ begin
   end;
 end;
 
+//TimeIsUp
+//****************************************
+procedure TfMainform.TimeIsUp;
+begin
+  edMinutesUntilStop.Value := iMinutesAtStart;
+  fPopUp.Show;
+
+end;
 
 end.
 

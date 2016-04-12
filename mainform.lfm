@@ -1,7 +1,7 @@
-object Form1: TForm1
-  Left = 377
+object fMainform: TfMainform
+  Left = 383
   Height = 70
-  Top = -701
+  Top = 377
   Width = 485
   Caption = 'Open Sleep Timer v0.1'
   ClientHeight = 70
@@ -27,7 +27,7 @@ object Form1: TForm1
     TabOrder = 1
   end
   object edMinutesUntilStop: TSpinEdit
-    Left = 160
+    Left = 131
     Height = 23
     Top = 25
     Width = 64
@@ -37,8 +37,8 @@ object Form1: TForm1
     Left = 16
     Height = 15
     Top = 28
-    Width = 134
-    Caption = 'Gesamtdauer in Minuten:'
+    Width = 108
+    Caption = 'Duration in minutes:'
     ParentColor = False
   end
 end

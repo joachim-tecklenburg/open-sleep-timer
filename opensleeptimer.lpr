@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, runtimetypeinfocontrols, mainform, VolumeControl
+  Forms, runtimetypeinfocontrols, mainform, VolumeControl, popup
   { you can add units after this };
 
 {$R *.res}
@@ -15,7 +15,8 @@ uses
 begin
   RequireDerivedFormResource:=True;
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfMainform, fMainform);
+  Application.CreateForm(TfPopUp, fPopUp);
   Application.Run;
 end.
 

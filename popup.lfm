@@ -1,0 +1,27 @@
+object fPopUp: TfPopUp
+  Left = 515
+  Height = 116
+  Top = 349
+  Width = 219
+  Caption = 'Time is Up!'
+  ClientHeight = 116
+  ClientWidth = 219
+  LCLVersion = '1.6.0.4'
+  object lblQuestion: TLabel
+    Left = 22
+    Height = 15
+    Top = 29
+    Width = 175
+    Caption = 'Time is up. Restore volume level?'
+    ParentColor = False
+  end
+  object bntRestoreVolume: TButton
+    Left = 122
+    Height = 25
+    Top = 74
+    Width = 75
+    Caption = 'OK'
+    OnClick = bntRestoreVolumeClick
+    TabOrder = 0
+  end
+end
