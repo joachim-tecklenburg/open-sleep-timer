@@ -61,6 +61,48 @@ object fMainform: TfMainform
     Anchors = [akLeft, akBottom]
     Caption = 'Minutes until Vol red.:'
     ParentColor = False
-    OnClick = lblMinutesUntilStartClick
+  end
+  object tbTargetVolume: TTrackBar
+    Left = 128
+    Height = 25
+    Top = 24
+    Width = 208
+    OnChange = tbTargetVolumeChange
+    Position = 0
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 4
+  end
+  object lblTargetVolume: TLabel
+    Left = 16
+    Height = 15
+    Top = 24
+    Width = 80
+    Caption = 'Target volume:'
+    ParentColor = False
+  end
+  object lblShowTargetVolume: TLabel
+    Left = 344
+    Height = 15
+    Top = 24
+    Width = 32
+    AutoSize = False
+    Caption = 'lblShowTargetVolume'
+    ParentColor = False
+  end
+  object lblCurrentVolume: TLabel
+    Left = 16
+    Height = 15
+    Top = 56
+    Width = 90
+    Caption = 'Current Volume: '
+    ParentColor = False
+  end
+  object lblShowCurrentVolume: TLabel
+    Left = 131
+    Height = 15
+    Top = 56
+    Width = 90
+    Caption = 'Current Volume: '
+    ParentColor = False
   end
 end

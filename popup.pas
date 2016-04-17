@@ -35,7 +35,8 @@ uses
 
 procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
-  VolumeControl.SetMasterVolume(mainform.dVolumeLevelAtStart);
+  VolumeControl.SetMasterVolume(mainform.dVolumeLevelAtStart); //TODO: There should be one function, that does SetMasterVolume && lbl.ShowCurrentCaption
+  fMainform.lblShowCurrentVolume.Caption := (IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100)));
   fPopUp.Close;
 
 end;
