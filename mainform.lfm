@@ -1,17 +1,19 @@
 object fMainform: TfMainform
-  Left = -341
-  Height = 169
-  Top = -720
+  Left = 357
+  Height = 191
+  Top = -617
   Width = 434
   Caption = 'Open Sleep Timer v0.1'
-  ClientHeight = 169
+  ClientHeight = 171
   ClientWidth = 434
+  Menu = mnMainMenu
   OnCreate = FormCreate
+  OnShow = FormShow
   LCLVersion = '1.6.0.4'
   object btnStart: TButton
     Left = 253
     Height = 25
-    Top = 127
+    Top = 129
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Start'
@@ -21,7 +23,7 @@ object fMainform: TfMainform
   object btnStop: TButton
     Left = 341
     Height = 25
-    Top = 127
+    Top = 129
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
@@ -31,7 +33,7 @@ object fMainform: TfMainform
   object edMinutesUntilStop: TSpinEdit
     Left = 131
     Height = 23
-    Top = 128
+    Top = 130
     Width = 102
     Anchors = [akLeft, akRight, akBottom]
     TabOrder = 2
@@ -39,7 +41,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStop: TLabel
     Left = 16
     Height = 15
-    Top = 131
+    Top = 133
     Width = 108
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
@@ -48,7 +50,7 @@ object fMainform: TfMainform
   object edMinutesUntilStart: TSpinEdit
     Left = 131
     Height = 23
-    Top = 88
+    Top = 90
     Width = 102
     Anchors = [akLeft, akRight, akBottom]
     TabOrder = 3
@@ -56,7 +58,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStart: TLabel
     Left = 16
     Height = 15
-    Top = 91
+    Top = 93
     Width = 116
     Anchors = [akLeft, akBottom]
     Caption = 'Minutes until Vol red.:'
@@ -104,5 +106,19 @@ object fMainform: TfMainform
     Width = 90
     Caption = 'Current Volume: '
     ParentColor = False
+  end
+  object mnMainMenu: TMainMenu
+    left = 280
+    top = 72
+    object MenuItem1: TMenuItem
+      Caption = 'Help'
+      object MenuItem4: TMenuItem
+        Caption = '-'
+      end
+      object miAbout: TMenuItem
+        Caption = 'About'
+        OnClick = miAboutClick
+      end
+    end
   end
 end

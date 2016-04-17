@@ -23,12 +23,18 @@ type
     lblMinutesUntilStop: TLabel;
     edMinutesUntilStop: TSpinEdit;
     lblMinutesUntilStart: TLabel;
+    mnMainMenu: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem4: TMenuItem;
+    miAbout: TMenuItem;
     tbTargetVolume: TTrackBar;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     function IsStopped:Boolean;
     function AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer):Boolean;
+    procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure UpdateButtons;
     procedure TimeIsUp;
@@ -73,6 +79,15 @@ begin
   tbTargetVolume.Position := iTargetVolume;
   lblShowTargetVolume.Caption := IntToStr(iTargetVolume);
   lblShowCurrentVolume.Caption := IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100));
+end;
+
+procedure TfMainform.FormShow(Sender: TObject);
+begin
+  //Set window position (otherwise would be last position in IDE)
+  fMainform.Left := 300;
+  fMainform.Top := 200;
+  fPopUp.Left := 330;
+  fPopUp.Top := 270;
 end;
 
 //Start Button
@@ -169,6 +184,11 @@ begin
     result := True; //Volume at final level: stop!
   end;
   result := False; //Not finished, yet. Keep running!
+end;
+
+procedure TfMainform.miAboutClick(Sender: TObject);
+begin
+  showmessage('Open Sleep Timer - https://github.com/achim-tecklenburg/open-sleep-timer');
 end;
 
 
