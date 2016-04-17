@@ -15,13 +15,16 @@ type
   TfMainform = class(TForm)
     btnStop: TButton;
     btnStart: TButton;
+    edMinutesUntilStart: TSpinEdit;
     lblMinutesUntilStop: TLabel;
     edMinutesUntilStop: TSpinEdit;
+    lblMinutesUntilStart: TLabel;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     function IsStopped:Boolean;
     function AdjustVolume(iMinutesUntilStop: Integer):Boolean;
+    procedure lblMinutesUntilStartClick(Sender: TObject);
     procedure UpdateButtons;
     procedure TimeIsUp;
   private
@@ -64,7 +67,8 @@ end;
 //******************************************
 procedure TfMainform.btnStartClick(Sender: TObject);
 var
-  iCounter: Double = 0;
+  iDeciSeconds: Integer = 0;
+  iMinutesLapsed: Integer = 0;
 begin
   bIsStopped := False;
   btnStart.Enabled := False;
@@ -76,17 +80,25 @@ begin
   while True do
     begin
       sleep(100);
-      iCounter := iCounter + 0.1;
-      if iCounter > 60 then //every minute
+      iDeciSeconds := iDeciSeconds + 1;
+
+      if iDeciSeconds mod 10 = 0 then //every minute //one minute = 600
       begin
-        iCounter := 0;
-        edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1;
-        if AdjustVolume(edMinutesUntilStop.Value) then begin //if Volume at final value
-          bIsStopped := True;
-          UpdateButtons;
-          TimeIsUp;
-          Exit;
-        end;
+                  edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1;
+        iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
+
+        if iMinutesLapsed > edMinutesUntilStart.Value then // if Start of vol red. reached)
+        begin
+          //edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1;
+
+          if AdjustVolume(edMinutesUntilStop.Value) then //if Volume at final value
+            begin
+              bIsStopped := True;
+              //UpdateButtons;
+              TimeIsUp;
+              Exit;
+            end;
+         end;
       end;
       if IsStopped then Exit;
     end;
@@ -98,7 +110,8 @@ end;
 procedure TfMainform.btnStopClick(Sender: TObject);
 begin
     bIsStopped:= True;
-    UpdateButtons;
+    TimeIsUp;
+    //UpdateButtons;
 end;
 
 //Update Buttons
@@ -138,12 +151,18 @@ begin
   end;
 end;
 
+procedure TfMainform.lblMinutesUntilStartClick(Sender: TObject);
+begin
+
+end;
+
 //TimeIsUp
 //****************************************
 procedure TfMainform.TimeIsUp;
 begin
   edMinutesUntilStop.Value := iMinutesAtStart;
   fPopUp.Show;
+  UpdateButtons;
 
 end;
 

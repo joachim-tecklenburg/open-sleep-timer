@@ -1,27 +1,29 @@
 object fMainform: TfMainform
-  Left = 383
-  Height = 70
-  Top = 377
-  Width = 485
+  Left = -341
+  Height = 169
+  Top = -720
+  Width = 434
   Caption = 'Open Sleep Timer v0.1'
-  ClientHeight = 70
-  ClientWidth = 485
+  ClientHeight = 169
+  ClientWidth = 434
   OnCreate = FormCreate
   LCLVersion = '1.6.0.4'
   object btnStart: TButton
-    Left = 293
+    Left = 253
     Height = 25
-    Top = 24
+    Top = 127
     Width = 75
+    Anchors = [akRight, akBottom]
     Caption = 'Start'
     OnClick = btnStartClick
     TabOrder = 0
   end
   object btnStop: TButton
-    Left = 381
+    Left = 341
     Height = 25
-    Top = 24
+    Top = 127
     Width = 75
+    Anchors = [akRight, akBottom]
     Caption = 'Stop'
     OnClick = btnStopClick
     TabOrder = 1
@@ -29,16 +31,36 @@ object fMainform: TfMainform
   object edMinutesUntilStop: TSpinEdit
     Left = 131
     Height = 23
-    Top = 25
-    Width = 64
+    Top = 128
+    Width = 102
+    Anchors = [akLeft, akRight, akBottom]
     TabOrder = 2
   end
   object lblMinutesUntilStop: TLabel
     Left = 16
     Height = 15
-    Top = 28
+    Top = 131
     Width = 108
+    Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
     ParentColor = False
+  end
+  object edMinutesUntilStart: TSpinEdit
+    Left = 131
+    Height = 23
+    Top = 88
+    Width = 102
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 3
+  end
+  object lblMinutesUntilStart: TLabel
+    Left = 16
+    Height = 15
+    Top = 91
+    Width = 116
+    Anchors = [akLeft, akBottom]
+    Caption = 'Minutes until Vol red.:'
+    ParentColor = False
+    OnClick = lblMinutesUntilStartClick
   end
 end
