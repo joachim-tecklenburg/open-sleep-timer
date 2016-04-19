@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp;
+  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Math;
 
 type
 
@@ -33,11 +33,13 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     function IsStopped:Boolean;
-    function AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer):Boolean;
+    procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure UpdateButtons;
     procedure TimeIsUp;
+    procedure UpdateShowCurrentVolumeLabel;
+
   private
     { private declarations }
   public
@@ -77,8 +79,9 @@ begin
   tbTargetVolume.Min := 0;
   tbTargetVolume.Max := 100;
   tbTargetVolume.Position := iTargetVolume;
-  lblShowTargetVolume.Caption := IntToStr(iTargetVolume);
-  lblShowCurrentVolume.Caption := IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100));
+  //lblShowTargetVolume.Caption := IntToStr(iTargetVolume);
+  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
+  UpdateShowCurrentVolumeLabel;
 end;
 
 procedure TfMainform.FormShow(Sender: TObject);
@@ -96,12 +99,16 @@ procedure TfMainform.btnStartClick(Sender: TObject);
 var
   iDeciSeconds: Integer = 0;
   iMinutesLapsed: Integer = 0;
+  bTimeIsUp: Boolean;
+  bTargetVolumeReached: Boolean;
+  iCurrentVolume: Integer;
 begin
   bIsStopped := False;
   btnStart.Enabled := False;
   btnStop.Enabled := True;
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
   iMinutesAtStart := edMinutesUntilStop.Value;
+
 
   //Loop until Stop Button clicked
   while True do
@@ -114,17 +121,22 @@ begin
         edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
         iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
 
+        //Check current parameters
+        bTimeIsUp := edMinutesUntilStop.Value <= 0;
+        iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100);
+        bTargetVolumeReached := iCurrentVolume <= tbTargetVolume.Position;
+
         if iMinutesLapsed > edMinutesUntilStart.Value then // if Start of vol red. reached)
         begin
-          //edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1;
-
-          if AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position) then //if Volume at final value
+          if bTimeIsUp or bTargetVolumeReached then
+          //if AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position) then //if Volume at final value
             begin
               bIsStopped := True;
-              //UpdateButtons;
               TimeIsUp;
               Exit;
             end;
+          //AdjustVolume(edMinutesUntilStop.Value);
+          AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
          end;
       end;
       if IsStopped then Exit;
@@ -138,6 +150,7 @@ procedure TfMainform.btnStopClick(Sender: TObject);
 begin
     bIsStopped:= True;
     TimeIsUp;
+    fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
     //UpdateButtons;
 end;
 
@@ -151,12 +164,12 @@ end;
 
 //Adjust Volume
 //****************************************
-function TfMainform.AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer):Boolean;
+procedure TfMainform.AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
 var
   dCurrentVolume: Double;
   dVolumeStepSize: Double;
   dNewVolumeLevel: Double;
-  dNewVolumeLevelPerCent: Double;
+  dVolumeStepsTotal: Double;
 begin
 
   //read current audio volume from system
@@ -165,25 +178,18 @@ begin
   //calculate new volume level
   if iMinutesUntilStop > 0 then
   begin
-    dVolumeStepSize := dCurrentVolume / iMinutesUntilStop;
+    dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
+    dVolumeStepSize := (dVolumeStepsTotal / iMinutesUntilStop) / 100;
   end;
-  dNewVolumeLevel := dCurrentVolume - dVolumeStepSize;
+  dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
 
-  //set new volume level
-  dNewVolumeLevelPerCent := dNewVolumeLevel * 100;
+  //Set new Volume
+  VolumeControl.SetMasterVolume(dNewVolumeLevel);
 
-  //check if end reached
-  //TODO: move "End-Detection" to StartButton procedure (Based on minutes left instead of volume)
+  //Update Label
+  UpdateShowCurrentVolumeLabel;
+  //lblShowCurrentVolume.Caption := IntToStr(Trunc(dNewvolumeLevel * 100)) + '%';
 
-  if Trunc(dNewVolumeLevelPerCent) >= iTargetVolume then //if current vol is still higher than target vol.
-  begin
-    VolumeControl.SetMasterVolume(dNewVolumeLevel);
-    lblShowCurrentVolume.Caption := IntToStr(Trunc(dNewvolumeLevel * 100));
-  end
-  else begin
-    result := True; //Volume at final level: stop!
-  end;
-  result := False; //Not finished, yet. Keep running!
 end;
 
 procedure TfMainform.miAboutClick(Sender: TObject);
@@ -197,7 +203,7 @@ end;
 //****************************************************
 procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
 begin
-  lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position);
+  lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
 end;
 
 //TimeIsUp
@@ -205,10 +211,15 @@ end;
 procedure TfMainform.TimeIsUp;
 begin
   edMinutesUntilStop.Value := iMinutesAtStart;
+  fPopUp.lblQuestion.Caption := 'Time is up. Restore volume level?';
   fPopUp.Show;
   UpdateButtons;
+end;
 
-
+//Update Show Current Volume Label
+procedure TfMainform.UpdateShowCurrentVolumeLabel;
+begin
+  fMainform.lblShowCurrentVolume.Caption := IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100)) + '%';
 end;
 
 end.

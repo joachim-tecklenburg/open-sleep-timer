@@ -1,9 +1,9 @@
 object fMainform: TfMainform
-  Left = 357
+  Left = 725
   Height = 191
-  Top = -617
+  Top = 531
   Width = 434
-  Caption = 'Open Sleep Timer v0.1'
+  Caption = 'Open Sleep Timer v0.2'
   ClientHeight = 171
   ClientWidth = 434
   Menu = mnMainMenu
@@ -36,6 +36,7 @@ object fMainform: TfMainform
     Top = 130
     Width = 102
     Anchors = [akLeft, akRight, akBottom]
+    MaxValue = 1000000
     TabOrder = 2
   end
   object lblMinutesUntilStop: TLabel
@@ -53,6 +54,7 @@ object fMainform: TfMainform
     Top = 90
     Width = 102
     Anchors = [akLeft, akRight, akBottom]
+    MaxValue = 1000
     TabOrder = 3
   end
   object lblMinutesUntilStart: TLabel
@@ -65,27 +67,29 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object tbTargetVolume: TTrackBar
-    Left = 128
+    Left = 125
     Height = 25
-    Top = 24
-    Width = 208
+    Top = 13
+    Width = 251
     OnChange = tbTargetVolumeChange
     Position = 0
+    ShowSelRange = False
+    TickStyle = tsNone
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 4
   end
   object lblTargetVolume: TLabel
     Left = 16
     Height = 15
-    Top = 24
+    Top = 15
     Width = 80
     Caption = 'Target volume:'
     ParentColor = False
   end
   object lblShowTargetVolume: TLabel
-    Left = 344
+    Left = 384
     Height = 15
-    Top = 24
+    Top = 15
     Width = 32
     AutoSize = False
     Caption = 'lblShowTargetVolume'
