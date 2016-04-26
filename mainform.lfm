@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 725
+  Left = -162
   Height = 191
-  Top = 531
+  Top = -875
   Width = 434
   Caption = 'Open Sleep Timer v0.2'
   ClientHeight = 171

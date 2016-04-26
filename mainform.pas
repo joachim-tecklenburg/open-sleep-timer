@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Math;
+  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Math, IniFiles;
 
 type
 
@@ -39,6 +39,7 @@ type
     procedure UpdateButtons;
     procedure TimeIsUp;
     procedure UpdateShowCurrentVolumeLabel;
+    procedure parseConfigFile;
 
   private
     { private declarations }
@@ -49,9 +50,10 @@ type
 var
   fMainform: TfMainform;
   bIsStopped: Boolean = False;
-  iDefaultMinutes: Integer = 60;
-  iMinutesAtStart: Integer;
+  iDurationDefault: Integer;
+  iDurationSetByUser: Integer;
   dVolumeLevelAtStart: Double;
+  bTestMode: Boolean;
   //TODO: Default values as constants
 
 
@@ -71,26 +73,47 @@ end;
 //Form Create
 //******************************************
 procedure TfMainform.FormCreate(Sender: TObject);
-var
-  iTargetVolume: Integer = 20;
 begin
-  edMinutesUntilStop.Increment := 15;
-  edMinutesUntilStop.Value := 60;
   tbTargetVolume.Min := 0;
   tbTargetVolume.Max := 100;
-  tbTargetVolume.Position := iTargetVolume;
-  //lblShowTargetVolume.Caption := IntToStr(iTargetVolume);
   tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   UpdateShowCurrentVolumeLabel;
 end;
 
+
+//Form Show
+//*****************************************
 procedure TfMainform.FormShow(Sender: TObject);
+
 begin
-  //Set window position (otherwise would be last position in IDE)
-  fMainform.Left := 300;
+  parseConfigFile;
+
+  //Set window position (otherwise would be position from IDE)
+  {fMainform.Left := 300;
   fMainform.Top := 200;
   fPopUp.Left := 330;
-  fPopUp.Top := 270;
+  fPopUp.Top := 270;}
+
+end;
+
+//Parse Config File
+//******************************************
+procedure TfMainform.parseConfigFile;
+var
+  iniConfigFile: TINIFile;
+begin
+   iniConfigFile := TINIFile.Create('config.ini');
+  try
+    bTestMode := iniConfigFile.ReadBool('development', 'TestMode', false);
+    edMinutesUntilStop.Value := iniConfigFile.ReadInteger('main', 'DurationDefault', 75);
+    edMinutesUntilStop.Increment := iniConfigFile.ReadInteger('main', 'DurationIncrement', 15);
+    tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
+    fMainform.Left := iniConfigFile.ReadInteger('main', 'MainformLeft', 300);
+    fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
+    fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
+    fPopUp.Top := iniConfigFile.ReadInteger('main', 'PopUpTop', 270);
+  finally
+  end;
 end;
 
 //Start Button
@@ -98,16 +121,18 @@ end;
 procedure TfMainform.btnStartClick(Sender: TObject);
 var
   iDeciSeconds: Integer = 0;
+  iDivider: Integer = 600; //one minute
   iMinutesLapsed: Integer = 0;
   bTimeIsUp: Boolean;
   bTargetVolumeReached: Boolean;
   iCurrentVolume: Integer;
+
 begin
   bIsStopped := False;
   btnStart.Enabled := False;
   btnStop.Enabled := True;
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
-  iMinutesAtStart := edMinutesUntilStop.Value;
+  iDurationSetByUser := edMinutesUntilStop.Value;
 
 
   //Loop until Stop Button clicked
@@ -116,7 +141,11 @@ begin
       sleep(100);
       iDeciSeconds := iDeciSeconds + 1;
 
-      if iDeciSeconds mod 10 = 0 then //every minute //one minute = 600
+      //check if testmode (faster contdown)
+      if bTestMode = true then
+        iDivider := 10;
+
+      if iDeciSeconds mod iDivider = 0 then //every minute //one minute = 600
       begin
         edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
         iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
@@ -154,6 +183,7 @@ begin
     //UpdateButtons;
 end;
 
+
 //Update Buttons
 //***************************************
 procedure TfMainform.UpdateButtons;
@@ -161,6 +191,7 @@ begin
   btnStart.Enabled := bIsStopped;
   btnStop.Enabled := not bIsStopped;
 end;
+
 
 //Adjust Volume
 //****************************************
@@ -192,6 +223,9 @@ begin
 
 end;
 
+
+//Menu Procedures
+//********************************************
 procedure TfMainform.miAboutClick(Sender: TObject);
 begin
   showmessage('Open Sleep Timer - https://github.com/achim-tecklenburg/open-sleep-timer');
@@ -206,17 +240,19 @@ begin
   lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
 end;
 
+
 //TimeIsUp
 //****************************************
 procedure TfMainform.TimeIsUp;
 begin
-  edMinutesUntilStop.Value := iMinutesAtStart;
+  edMinutesUntilStop.Value := iDurationSetByUser;
   fPopUp.lblQuestion.Caption := 'Time is up. Restore volume level?';
   fPopUp.Show;
   UpdateButtons;
 end;
 
-//Update Show Current Volume Label
+
+//Update ShowCurrentVolumeLabel
 procedure TfMainform.UpdateShowCurrentVolumeLabel;
 begin
   fMainform.lblShowCurrentVolume.Caption := IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100)) + '%';

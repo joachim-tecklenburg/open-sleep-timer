@@ -1,11 +1,12 @@
 object fPopUp: TfPopUp
-  Left = 837
+  Left = -60
   Height = 116
-  Top = 497
+  Top = -1036
   Width = 219
   Caption = 'Time is Up!'
   ClientHeight = 116
   ClientWidth = 219
+  OnClose = FormClose
   LCLVersion = '1.6.0.4'
   object lblQuestion: TLabel
     Left = 22
