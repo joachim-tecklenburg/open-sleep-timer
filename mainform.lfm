@@ -1,12 +1,13 @@
 object fMainform: TfMainform
-  Left = -162
+  Left = -227
   Height = 191
-  Top = -875
+  Top = -928
   Width = 434
   Caption = 'Open Sleep Timer v0.2'
   ClientHeight = 171
   ClientWidth = 434
   Menu = mnMainMenu
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   LCLVersion = '1.6.0.4'
@@ -18,7 +19,7 @@ object fMainform: TfMainform
     Anchors = [akRight, akBottom]
     Caption = 'Start'
     OnClick = btnStartClick
-    TabOrder = 0
+    TabOrder = 3
   end
   object btnStop: TButton
     Left = 341
@@ -28,13 +29,13 @@ object fMainform: TfMainform
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
     OnClick = btnStopClick
-    TabOrder = 1
+    TabOrder = 4
   end
   object edMinutesUntilStop: TSpinEdit
-    Left = 131
+    Left = 137
     Height = 23
     Top = 130
-    Width = 102
+    Width = 95
     Anchors = [akLeft, akRight, akBottom]
     MaxValue = 1000000
     TabOrder = 2
@@ -49,34 +50,34 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object edMinutesUntilStart: TSpinEdit
-    Left = 131
+    Left = 137
     Height = 23
     Top = 90
-    Width = 102
+    Width = 95
     Anchors = [akLeft, akRight, akBottom]
     MaxValue = 1000
-    TabOrder = 3
+    TabOrder = 1
   end
   object lblMinutesUntilStart: TLabel
     Left = 16
     Height = 15
     Top = 93
-    Width = 116
+    Width = 111
     Anchors = [akLeft, akBottom]
-    Caption = 'Minutes until Vol red.:'
+    Caption = 'Delayed start in min.:'
     ParentColor = False
   end
   object tbTargetVolume: TTrackBar
-    Left = 125
+    Left = 131
     Height = 25
     Top = 13
-    Width = 251
+    Width = 242
     OnChange = tbTargetVolumeChange
     Position = 0
     ShowSelRange = False
     TickStyle = tsNone
     Anchors = [akTop, akLeft, akRight]
-    TabOrder = 4
+    TabOrder = 0
   end
   object lblTargetVolume: TLabel
     Left = 16
@@ -91,31 +92,36 @@ object fMainform: TfMainform
     Height = 15
     Top = 15
     Width = 32
+    Anchors = [akTop, akRight]
     AutoSize = False
-    Caption = 'lblShowTargetVolume'
+    Caption = '20%'
     ParentColor = False
   end
   object lblCurrentVolume: TLabel
     Left = 16
     Height = 15
-    Top = 56
+    Top = 55
     Width = 90
     Caption = 'Current Volume: '
     ParentColor = False
   end
   object lblShowCurrentVolume: TLabel
-    Left = 131
+    Left = 137
     Height = 15
-    Top = 56
-    Width = 90
-    Caption = 'Current Volume: '
+    Top = 55
+    Width = 28
+    Caption = '50%: '
     ParentColor = False
   end
   object mnMainMenu: TMainMenu
-    left = 280
+    left = 376
     top = 72
     object MenuItem1: TMenuItem
       Caption = 'Help'
+      object MenuItem2: TMenuItem
+        Caption = 'Options'
+        OnClick = MenuItem2Click
+      end
       object MenuItem4: TMenuItem
         Caption = '-'
       end

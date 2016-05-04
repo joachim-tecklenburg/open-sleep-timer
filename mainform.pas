@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Math, IniFiles;
+  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, programoptions, Unit1, Math, IniFiles;
 
 type
 
@@ -23,6 +23,7 @@ type
     lblMinutesUntilStop: TLabel;
     edMinutesUntilStop: TSpinEdit;
     lblMinutesUntilStart: TLabel;
+    MenuItem2: TMenuItem;
     mnMainMenu: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem4: TMenuItem;
@@ -30,16 +31,19 @@ type
     tbTargetVolume: TTrackBar;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     function IsStopped:Boolean;
     procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
+    procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure UpdateButtons;
     procedure TimeIsUp;
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
+    procedure saveSettings;
 
   private
     { private declarations }
@@ -49,6 +53,7 @@ type
 
 var
   fMainform: TfMainform;
+  fOptions: TfOptions;
   bIsStopped: Boolean = False;
   iDurationDefault: Integer;
   iDurationSetByUser: Integer;
@@ -78,6 +83,7 @@ begin
   tbTargetVolume.Max := 100;
   tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   UpdateShowCurrentVolumeLabel;
+  tbTargetVolume.PageSize := 5;
 end;
 
 
@@ -87,12 +93,6 @@ procedure TfMainform.FormShow(Sender: TObject);
 
 begin
   parseConfigFile;
-
-  //Set window position (otherwise would be position from IDE)
-  {fMainform.Left := 300;
-  fMainform.Top := 200;
-  fPopUp.Left := 330;
-  fPopUp.Top := 270;}
 
 end;
 
@@ -106,7 +106,9 @@ begin
   try
     bTestMode := iniConfigFile.ReadBool('development', 'TestMode', false);
     edMinutesUntilStop.Value := iniConfigFile.ReadInteger('main', 'DurationDefault', 75);
-    edMinutesUntilStop.Increment := iniConfigFile.ReadInteger('main', 'DurationIncrement', 15);
+    edMinutesUntilStop.Increment := iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
+    edMinutesUntilStart.Value := iniConfigFile.ReadInteger('main', 'DelayDefault', 20);
+    edMinutesUntilStart.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
     tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
     fMainform.Left := iniConfigFile.ReadInteger('main', 'MainformLeft', 300);
     fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
@@ -114,6 +116,20 @@ begin
     fPopUp.Top := iniConfigFile.ReadInteger('main', 'PopUpTop', 270);
   finally
   end;
+end;
+
+//Save Settings
+//*****************************************
+procedure TfMainform.saveSettings;
+var
+  iniConfigFile: TINIFile;
+begin
+  iniConfigFile := TINIFile.Create('config.ini');
+  iniConfigFile.WriteInteger('main', 'TargetVolume', tbTargetVolume.Position);
+  iniConfigFile.WriteInteger('main', 'DurationDefault', edMinutesUntilStop.Value);
+  iniConfigFile.WriteInteger('main', 'MainformLeft', fMainform.Left);
+  iniConfigFile.WriteInteger('main', 'MainformTop', fMainform.Top);
+  iniConfigFile.WriteInteger('main', 'DelayDefault', edMinutesUntilStart.Value);
 end;
 
 //Start Button
@@ -184,6 +200,14 @@ begin
 end;
 
 
+//OnClose
+//***************************************
+procedure TfMainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  saveSettings;
+end;
+
+
 //Update Buttons
 //***************************************
 procedure TfMainform.UpdateButtons;
@@ -219,8 +243,11 @@ begin
 
   //Update Label
   UpdateShowCurrentVolumeLabel;
-  //lblShowCurrentVolume.Caption := IntToStr(Trunc(dNewvolumeLevel * 100)) + '%';
+end;
 
+procedure TfMainform.MenuItem2Click(Sender: TObject);
+begin
+  Form1.Show;
 end;
 
 

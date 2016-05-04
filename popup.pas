@@ -49,8 +49,8 @@ var
 begin
    iniConfigFile := TINIFile.Create('config.ini');
   try
-    //fPopUp.Left := iniConfigFile.WriteString('main', 'PopUpLeft', IntToStr(fPopUp.Left));
-    //fPopUp.Top := iniConfigFile.WriteInteger('main', 'PopUpTop', fPopUp.Top);
+    iniConfigFile.WriteString('main', 'PopUpLeft', IntToStr(fPopUp.Left));
+    iniConfigFile.WriteInteger('main', 'PopUpTop', fPopUp.Top);
   finally
     iniConfigFile.Free
   end;
