@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, programoptions, Unit1, Math, IniFiles;
+  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Unit1, Math, IniFiles;
 
 type
 
@@ -53,7 +53,6 @@ type
 
 var
   fMainform: TfMainform;
-  fOptions: TfOptions;
   bIsStopped: Boolean = False;
   iDurationDefault: Integer;
   iDurationSetByUser: Integer;
@@ -84,6 +83,8 @@ begin
   tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   UpdateShowCurrentVolumeLabel;
   tbTargetVolume.PageSize := 5;
+
+    btnStartClick(Application);
 end;
 
 
@@ -93,6 +94,9 @@ procedure TfMainform.FormShow(Sender: TObject);
 
 begin
   parseConfigFile;
+
+  //if iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', false)
+
 
 end;
 

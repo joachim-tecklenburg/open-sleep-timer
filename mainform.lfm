@@ -36,7 +36,7 @@ object fMainform: TfMainform
     Height = 23
     Top = 130
     Width = 95
-    Anchors = [akLeft, akRight, akBottom]
+    Anchors = [akLeft, akBottom]
     MaxValue = 1000000
     TabOrder = 2
   end
@@ -54,7 +54,7 @@ object fMainform: TfMainform
     Height = 23
     Top = 90
     Width = 95
-    Anchors = [akLeft, akRight, akBottom]
+    Anchors = [akLeft, akBottom]
     MaxValue = 1000
     TabOrder = 1
   end
