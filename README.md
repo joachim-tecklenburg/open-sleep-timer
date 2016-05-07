@@ -1,8 +1,10 @@
 # open sleep timer
 
+![ScreenShot](https://raw.githubusercontent.com/achim-tecklenburg/open-sleep-timer/screenshot.png)
+
 ## What is it?
 
-This is a Clone of [Sweet Dreams](!http://www.svenbader.de/downloads_software_sweet_dreams/) for Windows.
+This is a Clone of [Sweet Dreams](http://www.svenbader.de/downloads_software_sweet_dreams/) for Windows.
 It slowly fades out System Master Volume to help you fall asleep.
 
 ## Download
@@ -16,4 +18,7 @@ The only Feature at the moment is, that it turns down Master Volume over a confi
 For planned Features there is a Roadmap on [Trello](https://trello.com/b/shS1Qphz/open-sleep-timer).
 
 ## Code
-It is written in Pascal on [Lazarus](http://www.lazarus-ide.org/) - the open Source Delphi Clone.
+It is written in FreePascal using [Lazarus](http://www.lazarus-ide.org/) - the open Source Delphi Clone.
+
+## Icon
+I took the icon from https://icons8.com/
