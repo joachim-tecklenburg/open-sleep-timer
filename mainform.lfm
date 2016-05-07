@@ -22,12 +22,13 @@ object fMainform: TfMainform
     TabOrder = 3
   end
   object btnStop: TButton
-    Left = 341
+    Left = 337
     Height = 25
-    Top = 129
+    Top = 128
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
+    Enabled = False
     OnClick = btnStopClick
     TabOrder = 4
   end
@@ -114,10 +115,10 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object tbCurrentVolume: TTrackBar
-    Left = 160
+    Left = 131
     Height = 25
     Top = 55
-    Width = 181
+    Width = 242
     Max = 100
     OnChange = tbCurrentVolumeChange
     Position = 0
@@ -143,5 +144,20 @@ object fMainform: TfMainform
         OnClick = miAboutClick
       end
     end
+  end
+  object tmrWaitForStop: TTimer
+    Interval = 100
+    OnTimer = tmrWaitForStopTimer
+    OnStopTimer = tmrWaitForStopStopTimer
+    left = 400
+    top = 32
+  end
+  object tmrCountDown: TTimer
+    Enabled = False
+    Interval = 60000
+    OnTimer = tmrCountDownTimer
+    OnStopTimer = tmrCountDownStopTimer
+    left = 304
+    top = 88
   end
 end

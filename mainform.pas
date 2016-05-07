@@ -30,19 +30,25 @@ type
     miAbout: TMenuItem;
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
+    tmrWaitForStop: TTimer;
+    tmrCountDown: TTimer;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    function IsStopped:Boolean;
+   // function IsStopped:Boolean;
     procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
     procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure tbCurrentVolumeChange(Sender: TObject);
+    procedure tmrWaitForStopStopTimer(Sender: TObject);
+    procedure tmrWaitForStopTimer(Sender: TObject);
+    procedure tmrCountDownStopTimer(Sender: TObject);
+    procedure tmrCountDownTimer(Sender: TObject);
     procedure UpdateButtons;
-    procedure TimeIsUp;
+    procedure StopCountDown;
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
     procedure saveSettings;
@@ -71,12 +77,13 @@ implementation
 
 //IsStopped - checks if Stop Button pressed
 //*****************************************
+{
 function TfMainform.IsStopped: Boolean;
 begin
   Application.ProcessMessages;
   Result := bIsStopped;
 end;
-
+     }
 
 //Form Create
 //******************************************
@@ -93,16 +100,14 @@ end;
 //Form Show
 //*****************************************
 procedure TfMainform.FormShow(Sender: TObject);
-
 begin
+  tmrWaitForStop.Enabled := False;
   parseConfigFile;
     tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   //TODO: move trackbar change to form show?
   UpdateShowCurrentVolumeLabel;
 
   //if iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', false)
-
-
 end;
 
 //Parse Config File
@@ -146,57 +151,14 @@ end;
 //Start Button
 //******************************************
 procedure TfMainform.btnStartClick(Sender: TObject);
-var
-  iDeciSeconds: Integer = 0;
-  iDivider: Integer = 600; //one minute
-  iMinutesLapsed: Integer = 0;
-  bTimeIsUp: Boolean;
-  bTargetVolumeReached: Boolean;
-  iCurrentVolume: Integer;
 
 begin
-  bIsStopped := False;
-  btnStart.Enabled := False;
-  btnStop.Enabled := True;
+  UpdateButtons; //enable/disable start/stop-buttons
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
   iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
 
-
-  //Loop until Stop Button clicked
-  while True do
-    begin
-      sleep(100);
-      iDeciSeconds := iDeciSeconds + 1;
-
-      //check if testmode (faster contdown)
-      if bTestMode = true then
-        iDivider := 10;
-
-      if iDeciSeconds mod iDivider = 0 then //every minute //one minute = 600
-      begin
-        edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
-        iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
-
-        //Check current parameters
-        bTimeIsUp := edMinutesUntilStop.Value <= 0;
-        iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100);
-        bTargetVolumeReached := iCurrentVolume <= tbTargetVolume.Position;
-
-        if iMinutesLapsed > edMinutesUntilStart.Value then // if Start of vol red. reached)
-        begin
-          if bTimeIsUp or bTargetVolumeReached then
-          //if AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position) then //if Volume at final value
-            begin
-              bIsStopped := True;
-              TimeIsUp;
-              Exit;
-            end;
-          //AdjustVolume(edMinutesUntilStop.Value);
-          AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
-         end;
-      end;
-      if IsStopped then Exit;
-    end;
+  //Start
+  tmrWaitForStop.Enabled := True;
 end;
 
 
@@ -204,10 +166,8 @@ end;
 //***************************************
 procedure TfMainform.btnStopClick(Sender: TObject);
 begin
-    bIsStopped:= True;
-    TimeIsUp;
+    StopCountDown;
     fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
-    //UpdateButtons;
 end;
 
 
@@ -223,8 +183,8 @@ end;
 //***************************************
 procedure TfMainform.UpdateButtons;
 begin
-  btnStart.Enabled := bIsStopped;
-  btnStop.Enabled := not bIsStopped;
+    btnStart.Enabled := not btnStart.Enabled;
+    btnStop.Enabled := not btnStop.Enabled;
 end;
 
 
@@ -292,13 +252,62 @@ begin
   UpdateShowCurrentVolumeLabel;
 end;
 
+procedure TfMainform.tmrWaitForStopStopTimer(Sender: TObject);
+begin
+end;
+
+//Timer WaitForStop
+//*********************************************
+procedure TfMainform.tmrWaitForStopTimer(Sender: TObject);
+var
+  bTimeIsUp: Boolean;
+  bTargetVolumeReached: Boolean;
+  iCurrentVolume: Integer;
+begin
+  //if testmode -> faster contdown
+  if bTestMode = true then
+    tmrCountDown.Interval := 1000;
+
+  //start count down
+  tmrCountDown.Enabled := True;
+
+  //check current parameters
+  bTimeIsUp := edMinutesUntilStop.Value <= 0;
+  iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
+  bTargetVolumeReached := iCurrentVolume <= tbTargetVolume.Position;
+
+  //Stop
+  if bTimeIsUp or bTargetVolumeReached then
+    StopCountDown;
+end;
+
+procedure TfMainform.tmrCountDownStopTimer(Sender: TObject);
+begin
+end;
+
+//Timer CountDown (default = 1 minute)
+//***********************************
+procedure TfMainform.tmrCountDownTimer(Sender: TObject);
+var
+  iMinutesLapsed: Integer = 0;
+begin
+  edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
+  iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
+
+  if iMinutesLapsed > edMinutesUntilStart.Value then // if Start of vol red. reached)
+  begin
+    AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
+  end;
+end;
+
 
 //TimeIsUp
 //****************************************
-procedure TfMainform.TimeIsUp;
+procedure TfMainform.StopCountDown;
 begin
-  edMinutesUntilStop.Value := iDurationSetByUser;
   fPopUp.lblQuestion.Caption := 'Time is up. Restore volume level?';
+  tmrWaitForStop.Enabled := False;
+  tmrCountDown.Enabled := False;
   fPopUp.Show;
   UpdateButtons;
 end;

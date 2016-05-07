@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, VolumeControl, IniFiles;
+  Menus, IniFiles;
 
 type
 
@@ -29,7 +29,7 @@ var
 implementation
 
 uses
-  mainform;  //to avoid circular reference mainform is referenced from here
+  mainform;  //to avoid circular reference, "mainform" is referenced from here
 
 {$R *.lfm}
 
@@ -38,6 +38,7 @@ uses
 procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
   fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
+  fMainform.edMinutesUntilStop.Value := iDurationSetByUser;
   fPopUp.Close;
 
 end;

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus, func;
+  Graphics, Dialogs, StdCtrls, Menus;
 
 type
 
@@ -36,6 +36,7 @@ procedure TForm1.chkStartCountdownAutomaticallyChange(Sender: TObject);
 begin
   //iniConfigFile.WriteBool('options', 'StartCountdownAutomatically', chkStartCountDownAutomatically.State);
 end;
+
 
 end.
 
