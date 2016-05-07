@@ -29,7 +29,7 @@ var
 implementation
 
 uses
-  mainform;
+  mainform;  //to avoid circular reference mainform is referenced from here
 
 {$R *.lfm}
 
@@ -37,8 +37,7 @@ uses
 
 procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
-  VolumeControl.SetMasterVolume(mainform.dVolumeLevelAtStart); //TODO: There should be one function, that does SetMasterVolume && lbl.ShowCurrentCaption
-  fMainform.lblShowCurrentVolume.Caption := (IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100)));
+  fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
   fPopUp.Close;
 
 end;

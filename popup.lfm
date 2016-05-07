@@ -1,7 +1,7 @@
 object fPopUp: TfPopUp
-  Left = -195
+  Left = 116
   Height = 116
-  Top = -1024
+  Top = 118
   Width = 219
   Caption = 'Time is Up!'
   ClientHeight = 116

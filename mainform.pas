@@ -29,6 +29,7 @@ type
     MenuItem4: TMenuItem;
     miAbout: TMenuItem;
     tbTargetVolume: TTrackBar;
+    tbCurrentVolume: TTrackBar;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -39,6 +40,7 @@ type
     procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
+    procedure tbCurrentVolumeChange(Sender: TObject);
     procedure UpdateButtons;
     procedure TimeIsUp;
     procedure UpdateShowCurrentVolumeLabel;
@@ -67,6 +69,8 @@ implementation
 
 { TfMainform }
 
+//IsStopped - checks if Stop Button pressed
+//*****************************************
 function TfMainform.IsStopped: Boolean;
 begin
   Application.ProcessMessages;
@@ -80,11 +84,9 @@ procedure TfMainform.FormCreate(Sender: TObject);
 begin
   tbTargetVolume.Min := 0;
   tbTargetVolume.Max := 100;
-  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
-  UpdateShowCurrentVolumeLabel;
   tbTargetVolume.PageSize := 5;
 
-    btnStartClick(Application);
+    //btnStartClick(Application);
 end;
 
 
@@ -94,6 +96,9 @@ procedure TfMainform.FormShow(Sender: TObject);
 
 begin
   parseConfigFile;
+    tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
+  //TODO: move trackbar change to form show?
+  UpdateShowCurrentVolumeLabel;
 
   //if iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', false)
 
@@ -114,6 +119,7 @@ begin
     edMinutesUntilStart.Value := iniConfigFile.ReadInteger('main', 'DelayDefault', 20);
     edMinutesUntilStart.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
     tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
+    tbCurrentVolume.Position := iniConfigFile.ReadInteger('main', 'DefaultVolume', 30);
     fMainform.Left := iniConfigFile.ReadInteger('main', 'MainformLeft', 300);
     fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
     fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
@@ -130,6 +136,7 @@ var
 begin
   iniConfigFile := TINIFile.Create('config.ini');
   iniConfigFile.WriteInteger('main', 'TargetVolume', tbTargetVolume.Position);
+  iniConfigFile.WriteInteger('main', 'DefaultVolume', tbCurrentVolume.Position);
   iniConfigFile.WriteInteger('main', 'DurationDefault', edMinutesUntilStop.Value);
   iniConfigFile.WriteInteger('main', 'MainformLeft', fMainform.Left);
   iniConfigFile.WriteInteger('main', 'MainformTop', fMainform.Top);
@@ -151,8 +158,8 @@ begin
   bIsStopped := False;
   btnStart.Enabled := False;
   btnStop.Enabled := True;
-  dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
-  iDurationSetByUser := edMinutesUntilStop.Value;
+  dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
+  iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
 
 
   //Loop until Stop Button clicked
@@ -243,7 +250,7 @@ begin
   dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
 
   //Set new Volume
-  VolumeControl.SetMasterVolume(dNewVolumeLevel);
+  tbCurrentVolume.Position := Round(dNewVolumeLevel * 100);
 
   //Update Label
   UpdateShowCurrentVolumeLabel;
@@ -272,6 +279,20 @@ begin
 end;
 
 
+//Current Volume Trackbar OnChange
+//****************************************************
+procedure TfMainform.tbCurrentVolumeChange(Sender: TObject);
+var
+  dNewVolumeLevel: Double;
+  iNewVolumeLevel: Integer;
+begin
+  iNewVolumeLevel := tbCurrentVolume.Position;
+  dNewVolumeLevel := Double(iNewVolumeLevel);
+  VolumeControl.SetMasterVolume(dNewVolumeLevel / 100);
+  UpdateShowCurrentVolumeLabel;
+end;
+
+
 //TimeIsUp
 //****************************************
 procedure TfMainform.TimeIsUp;
@@ -286,7 +307,7 @@ end;
 //Update ShowCurrentVolumeLabel
 procedure TfMainform.UpdateShowCurrentVolumeLabel;
 begin
-  fMainform.lblShowCurrentVolume.Caption := IntToStr(Trunc(VolumeControl.GetMasterVolume() * 100)) + '%';
+  fMainform.lblShowCurrentVolume.Caption := IntToStr(tbCurrentVolume.Position) + '%';
 end;
 
 end.

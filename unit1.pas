@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, func;
+  Graphics, Dialogs, StdCtrls, Menus, func;
 
 type
 
@@ -14,6 +14,7 @@ type
 
   TForm1 = class(TForm)
     chkStartCountdownAutomatically: TCheckBox;
+    MainMenu1: TMainMenu;
     procedure chkStartCountdownAutomaticallyChange(Sender: TObject);
   private
     { private declarations }

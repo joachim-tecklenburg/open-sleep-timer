@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = -227
+  Left = 320
   Height = 191
-  Top = -928
+  Top = 156
   Width = 434
   Caption = 'Open Sleep Timer v0.2'
   ClientHeight = 171
@@ -106,12 +106,25 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object lblShowCurrentVolume: TLabel
-    Left = 137
+    Left = 384
     Height = 15
     Top = 55
     Width = 28
     Caption = '50%: '
     ParentColor = False
+  end
+  object tbCurrentVolume: TTrackBar
+    Left = 160
+    Height = 25
+    Top = 55
+    Width = 181
+    Max = 100
+    OnChange = tbCurrentVolumeChange
+    Position = 0
+    ShowSelRange = False
+    TickStyle = tsNone
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 5
   end
   object mnMainMenu: TMainMenu
     left = 376
