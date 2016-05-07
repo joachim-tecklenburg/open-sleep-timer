@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus;
+  Graphics, Dialogs, StdCtrls, Menus, IniFiles;
 
 type
 
@@ -16,6 +16,7 @@ type
     chkStartCountdownAutomatically: TCheckBox;
     MainMenu1: TMainMenu;
     procedure chkStartCountdownAutomaticallyChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { private declarations }
   public
@@ -33,8 +34,16 @@ implementation
 
 
 procedure TForm1.chkStartCountdownAutomaticallyChange(Sender: TObject);
+var
+  iniConfigFile: TINIFile;
 begin
-  //iniConfigFile.WriteBool('options', 'StartCountdownAutomatically', chkStartCountDownAutomatically.State);
+  iniConfigFile := TINIFile.Create('config.ini');
+  iniConfigFile.WriteBool('options', 'StartCountdownAutomatically', chkStartCountDownAutomatically.Checked);
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+
 end;
 
 

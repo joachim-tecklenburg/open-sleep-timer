@@ -75,31 +75,24 @@ implementation
 
 { TfMainform }
 
-//IsStopped - checks if Stop Button pressed
-//*****************************************
-{
-function TfMainform.IsStopped: Boolean;
-begin
-  Application.ProcessMessages;
-  Result := bIsStopped;
-end;
-     }
 
 //Form Create
 //******************************************
 procedure TfMainform.FormCreate(Sender: TObject);
+
 begin
   tbTargetVolume.Min := 0;
   tbTargetVolume.Max := 100;
   tbTargetVolume.PageSize := 5;
-
-    //btnStartClick(Application);
 end;
 
 
 //Form Show
 //*****************************************
 procedure TfMainform.FormShow(Sender: TObject);
+var
+  iniConfigFile: TINIFile; //TODO: Move config.ini access to func
+  bStartCountdownAutomatically: Boolean;
 begin
   tmrWaitForStop.Enabled := False;
   parseConfigFile;
@@ -108,6 +101,12 @@ begin
   UpdateShowCurrentVolumeLabel;
 
   //if iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', false)
+
+    //Check if Countdown should start immedately
+  iniConfigFile := TINIFile.Create('config.ini'); //TODO: Move config.ini access to func
+  bStartCountdownAutomatically := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', False);
+  if bStartCountdownAutomatically then
+    btnStartClick(Application);
 end;
 
 //Parse Config File
@@ -129,6 +128,10 @@ begin
     fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
     fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
     fPopUp.Top := iniConfigFile.ReadInteger('main', 'PopUpTop', 270);
+
+    //TODO: Put in config file
+    Form1.Left := 300;
+    Form1.Top := 200;
   finally
   end;
 end;
@@ -302,7 +305,7 @@ end;
 
 
 //TimeIsUp
-//****************************************
+//*************************************
 procedure TfMainform.StopCountDown;
 begin
   fPopUp.lblQuestion.Caption := 'Time is up. Restore volume level?';
