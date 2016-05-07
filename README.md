@@ -1,6 +1,6 @@
 # open sleep timer
 
-![ScreenShot](https://raw.githubusercontent.com/achim-tecklenburg/open-sleep-timer/screenshot.png)
+![ScreenShot](https://github.com/achim-tecklenburg/open-sleep-timer/blob/master/screenshot.png)
 
 ## What is it?
 
