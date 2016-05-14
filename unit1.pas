@@ -32,18 +32,26 @@ implementation
 
 { TForm1 }
 
-
+//OnChange - Start Countdown automatically
+//**********************************************
 procedure TForm1.chkStartCountdownAutomaticallyChange(Sender: TObject);
 var
-  iniConfigFile: TINIFile;
+  iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops
 begin
   iniConfigFile := TINIFile.Create('config.ini');
   iniConfigFile.WriteBool('options', 'StartCountdownAutomatically', chkStartCountDownAutomatically.Checked);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
-begin
 
+//Form Create
+//***********************************************
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops;
+begin
+  //read config file
+  iniConfigFile := TINIFile.Create('config.ini');
+  chkStartCountDownAutomatically.Checked := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically',  false);
 end;
 
 
