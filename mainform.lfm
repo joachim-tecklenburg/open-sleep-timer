@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 320
+  Left = 9
   Height = 191
-  Top = 156
+  Top = -880
   Width = 434
   Caption = 'Open Sleep Timer v0.2'
   ClientHeight = 171
@@ -145,18 +145,10 @@ object fMainform: TfMainform
       end
     end
   end
-  object tmrWaitForStop: TTimer
-    Interval = 100
-    OnTimer = tmrWaitForStopTimer
-    OnStopTimer = tmrWaitForStopStopTimer
-    left = 400
-    top = 32
-  end
   object tmrCountDown: TTimer
     Enabled = False
     Interval = 60000
     OnTimer = tmrCountDownTimer
-    OnStopTimer = tmrCountDownStopTimer
     left = 304
     top = 88
   end
