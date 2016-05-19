@@ -15,7 +15,7 @@ type
   TfMainform = class(TForm)
     btnStop: TButton;
     btnStart: TButton;
-    CheckBox1: TCheckBox;
+    chkStandby: TCheckBox;
     edMinutesUntilStart: TSpinEdit;
     lblCurrentVolume: TLabel;
     lblShowCurrentVolume: TLabel;
@@ -124,6 +124,7 @@ begin
     edMinutesUntilStart.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
     tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
     tbCurrentVolume.Position := iniConfigFile.ReadInteger('main', 'DefaultVolume', 30);
+    chkStandby.Checked := iniConfigfile.Readbool('main', 'GoToStandby', False);
     fMainform.Left := iniConfigFile.ReadInteger('main', 'MainformLeft', 300);
     fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
     fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
@@ -149,6 +150,7 @@ begin
   iniConfigFile.WriteInteger('main', 'MainformLeft', fMainform.Left);
   iniConfigFile.WriteInteger('main', 'MainformTop', fMainform.Top);
   iniConfigFile.WriteInteger('main', 'DelayDefault', edMinutesUntilStart.Value);
+  iniConfigfile.Writebool('main', 'GoToStandby', chkStandby.Checked);
 end;
 
 //Start Button
@@ -305,7 +307,7 @@ begin
   UpdateButtons;
 
   //Go to Standby at the end (if checked)
-  if CheckBox1.Checked then
+  if chkStandby.Checked then
     process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', s);
 end;
 

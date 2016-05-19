@@ -127,7 +127,7 @@ object fMainform: TfMainform
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 5
   end
-  object CheckBox1: TCheckBox
+  object chkStandby: TCheckBox
     Left = 254
     Height = 19
     Top = 110
@@ -159,6 +159,6 @@ object fMainform: TfMainform
     Interval = 60000
     OnTimer = tmrCountDownTimer
     left = 416
-    top = 80
+    top = 72
   end
 end
