@@ -5,7 +5,7 @@ unit mainform;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
+  Classes, Process, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Unit1, Math, IniFiles;
 
 type
@@ -15,6 +15,7 @@ type
   TfMainform = class(TForm)
     btnStop: TButton;
     btnStart: TButton;
+    CheckBox1: TCheckBox;
     edMinutesUntilStart: TSpinEdit;
     lblCurrentVolume: TLabel;
     lblShowCurrentVolume: TLabel;
@@ -294,12 +295,18 @@ end;
 //Stop CountDown
 //*************************************
 procedure TfMainform.StopCountDown;
+var
+  s: String;
 begin
   fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
   //tmrWaitForStop.Enabled := False; TODO: Remove
   tmrCountDown.Enabled := False;
   fPopUp.Show;
   UpdateButtons;
+
+  //Go to Standby at the end (if checked)
+  if CheckBox1.Checked then
+    process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', s);
 end;
 
 
