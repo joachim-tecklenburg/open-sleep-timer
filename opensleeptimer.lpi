@@ -16,7 +16,8 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <StringTable ProductVersion=""/>
+      <MinorVersionNr Value="3"/>
+      <StringTable CompanyName="Joachim Tecklenburg" LegalCopyright="MIT Lizenz" ProductName="Open Sleep Timer" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -88,10 +89,6 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <CodeGeneration>
-      <TargetCPU Value="i386"/>
-      <TargetOS Value="win32"/>
-    </CodeGeneration>
     <Linking>
       <Options>
         <Win32>

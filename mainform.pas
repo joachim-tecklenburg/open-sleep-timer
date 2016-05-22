@@ -48,7 +48,7 @@ type
     //procedure tmrCountDownStopTimer(Sender: TObject); TODO: REMOVE
     procedure tmrCountDownTimer(Sender: TObject);
     procedure UpdateButtons;
-    procedure StopCountDown;
+    procedure StopCountDown(Sender: TObject);
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
     procedure saveSettings;
@@ -180,7 +180,7 @@ procedure TfMainform.btnStopClick(Sender: TObject);
 begin
     //StopCountDown;
     //fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
-  StopCountDown;
+  StopCountDown(Sender);
 end;
 
 
@@ -290,13 +290,13 @@ begin
 
   //Stop if time is up or target volume reached
   if bTimeIsUp or bTargetVolumeReached then
-    StopCountDown;
+    StopCountDown(Self);
 end;
 
 
 //Stop CountDown
 //*************************************
-procedure TfMainform.StopCountDown;
+procedure TfMainform.StopCountDown(Sender: TObject);
 var
   s: String;
 begin
@@ -307,8 +307,8 @@ begin
   UpdateButtons;
 
   //Go to Standby at the end (if checked)
-  if chkStandby.Checked then
-    process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', s);
+  if (chkStandby.Checked) AND (Sender <> btnStop) then //Standby option / Stop Buttton NOT pressed
+    process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState Standby', s);
 end;
 
 
