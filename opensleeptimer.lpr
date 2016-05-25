@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, runtimetypeinfocontrols, lazcontrols, mainform, VolumeControl, popup,
-  Unit1, func
+  Forms, runtimetypeinfocontrols, lazcontrols, tachartlazaruspkg, mainform,
+  VolumeControl, popup, Unit1, func
   { you can add units after this };
 
 {$R *.res}

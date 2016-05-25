@@ -5,8 +5,9 @@ unit mainform;
 interface
 
 uses
-  Classes, Process, SysUtils, FileUtil, RTTICtrls, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Spin, Menus, ComCtrls, VolumeControl, PopUp, Unit1, Math, IniFiles;
+  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASources, TASeries,
+  Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
+  VolumeControl, PopUp, Unit1, Math, IniFiles;
 
 type
 
@@ -15,6 +16,8 @@ type
   TfMainform = class(TForm)
     btnStop: TButton;
     btnStart: TButton;
+    Chart1: TChart;
+    Chart1LineSeries1: TLineSeries;
     chkStandby: TCheckBox;
     edMinutesUntilStart: TSpinEdit;
     lblCurrentVolume: TLabel;
@@ -34,6 +37,8 @@ type
     tmrCountDown: TTimer;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
+    procedure edMinutesUntilStartChange(Sender: TObject);
+    procedure edMinutesUntilStopChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -52,6 +57,10 @@ type
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
     procedure saveSettings;
+    procedure updateDiagram(iTargetVolume: Integer;
+                            iCurrentVolume: Integer;
+                            iDelayedStart: Integer;
+                            iDuration: Integer);
 
   private
     { private declarations }
@@ -107,6 +116,45 @@ begin
   bStartCountdownAutomatically := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', False);
   if bStartCountdownAutomatically then
     btnStartClick(Application);
+
+  //Style Settings for Diagram
+  Chart1.BackColor:=clWhite;
+  Chart1.Extent.UseYMin:=True;
+  Chart1.Extent.YMin:=0;
+  Chart1.Extent.UseYMax:=True;
+  Chart1.Extent.YMax:=100;
+  //Chart1.LeftAxis.Range.UseMin:=True;
+  //Chart1.LeftAxis.Range.Min:=0;
+  //Chart1.LeftAxis.Range.UseMax:=True;
+  //Chart1.LeftAxis.Range.Max:=100;
+  //Chart1LineSeries1.SeriesColor:=clBlue;
+end;
+
+//Update Diagram
+//******************************************
+procedure TfMainform.updateDiagram(iTargetVolume: Integer;
+                                   iCurrentVolume: Integer;
+                                   iDelayedStart: Integer;
+                                   iDuration: Integer);
+var
+  i: Integer;
+  dSteigung: Double;
+  dYAbschnitt: Double;
+  //iDuration: Integer;
+  //iDelayedStart: Integer;
+
+begin
+  //iDelayedStart := edMinutesUntilStart.Value;
+  dSteigung := (iTargetVolume - iCurrentVolume) / (55 - 15);
+  dYAbschnitt := dSteigung *-1 * iDelayedStart + iCurrentVolume;
+  //iDuration := 50;
+
+  for i:=0 to iDelayedStart do begin
+    Chart1LineSeries1.AddXY(i, iCurrentVolume);
+  end;
+  for i:=iDelayedStart to iDuration do begin
+    Chart1LineSeries1.AddXY(i, i * dSteigung + dYAbschnitt);
+  end;
 end;
 
 //Parse Config File
@@ -183,6 +231,28 @@ begin
   StopCountDown(Sender);
 end;
 
+procedure TfMainform.edMinutesUntilStartChange(Sender: TObject);
+begin
+  Chart1LineSeries1.Clear;
+  UpdateDiagram(tbTargetVolume.Position,
+                tbCurrentVolume.Position,
+                edMinutesUntilStart.Value,
+                edMinutesUntilStop.Value);
+end;
+
+procedure TfMainform.edMinutesUntilStopChange(Sender: TObject);
+begin
+  if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
+    edMinutesUntilStart.Value := edMinutesUntilStop.Value;
+  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
+
+  Chart1LineSeries1.Clear;
+  UpdateDiagram(tbTargetVolume.Position,
+                tbCurrentVolume.Position,
+                edMinutesUntilStart.Value,
+                edMinutesUntilStop.Value);
+end;
+
 
 //OnClose
 //***************************************
@@ -249,6 +319,11 @@ end;
 procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
 begin
   lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
+  Chart1LineSeries1.Clear;
+  UpdateDiagram(tbTargetVolume.Position,
+                tbCurrentVolume.Position,
+                edMinutesUntilStart.Value,
+                edMinutesUntilStop.Value);
 end;
 
 
@@ -263,6 +338,11 @@ begin
   dNewVolumeLevel := Double(iNewVolumeLevel);
   VolumeControl.SetMasterVolume(dNewVolumeLevel / 100);
   UpdateShowCurrentVolumeLabel;
+  Chart1LineSeries1.Clear;
+  UpdateDiagram(tbTargetVolume.Position,
+                tbCurrentVolume.Position,
+                edMinutesUntilStart.Value,
+                edMinutesUntilStop.Value);
 end;
 
 //Timer CountDown (default = 1 minute)

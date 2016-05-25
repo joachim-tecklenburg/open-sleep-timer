@@ -1,10 +1,10 @@
 object fMainform: TfMainform
-  Left = 9
-  Height = 209
-  Top = -880
+  Left = 683
+  Height = 433
+  Top = 172
   Width = 435
   Caption = 'Open Sleep Timer v0.3'
-  ClientHeight = 189
+  ClientHeight = 413
   ClientWidth = 435
   Menu = mnMainMenu
   OnClose = FormClose
@@ -14,7 +14,7 @@ object fMainform: TfMainform
   object btnStart: TButton
     Left = 254
     Height = 25
-    Top = 147
+    Top = 371
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Start'
@@ -24,7 +24,7 @@ object fMainform: TfMainform
   object btnStop: TButton
     Left = 338
     Height = 25
-    Top = 146
+    Top = 370
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
@@ -35,16 +35,17 @@ object fMainform: TfMainform
   object edMinutesUntilStop: TSpinEdit
     Left = 137
     Height = 23
-    Top = 148
+    Top = 372
     Width = 95
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
+    OnChange = edMinutesUntilStopChange
     TabOrder = 2
   end
   object lblMinutesUntilStop: TLabel
     Left = 16
     Height = 15
-    Top = 151
+    Top = 375
     Width = 108
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
@@ -53,16 +54,17 @@ object fMainform: TfMainform
   object edMinutesUntilStart: TSpinEdit
     Left = 137
     Height = 23
-    Top = 108
+    Top = 332
     Width = 95
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
+    OnChange = edMinutesUntilStartChange
     TabOrder = 1
   end
   object lblMinutesUntilStart: TLabel
     Left = 16
     Height = 15
-    Top = 111
+    Top = 335
     Width = 111
     Anchors = [akLeft, akBottom]
     Caption = 'Delayed start in min.:'
@@ -130,11 +132,39 @@ object fMainform: TfMainform
   object chkStandby: TCheckBox
     Left = 254
     Height = 19
-    Top = 110
+    Top = 334
     Width = 151
     Anchors = [akRight, akBottom]
     Caption = 'Go to Standby at the end'
     TabOrder = 6
+  end
+  object Chart1: TChart
+    Left = 16
+    Height = 216
+    Top = 96
+    Width = 397
+    AntialiasingMode = amOn
+    AxisList = <    
+      item
+        Minors = <>
+        Title.LabelFont.Orientation = 900
+      end    
+      item
+        Alignment = calBottom
+        Minors = <>
+      end>
+    BackColor = clWhite
+    Foot.Brush.Color = clBtnFace
+    Foot.Font.Color = clBlue
+    Title.Brush.Color = clBtnFace
+    Title.Font.Color = clBlue
+    Title.Text.Strings = (
+      'TAChart'
+    )
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    object Chart1LineSeries1: TLineSeries
+      LinePen.Color = clBlue
+    end
   end
   object mnMainMenu: TMainMenu
     left = 424
