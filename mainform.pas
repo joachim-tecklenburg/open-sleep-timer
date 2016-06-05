@@ -67,6 +67,7 @@ var
   iDurationSetByUser: Integer;
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
+  iMinutesLapsed: Integer;
   //TODO: Define default values as constants
 
 
@@ -196,6 +197,8 @@ begin
   if bTestMode = true then
     tmrCountDown.Interval := 1000;
 
+  iMinutesLapsed := 0;
+
   //start count down
   tmrCountDown.Enabled := True;
 
@@ -204,17 +207,24 @@ end;
 
 //Stop Button
 //***************************************
-procedure TfMainform.btnStopClick(Sender: TObject);
+procedure TfMainform.btnStopClick(Sender: TObject); //TODO: Rename
 begin
   //StopCountDown;
   //fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
   StopCountDown(Sender);
 end;
 
-procedure TfMainform.edMinutesUntilStartChange(Sender: TObject);
+
+//edMinutesUntilStart OnChange of Delayed Start Field
+//*************************************************************
+procedure TfMainform.edMinutesUntilStartChange(Sender: TObject); //TODO: Rename
 begin
-  Chart1LineSeries1.Clear;
-  UpdateDiagram;
+
+  if btnStart.Enabled then //Only if not running
+  begin
+    Chart1LineSeries1.Clear;
+    UpdateDiagram;
+  end;
 end;
 
 //edMinutesUntilStop Change - On Change of Duration Field
@@ -226,8 +236,11 @@ begin
 
   edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
 
-  Chart1LineSeries1.Clear;
-  UpdateDiagram;
+  if btnStart.Enabled then //Only if not running
+  begin
+    Chart1LineSeries1.Clear;
+    UpdateDiagram;
+  end;
 end;
 
 
@@ -296,8 +309,11 @@ end;
 procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
 begin
   lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
-  Chart1LineSeries1.Clear;
-  UpdateDiagram;
+  if btnStart.Enabled then //Only if not running
+  begin
+    Chart1LineSeries1.Clear;
+    UpdateDiagram;
+  end;
 end;
 
 
@@ -312,24 +328,30 @@ begin
   dNewVolumeLevel := Double(iNewVolumeLevel);
   VolumeControl.SetMasterVolume(dNewVolumeLevel / 100);
   UpdateShowCurrentVolumeLabel;
-  Chart1LineSeries1.Clear;
-  UpdateDiagram;
+  if btnStart.Enabled then //Only if not running
+  begin
+    Chart1LineSeries1.Clear;
+    UpdateDiagram;
+  end;
 end;
 
 //Timer CountDown (default = 1 minute)
 //***********************************
 procedure TfMainform.tmrCountDownTimer(Sender: TObject);
 var
-  iMinutesLapsed: Integer = 0;
+  //iMinutesLapsed: Integer = 0;
+  iMinutesDelay: Integer;
   bTimeIsUp: Boolean;
   bTargetVolumeReached: Boolean;
   iCurrentVolume: Integer;
 begin
+  iMinutesDelay := edMinutesUntilStart.Value;
+
   //TODO: calculate remaining minutes beforehand, then make timer interval shorter (for responsiveness)
   edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
   iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
 
-  if iMinutesLapsed > edMinutesUntilStart.Value then // if Start of vol red. reached)
+  if iMinutesLapsed > iMinutesDelay then // if Start of vol red. reached)
   begin
     AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
   end;
