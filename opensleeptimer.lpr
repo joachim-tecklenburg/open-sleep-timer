@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, runtimetypeinfocontrols, lazcontrols, tachartlazaruspkg, mainform,
-  VolumeControl, popup, Unit1, func
+  VolumeControl, popup, optionsform, func
   { you can add units after this };
 
 {$R *.res}

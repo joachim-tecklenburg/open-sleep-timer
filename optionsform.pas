@@ -1,4 +1,4 @@
-unit Unit1;
+unit optionsform;
 
 {$mode objfpc}{$H+}
 

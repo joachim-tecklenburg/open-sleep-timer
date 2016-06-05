@@ -1,5 +1,5 @@
 object fMainform: TfMainform
-  Left = 683
+  Left = 460
   Height = 433
   Top = 172
   Width = 435
@@ -8,7 +8,6 @@ object fMainform: TfMainform
   ClientWidth = 435
   Menu = mnMainMenu
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   LCLVersion = '1.6.0.4'
   object btnStart: TButton
@@ -75,6 +74,7 @@ object fMainform: TfMainform
     Height = 25
     Top = 13
     Width = 243
+    Max = 100
     OnChange = tbTargetVolumeChange
     Position = 0
     ShowSelRange = False

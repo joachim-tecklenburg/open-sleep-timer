@@ -5,9 +5,9 @@ unit mainform;
 interface
 
 uses
-  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASources, TASeries,
+  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, {TASources,} TASeries,
   Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, Unit1, Math, IniFiles;
+  VolumeControl, PopUp, optionsform, Math, IniFiles;
 
 type
 
@@ -40,27 +40,19 @@ type
     procedure edMinutesUntilStartChange(Sender: TObject);
     procedure edMinutesUntilStopChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    // function IsStopped:Boolean;           TODO: REMOVE
     procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
     procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure tbCurrentVolumeChange(Sender: TObject);
-    //procedure tmrWaitForStopStopTimer(Sender: TObject); TODO: REMOVE
-    // procedure tmrWaitForStopTimer(Sender: TObject);     TODO: REMOVE
-    //procedure tmrCountDownStopTimer(Sender: TObject); TODO: REMOVE
     procedure tmrCountDownTimer(Sender: TObject);
     procedure UpdateButtons;
     procedure StopCountDown(Sender: TObject);
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
     procedure saveSettings;
-    procedure updateDiagram(iTargetVolume: Integer;
-                            iCurrentVolume: Integer;
-                            iDelayedStart: Integer;
-                            iDuration: Integer);
+    procedure updateDiagram;
 
   private
     { private declarations }
@@ -75,7 +67,7 @@ var
   iDurationSetByUser: Integer;
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
-  //TODO: Default values as constants
+  //TODO: Define default values as constants
 
 
 implementation
@@ -84,18 +76,6 @@ implementation
 
 { TfMainform }
 
-
-//Form Create
-//******************************************
-procedure TfMainform.FormCreate(Sender: TObject);
-
-begin
-  tbTargetVolume.Min := 0;
-  tbTargetVolume.Max := 100;
-  tbTargetVolume.PageSize := 5;
-end;
-
-
 //Form Show
 //*****************************************
 procedure TfMainform.FormShow(Sender: TObject);
@@ -103,15 +83,16 @@ var
   iniConfigFile: TINIFile; //TODO: Move config.ini access to func
   bStartCountdownAutomatically: Boolean;
 begin
-  //tmrWaitForStop.Enabled := False; TODO: Remove
+  //tbTargetVolume.Min := 0;
+  //tbTargetVolume.Max := 100;
+  //tbTargetVolume.PageSize := 5;
+
   parseConfigFile;
-    tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
+  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   //TODO: move trackbar change to form show?
   UpdateShowCurrentVolumeLabel;
 
-  //if iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', false)
-
-    //Check if Countdown should start immedately
+  //Check if Countdown should start immedately
   iniConfigFile := TINIFile.Create('config.ini'); //TODO: Move config.ini access to func
   bStartCountdownAutomatically := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', False);
   if bStartCountdownAutomatically then
@@ -127,27 +108,29 @@ begin
   //Chart1.LeftAxis.Range.Min:=0;
   //Chart1.LeftAxis.Range.UseMax:=True;
   //Chart1.LeftAxis.Range.Max:=100;
-  //Chart1LineSeries1.SeriesColor:=clBlue;
 end;
 
 //Update Diagram
 //******************************************
-procedure TfMainform.updateDiagram(iTargetVolume: Integer;
-                                   iCurrentVolume: Integer;
-                                   iDelayedStart: Integer;
-                                   iDuration: Integer);
+procedure TfMainform.updateDiagram;
 var
   i: Integer;
   dSteigung: Double;
   dYAbschnitt: Double;
-  //iDuration: Integer;
-  //iDelayedStart: Integer;
+  iDuration: Integer;
+  iDelayedStart: Integer;
+  iTargetVolume: Integer;
+  iCurrentVolume: Integer;
 
 begin
-  //iDelayedStart := edMinutesUntilStart.Value;
+  iDelayedStart := edMinutesUntilStart.Value;
+  iTargetVolume := tbTargetVolume.Position;
+  iCurrentVolume := tbCurrentVolume.Position;
+  iDuration := edMinutesUntilStop.Value;
+
+
   dSteigung := (iTargetVolume - iCurrentVolume) / (55 - 15);
   dYAbschnitt := dSteigung *-1 * iDelayedStart + iCurrentVolume;
-  //iDuration := 50;
 
   for i:=0 to iDelayedStart do begin
     Chart1LineSeries1.AddXY(i, iCurrentVolume);
@@ -209,10 +192,7 @@ begin
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
   iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
 
-  //Start
-  //tmrWaitForStop.Enabled := True; TODO: Remove
-
-    //if testmode -> faster contdown
+  //if testmode -> faster contdown
   if bTestMode = true then
     tmrCountDown.Interval := 1000;
 
@@ -226,31 +206,28 @@ end;
 //***************************************
 procedure TfMainform.btnStopClick(Sender: TObject);
 begin
-    //StopCountDown;
-    //fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
+  //StopCountDown;
+  //fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
   StopCountDown(Sender);
 end;
 
 procedure TfMainform.edMinutesUntilStartChange(Sender: TObject);
 begin
   Chart1LineSeries1.Clear;
-  UpdateDiagram(tbTargetVolume.Position,
-                tbCurrentVolume.Position,
-                edMinutesUntilStart.Value,
-                edMinutesUntilStop.Value);
+  UpdateDiagram;
 end;
 
+//edMinutesUntilStop Change - On Change of Duration Field
+//*****************************************************
 procedure TfMainform.edMinutesUntilStopChange(Sender: TObject);
 begin
   if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
     edMinutesUntilStart.Value := edMinutesUntilStop.Value;
+
   edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
 
   Chart1LineSeries1.Clear;
-  UpdateDiagram(tbTargetVolume.Position,
-                tbCurrentVolume.Position,
-                edMinutesUntilStart.Value,
-                edMinutesUntilStop.Value);
+  UpdateDiagram;
 end;
 
 
@@ -320,10 +297,7 @@ procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
 begin
   lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
   Chart1LineSeries1.Clear;
-  UpdateDiagram(tbTargetVolume.Position,
-                tbCurrentVolume.Position,
-                edMinutesUntilStart.Value,
-                edMinutesUntilStop.Value);
+  UpdateDiagram;
 end;
 
 
@@ -339,10 +313,7 @@ begin
   VolumeControl.SetMasterVolume(dNewVolumeLevel / 100);
   UpdateShowCurrentVolumeLabel;
   Chart1LineSeries1.Clear;
-  UpdateDiagram(tbTargetVolume.Position,
-                tbCurrentVolume.Position,
-                edMinutesUntilStart.Value,
-                edMinutesUntilStop.Value);
+  UpdateDiagram;
 end;
 
 //Timer CountDown (default = 1 minute)
