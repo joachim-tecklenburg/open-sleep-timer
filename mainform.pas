@@ -275,7 +275,7 @@ begin
   dCurrentVolume := VolumeControl.GetMasterVolume();
 
   //calculate new volume level
-  if iMinutesUntilStop > 0 then
+  if iMinutesUntilStop > 0 then //TODO: Prüfung zum Timer verschieben
   begin
     dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
     dVolumeStepSize := (dVolumeStepsTotal / iMinutesUntilStop) / 100;
@@ -283,7 +283,7 @@ begin
   dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
 
   //Set new Volume
-  tbCurrentVolume.Position := Round(dNewVolumeLevel * 100);
+  tbCurrentVolume.Position := Trunc(dNewVolumeLevel * 100);
 
   //Update Label
   UpdateShowCurrentVolumeLabel;
@@ -342,7 +342,7 @@ var
   //iMinutesLapsed: Integer = 0;
   iMinutesDelay: Integer;
   bTimeIsUp: Boolean;
-  bTargetVolumeReached: Boolean;
+  bTargetVolumeNotReached: Boolean;
   iCurrentVolume: Integer;
 begin
   iMinutesDelay := edMinutesUntilStart.Value;
@@ -351,18 +351,22 @@ begin
   edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
   iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
 
-  if iMinutesLapsed > iMinutesDelay then // if Start of vol red. reached)
+  //check current parameters
+  bTimeIsUp := edMinutesUntilStop.Value <= 0;
+  iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
+  bTargetVolumeNotReached := iCurrentVolume > tbTargetVolume.Position;
+
+  // if Start of vol red. reached, but TargetVolume NOT reached
+  if (iMinutesLapsed > iMinutesDelay) and (bTargetVolumeNotReached) then
   begin
     AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
   end;
 
-  //check current parameters
-  bTimeIsUp := edMinutesUntilStop.Value <= 0;
-  iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
-  bTargetVolumeReached := iCurrentVolume <= tbTargetVolume.Position;
+
+
 
   //Stop if time is up or target volume reached
-  if bTimeIsUp or bTargetVolumeReached then
+  if bTimeIsUp {or bTargetVolumeReached} then
     StopCountDown(Self);
 end;
 
