@@ -41,7 +41,7 @@ type
     procedure edMinutesUntilStopChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
+    //procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
     procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
@@ -68,6 +68,8 @@ var
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
   iMinutesLapsed: Integer;
+  aVolumeLevels: Array[0..1000] of Double;
+  iVolumeArrayCounter: Integer = 0;
   //TODO: Define default values as constants
 
 
@@ -188,7 +190,51 @@ end;
 //Start Button
 //******************************************
 procedure TfMainform.btnStartClick(Sender: TObject);
+var
+  dCurrentVolume: Double;
+  dVolumeStepSize: Double;
+  //dNewVolumeLevel: Double;
+  dVolumeStepsTotal: Double;
+  //iVolDiff: Integer;
+  i: Integer;
+  iMinutesUntilStop: Integer;
+  iTargetVolume: Integer;
+
 begin
+  //Volume Gesamt-Differenz ermitteln
+  //Anhand der Gesamtzeit einzelne Volume-Schritte ermitteln
+  //Die Volume-Level vorberechnen und in einem Array ablegen
+  //Das Array ist global
+  //Es gibt außerdem einen globalen Zähler, der vom Timer hochgezählt wird
+  //(if >Delayed Start, <Target Volume) wird zum Zähler das Volumelevel aus dem Array genommen und an AdjustVolume übergeben
+
+  iMinutesUntilStop := edMinutesUntilStop.Value;
+  iTargetVolume := tbTargetVolume.Position;
+
+
+  //iVolDiff := tbCurrentVolume.Position - tbTargetVolume.Position;
+  //TODO: i negativ !!?
+
+  //read current audio volume from system
+  dCurrentVolume := VolumeControl.GetMasterVolume();
+
+  dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
+  dVolumeStepSize := (dVolumeStepsTotal / iMinutesUntilStop) / 100;
+
+  aVolumeLevels[0] := dCurrentVolume;
+  for i := 1 to iMinutesUntilStop do begin
+    aVolumeLevels[i] := aVolumeLevels[i-1] - dVolumeStepsize
+  end;
+
+
+
+  //calculate new volume level
+
+
+  //dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
+
+
+
   UpdateButtons; //enable/disable start/stop-buttons
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
   iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
@@ -260,7 +306,7 @@ begin
     btnStop.Enabled := not btnStop.Enabled;
 end;
 
-
+{
 //Adjust Volume
 //****************************************
 procedure TfMainform.AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
@@ -288,6 +334,7 @@ begin
   //Update Label
   UpdateShowCurrentVolumeLabel;
 end;
+}
 
 procedure TfMainform.MenuItem2Click(Sender: TObject);
 begin
@@ -354,18 +401,25 @@ begin
   //check current parameters
   bTimeIsUp := edMinutesUntilStop.Value <= 0;
   iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
-  bTargetVolumeNotReached := iCurrentVolume > tbTargetVolume.Position;
+
+  //check if target volume reached depending on rising/falling curve
+  if tbTargetVolume.Position <= tbCurrentVolume.Position then
+  begin
+    bTargetVolumeNotReached := iCurrentVolume > tbTargetVolume.Position;
+  end
+  else begin
+    bTargetVolumeNotReached := iCurrentVolume < tbTargetVolume.Position;
+  end;
 
   // if Start of vol red. reached, but TargetVolume NOT reached
   if (iMinutesLapsed > iMinutesDelay) and (bTargetVolumeNotReached) then
   begin
-    AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
+    Inc(iVolumeArrayCounter);
+    tbCurrentVolume.Position := trunc(aVolumeLevels[iVolumeArrayCounter]*100);
+    //AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
   end;
 
-
-
-
-  //Stop if time is up or target volume reached
+  //Stop if time is up
   if bTimeIsUp {or bTargetVolumeReached} then
     StopCountDown(Self);
 end;
@@ -386,6 +440,9 @@ begin
   //Go to Standby at the end (if checked)
   if (chkStandby.Checked) AND (Sender <> btnStop) then //Standby option / Stop Buttton NOT pressed
     process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState Standby', s);
+
+  //Reset Counter
+  iVolumeArrayCounter := 0;
 end;
 
 
