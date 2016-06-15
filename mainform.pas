@@ -204,12 +204,11 @@ procedure TfMainform.btnStartClick(Sender: TObject);
 var
   dCurrentVolume: Double;
   dVolumeStepSize: Double;
-  //dNewVolumeLevel: Double;
   dVolumeStepsTotal: Double;
-  //iVolDiff: Integer;
   i: Integer;
   iMinutesUntilStop: Integer;
   iTargetVolume: Integer;
+  iMinutesUntilStart: Integer;
 
 begin
   //Volume Gesamt-Differenz ermitteln
@@ -221,16 +220,20 @@ begin
 
   iMinutesUntilStop := edMinutesUntilStop.Value;
   iTargetVolume := tbTargetVolume.Position;
-
-
-  //iVolDiff := tbCurrentVolume.Position - tbTargetVolume.Position;
-  //TODO: i negativ !!?
+  iMinutesUntilStart := edMinutesUntilStart.Value;
 
   //read current audio volume from system
   dCurrentVolume := VolumeControl.GetMasterVolume();
 
   dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
-  dVolumeStepSize := (dVolumeStepsTotal / iMinutesUntilStop) / 100;
+  if (iMinutesUntilStop - iMinutesUntilStart <> 0) then
+  begin
+    dVolumeStepSize := (dVolumeStepsTotal / (iMinutesUntilStop - iMinutesUntilStart)) / 100;
+  end
+  else begin
+    dVolumeStepSize := 0.00000000000001;
+  end;
+
 
   aVolumeLevels[0] := dCurrentVolume;
   for i := 1 to iMinutesUntilStop do begin
@@ -267,6 +270,10 @@ end;
 //*************************************************************
 procedure TfMainform.edMinutesUntilStartChange(Sender: TObject); //TODO: Rename
 begin
+  if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
+    edMinutesUntilStart.Value := edMinutesUntilStop.Value;
+
+  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
 
   if btnStart.Enabled then //Only if not running  TODO: Disable when Started
   begin
@@ -279,10 +286,10 @@ end;
 //*****************************************************
 procedure TfMainform.edMinutesUntilStopChange(Sender: TObject);
 begin
-  if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
+  {if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
     edMinutesUntilStart.Value := edMinutesUntilStop.Value;
 
-  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
+  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;}
 
   if btnStart.Enabled then //Only if not running TODO: Disable when started
   begin
