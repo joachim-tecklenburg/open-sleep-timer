@@ -1,11 +1,12 @@
 object fMainform: TfMainform
-  Left = 222
+  Left = 131
   Height = 433
-  Top = -826
+  Top = -916
   Width = 435
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 413
   ClientWidth = 435
+  Color = clWhite
   Menu = mnMainMenu
   OnClose = FormClose
   OnShow = FormShow
@@ -91,6 +92,7 @@ object fMainform: TfMainform
     Width = 80
     Caption = 'Target volume:'
     ParentColor = False
+    ParentFont = False
   end
   object lblShowTargetVolume: TLabel
     Left = 391
@@ -148,11 +150,14 @@ object fMainform: TfMainform
     AntialiasingMode = amOn
     AxisList = <    
       item
+        Grid.Color = clSilver
         Minors = <>
         Title.LabelFont.Orientation = 900
       end    
       item
+        Grid.Color = clSilver
         Alignment = calBottom
+        AxisPen.Visible = True
         Minors = <>
       end>
     BackColor = clWhite
@@ -164,8 +169,9 @@ object fMainform: TfMainform
       'TAChart'
     )
     Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clWhite
     object Chart1LineSeries1: TLineSeries
-      LinePen.Color = clBlue
+      LinePen.Color = clMenuHighlight
     end
   end
   object mnMainMenu: TMainMenu

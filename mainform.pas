@@ -69,6 +69,7 @@ var
   iMinutesLapsed: Integer;
   aVolumeLevels: Array[0..1000] of Double;
   iVolumeArrayCounter: Integer = 0;
+  sTitlebarCaption: String = 'Open Sleep Timer v0.4';
   //TODO: Define default values as constants
 
 
@@ -106,6 +107,8 @@ begin
   //Chart1.LeftAxis.Range.Min:=0;
   //Chart1.LeftAxis.Range.UseMax:=True;
   //Chart1.LeftAxis.Range.Max:=100;
+
+  fMainform.Caption := sTitlebarCaption;
 end;
 
 //Update Diagram
@@ -250,6 +253,8 @@ begin
 
   iMinutesLapsed := 0;
 
+  edMinutesUntilStop.MinValue := 0;
+
   //start count down
   tmrCountDown.Enabled := True;
 
@@ -260,8 +265,6 @@ end;
 //***************************************
 procedure TfMainform.btnStopClick(Sender: TObject); //TODO: Rename
 begin
-  //StopCountDown;
-  //fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
   StopCountDown(Sender);
 end;
 
@@ -270,8 +273,8 @@ end;
 //*************************************************************
 procedure TfMainform.edMinutesUntilStartChange(Sender: TObject); //TODO: Rename
 begin
-  if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
-    edMinutesUntilStart.Value := edMinutesUntilStop.Value;
+  {if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
+    edMinutesUntilStart.Value := edMinutesUntilStop.Value;}
 
   edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
 
@@ -286,10 +289,11 @@ end;
 //*****************************************************
 procedure TfMainform.edMinutesUntilStopChange(Sender: TObject);
 begin
-  {if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
-    edMinutesUntilStart.Value := edMinutesUntilStop.Value;
 
-  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;}
+  if btnStart.Enabled then //if not running
+  begin
+    edMinutesUntilStop.MinValue := edMinutesUntilStart.Value;
+  end;
 
   if btnStart.Enabled then //Only if not running TODO: Disable when started
   begin
@@ -313,6 +317,13 @@ procedure TfMainform.UpdateButtons;
 begin
     btnStart.Enabled := not btnStart.Enabled;
     btnStop.Enabled := not btnStop.Enabled;
+    {
+    tbTargetVolume.Enabled := not tbTargetVolume.Enabled;
+    tbCurrentVolume.Enabled := not tbCurrentVolume.Enabled;
+    edMinutesUntilStart.Enabled := not edMinutesUntilStart.Enabled;
+    edMinutesUntilStop.Enabled := not edMinutesUntilStop.Enabled;
+    chkStandby.Enabled := not chkStandby.Enabled;
+    }
 end;
 
 
@@ -375,11 +386,13 @@ begin
   iMinutesDelay := edMinutesUntilStart.Value;
 
   //TODO: calculate remaining minutes beforehand, then make timer interval shorter (for responsiveness)
-  edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
+  //edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
   iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
+  fMainform.Caption := sTitlebarCaption + ' - Remaining Minutes: ' + IntToStr(iDurationSetByUser - iMinutesLapsed);
 
   //check current parameters
-  bTimeIsUp := edMinutesUntilStop.Value <= 0;
+  //bTimeIsUp := edMinutesUntilStop.Value <= 0;
+  bTimeIsUp := (iDurationSetByUser - iMinutesLapsed) <= 0;
   iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
 
   //check if target volume reached depending on rising/falling curve
@@ -423,6 +436,10 @@ begin
 
   //Reset Counter
   iVolumeArrayCounter := 0;
+
+  fMainform.Caption := sTitlebarCaption;
+
+
 end;
 
 
