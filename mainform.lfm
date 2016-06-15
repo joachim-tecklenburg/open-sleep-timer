@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 460
+  Left = 222
   Height = 433
-  Top = 172
+  Top = -826
   Width = 435
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 413
@@ -40,6 +40,7 @@ object fMainform: TfMainform
     MaxValue = 1000000
     OnChange = edMinutesUntilStopChange
     TabOrder = 2
+    Value = 75
   end
   object lblMinutesUntilStop: TLabel
     Left = 16
@@ -59,6 +60,7 @@ object fMainform: TfMainform
     MaxValue = 1000
     OnChange = edMinutesUntilStartChange
     TabOrder = 1
+    Value = 15
   end
   object lblMinutesUntilStart: TLabel
     Left = 16
@@ -76,7 +78,7 @@ object fMainform: TfMainform
     Width = 243
     Max = 100
     OnChange = tbTargetVolumeChange
-    Position = 0
+    Position = 20
     ShowSelRange = False
     TickStyle = tsNone
     Anchors = [akTop, akLeft, akRight]
@@ -123,7 +125,7 @@ object fMainform: TfMainform
     Width = 243
     Max = 100
     OnChange = tbCurrentVolumeChange
-    Position = 0
+    Position = 50
     ShowSelRange = False
     TickStyle = tsNone
     Anchors = [akTop, akLeft, akRight]

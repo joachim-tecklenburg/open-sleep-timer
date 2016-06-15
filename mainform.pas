@@ -41,7 +41,6 @@ type
     procedure edMinutesUntilStopChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
-    //procedure AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
     procedure MenuItem2Click(Sender: TObject);
     procedure miAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
@@ -86,12 +85,8 @@ var
   iniConfigFile: TINIFile; //TODO: Move config.ini access to func
   bStartCountdownAutomatically: Boolean;
 begin
-  //tbTargetVolume.Min := 0;
-  //tbTargetVolume.Max := 100;
-  //tbTargetVolume.PageSize := 5;
-
   parseConfigFile;
-  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
+//  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
   //TODO: move trackbar change to form show?
   UpdateShowCurrentVolumeLabel;
 
@@ -118,12 +113,13 @@ end;
 procedure TfMainform.updateDiagram;
 var
   i: Integer;
-  dSteigung: Double;
-  dYAbschnitt: Double;
+  dSlope: Double;
+  dYintercept: Double;
   iDuration: Integer;
   iDelayedStart: Integer;
   iTargetVolume: Integer;
   iCurrentVolume: Integer;
+  dSlopeStop: Double;
 
 begin
   iDelayedStart := edMinutesUntilStart.Value;
@@ -131,16 +127,31 @@ begin
   iCurrentVolume := tbCurrentVolume.Position;
   iDuration := edMinutesUntilStop.Value;
 
+  if (iDuration - iDelayedStart <> 0) then
+  begin
+    dSlope := (iTargetVolume - iCurrentVolume) / (iDuration - iDelayedStart);
+  end
+  else begin
+    dSlope := -10000;
+  end;
 
-  dSteigung := (iTargetVolume - iCurrentVolume) / (55 - 15);
-  dYAbschnitt := dSteigung *-1 * iDelayedStart + iCurrentVolume;
+  dYintercept := dSlope *-1 * iDelayedStart + iCurrentVolume;
 
-  for i:=0 to iDelayedStart do begin
+  if dSlope <> 0 then
+    dSlopeStop := (iTargetVolume - dYintercept) / dSlope;
+
+  for i := 0 to iDelayedStart do
+  begin
     Chart1LineSeries1.AddXY(i, iCurrentVolume);
   end;
-  for i:=iDelayedStart to iDuration do begin
-    Chart1LineSeries1.AddXY(i, i * dSteigung + dYAbschnitt);
+  for i := iDelayedStart to Trunc(dSlopeStop) do
+  begin
+    Chart1LineSeries1.AddXY(i, i * dSlope + dYintercept);
   end;
+  {for i := Trunc(dSlopeStop) to iDuration do
+  begin
+    Chart1LineSeries1.AddXY(i, iTargetVolume);
+  end;}
 end;
 
 //Parse Config File
@@ -226,15 +237,6 @@ begin
     aVolumeLevels[i] := aVolumeLevels[i-1] - dVolumeStepsize
   end;
 
-
-
-  //calculate new volume level
-
-
-  //dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
-
-
-
   UpdateButtons; //enable/disable start/stop-buttons
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
   iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
@@ -266,7 +268,7 @@ end;
 procedure TfMainform.edMinutesUntilStartChange(Sender: TObject); //TODO: Rename
 begin
 
-  if btnStart.Enabled then //Only if not running
+  if btnStart.Enabled then //Only if not running  TODO: Disable when Started
   begin
     Chart1LineSeries1.Clear;
     UpdateDiagram;
@@ -282,7 +284,7 @@ begin
 
   edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
 
-  if btnStart.Enabled then //Only if not running
+  if btnStart.Enabled then //Only if not running TODO: Disable when started
   begin
     Chart1LineSeries1.Clear;
     UpdateDiagram;
@@ -306,35 +308,6 @@ begin
     btnStop.Enabled := not btnStop.Enabled;
 end;
 
-{
-//Adjust Volume
-//****************************************
-procedure TfMainform.AdjustVolume(iMinutesUntilStop: Integer; iTargetVolume: Integer);
-var
-  dCurrentVolume: Double;
-  dVolumeStepSize: Double;
-  dNewVolumeLevel: Double;
-  dVolumeStepsTotal: Double;
-begin
-
-  //read current audio volume from system
-  dCurrentVolume := VolumeControl.GetMasterVolume();
-
-  //calculate new volume level
-  if iMinutesUntilStop > 0 then //TODO: Prüfung zum Timer verschieben
-  begin
-    dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
-    dVolumeStepSize := (dVolumeStepsTotal / iMinutesUntilStop) / 100;
-  end;
-  dNewVolumeLevel := max((dCurrentVolume - dVolumeStepSize), 0);
-
-  //Set new Volume
-  tbCurrentVolume.Position := Trunc(dNewVolumeLevel * 100);
-
-  //Update Label
-  UpdateShowCurrentVolumeLabel;
-end;
-}
 
 procedure TfMainform.MenuItem2Click(Sender: TObject);
 begin
