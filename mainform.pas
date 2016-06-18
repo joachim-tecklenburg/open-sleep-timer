@@ -161,7 +161,7 @@ begin
   end;
 end;
 
-//Save Settings
+//Save to Config File
 //*****************************************
 procedure TfMainform.saveSettings;
 var
@@ -181,29 +181,18 @@ end;
 //******************************************
 procedure TfMainform.btnStartClick(Sender: TObject);
 var
-  dCurrentVolume: Double;
-  dVolumeStepSize: Double;
-  dVolumeStepsTotal: Double;
-  i: Integer;
-  iMinutesUntilStop: Integer;
-  iTargetVolume: Integer;
-  iMinutesUntilStart: Integer;
+  dCurrentVolume, dVolumeStepSize, dVolumeStepsTotal: Double;
+  i, iMinutesUntilStop, iMinutesUntilStart, iTargetVolume: Integer;
 
 begin
-  //Volume Gesamt-Differenz ermitteln
-  //Anhand der Gesamtzeit einzelne Volume-Schritte ermitteln
-  //Die Volume-Level vorberechnen und in einem Array ablegen
-  //Das Array ist global
-  //Es gibt außerdem einen globalen Zähler, der vom Timer hochgezählt wird
-  //(if >Delayed Start, <Target Volume) wird zum Zähler das Volumelevel aus dem Array genommen und an AdjustVolume übergeben
-
   iMinutesUntilStop := edMinutesUntilStop.Value;
   iTargetVolume := tbTargetVolume.Position;
   iMinutesUntilStart := edMinutesUntilStart.Value;
-
-  //read current audio volume from system
   dCurrentVolume := VolumeControl.GetMasterVolume();
+  dVolumeLevelAtStart := dCurrentVolume;
+  iMinutesLapsed := 0;
 
+  //Calculate Volume Steps
   dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
   if (iMinutesUntilStop - iMinutesUntilStart <> 0) then
   begin
@@ -213,22 +202,18 @@ begin
     dVolumeStepSize := 0.00000000000001;
   end;
 
-
+  //Calculate Volume Levels
   aVolumeLevels[0] := dCurrentVolume;
   for i := 1 to iMinutesUntilStop do begin
     aVolumeLevels[i] := aVolumeLevels[i-1] - dVolumeStepsize
   end;
 
-  UpdateButtons; //enable/disable start/stop-buttons
-  dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
-
   //if testmode -> faster contdown
   if bTestMode = true then
     tmrCountDown.Interval := 1000;
 
-  iMinutesLapsed := 0;
-
-  edMinutesUntilStop.MinValue := 0;
+  //disable / enable Buttons
+  UpdateButtons;
 
   //start count down
   tmrCountDown.Enabled := True;
