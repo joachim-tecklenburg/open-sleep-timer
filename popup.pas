@@ -38,7 +38,6 @@ uses
 procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
   fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
-  //fMainform.edMinutesUntilStop.Value := iMinutesRemaining;
   fPopUp.Close;
 
 end;

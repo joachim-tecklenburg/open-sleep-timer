@@ -51,7 +51,7 @@ type
     procedure UpdateShowCurrentVolumeLabel;
     procedure parseConfigFile;
     procedure saveSettings;
-    procedure updateDiagram;
+    procedure drawGraph;
 
   private
     { private declarations }
@@ -61,7 +61,6 @@ type
 
 var
   fMainform: TfMainform;
-  //iMinutesRemaining: Integer;
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
   iMinutesLapsed: Integer;
@@ -84,9 +83,6 @@ var
   bStartCountdownAutomatically: Boolean;
 begin
   parseConfigFile;
-//  tbTargetVolumeChange(NIL); //Update lblShowTargetVolume.Caption
-  //TODO: move trackbar change to form show?
-  UpdateShowCurrentVolumeLabel;
 
   //Check if Countdown should start immedately
   iniConfigFile := TINIFile.Create('config.ini'); //TODO: Move config.ini access to func
@@ -94,39 +90,22 @@ begin
   if bStartCountdownAutomatically then
     btnStartClick(Application);
 
-  //Style Settings for Diagram
-  Chart1.BackColor:=clWhite;
-  Chart1.Extent.UseYMin:=True;
-  Chart1.Extent.YMin:=0;
-  Chart1.Extent.UseYMax:=True;
-  Chart1.Extent.YMax:=100;
-  //Chart1.LeftAxis.Range.UseMin:=True;
-  //Chart1.LeftAxis.Range.Min:=0;
-  //Chart1.LeftAxis.Range.UseMax:=True;
-  //Chart1.LeftAxis.Range.Max:=100;
-
   fMainform.Caption := sTitlebarCaption;
 end;
 
 //Update Diagram
 //******************************************
-procedure TfMainform.updateDiagram;
+procedure TfMainform.drawGraph;
 var
-  i: Integer;
-  dSlope: Double;
-  dYintercept: Double;
-  iDuration: Integer;
-  iDelayedStart: Integer;
-  iTargetVolume: Integer;
-  iCurrentVolume: Integer;
-  dSlopeStop: Double;
-
+  dSlope, dYintercept, dGraphEnd: Double;
+  i, iDuration, iDelayedStart, iTargetVolume, iCurrentVolume: Integer;
 begin
   iDelayedStart := edMinutesUntilStart.Value;
   iTargetVolume := tbTargetVolume.Position;
   iCurrentVolume := tbCurrentVolume.Position;
   iDuration := edMinutesUntilStop.Value;
 
+  //Calculate Slope
   if (iDuration - iDelayedStart <> 0) then
   begin
     dSlope := (iTargetVolume - iCurrentVolume) / (iDuration - iDelayedStart);
@@ -135,23 +114,25 @@ begin
     dSlope := -10000;
   end;
 
+  //Calculate Start- and Endpoints of Graph
   dYintercept := dSlope *-1 * iDelayedStart + iCurrentVolume;
-
   if dSlope <> 0 then
-    dSlopeStop := (iTargetVolume - dYintercept) / dSlope;
+  begin
+    dGraphEnd := (iTargetVolume - dYintercept) / dSlope;
+  end
+  else begin
+    dGraphEnd := iDuration;
+  end;
 
+  //Draw Chart
   for i := 0 to iDelayedStart do
   begin
     Chart1LineSeries1.AddXY(i, iCurrentVolume);
   end;
-  for i := iDelayedStart to Trunc(dSlopeStop) do
+  for i := iDelayedStart to Trunc(dGraphEnd) do
   begin
     Chart1LineSeries1.AddXY(i, i * dSlope + dYintercept);
   end;
-  {for i := Trunc(dSlopeStop) to iDuration do
-  begin
-    Chart1LineSeries1.AddXY(i, iTargetVolume);
-  end;}
 end;
 
 //Parse Config File
@@ -242,7 +223,6 @@ begin
 
   UpdateButtons; //enable/disable start/stop-buttons
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
-  //iMinutesRemaining := edMinutesUntilStop.Value; //Keep initial Duration in Mind
 
   //if testmode -> faster contdown
   if bTestMode = true then
@@ -278,7 +258,7 @@ begin
   if btnStart.Enabled then //Only if not running  TODO: Disable when Started
   begin
     Chart1LineSeries1.Clear;
-    UpdateDiagram;
+    drawGraph;
   end;
 end;
 
@@ -295,7 +275,7 @@ begin
   if btnStart.Enabled then //Only if not running TODO: Disable when started
   begin
     Chart1LineSeries1.Clear;
-    UpdateDiagram;
+    drawGraph;
   end;
 end;
 
@@ -347,7 +327,7 @@ begin
   if btnStart.Enabled then //Only if not running
   begin
     Chart1LineSeries1.Clear;
-    UpdateDiagram;
+    drawGraph;
   end;
 end;
 
@@ -366,7 +346,7 @@ begin
   if btnStart.Enabled then //Only if not running
   begin
     Chart1LineSeries1.Clear;
-    UpdateDiagram;
+    drawGraph;
   end;
 end;
 

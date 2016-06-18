@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 131
+  Left = 122
   Height = 433
-  Top = -916
+  Top = -887
   Width = 435
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 413
@@ -161,6 +161,9 @@ object fMainform: TfMainform
         Minors = <>
       end>
     BackColor = clWhite
+    Extent.UseYMax = True
+    Extent.UseYMin = True
+    Extent.YMax = 100
     Foot.Brush.Color = clBtnFace
     Foot.Font.Color = clBlue
     Title.Brush.Color = clBtnFace
