@@ -7,7 +7,7 @@ interface
 uses
   Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASeries,
   Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, IniFiles;
+  VolumeControl, PopUp, optionsform, math, IniFiles;
 
 type
 
@@ -43,6 +43,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure MenuItemOptionsClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
+    procedure tbCurrentVolumeMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure tbCurrentVolumeMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure tbCurrentVolumeChange(Sender: TObject);
     procedure tmrCountDownTimer(Sender: TObject);
@@ -51,6 +55,7 @@ type
     procedure readConfigFile;
     procedure saveSettings;
     procedure drawGraph;
+    procedure AdjustVolume;
 
   private
     { private declarations }
@@ -63,8 +68,10 @@ var
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
   iMinutesLapsed: Integer;
-  aVolumeLevels: Array[0..1000] of Double;
+  aVolumeLevels: Array[0..10000] of Double;
   iVolumeArrayCounter: Integer = 0;
+  dPreviousVolume: Double;
+  btbCurrentVolumeMouseDown: Boolean;
   const sTitlebarCaption: String = 'Open Sleep Timer v0.4';
 
 
@@ -177,36 +184,47 @@ begin
   iniConfigfile.Writebool('main', 'GoToStandby', chkStandby.Checked);
 end;
 
-//Start Button
-//******************************************
-procedure TfMainform.btnStartClick(Sender: TObject);
+//Adjust Volume
+//****************************************
+procedure TfMainform.AdjustVolume;
 var
-  dCurrentVolume, dVolumeStepSize, dVolumeStepsTotal: Double;
-  i, iMinutesUntilStop, iMinutesUntilStart, iTargetVolume: Integer;
-
+  //dPreviousVolume: Double;
+  dVolumeStepSize: Double;
+  dNewVolumeLevel: Double;
+  dVolumeStepsTotal: Double;
+  iMinutesDuration: Integer;
+  iTargetVolume: Integer;
+  iMinutesRemaining: Integer;
+  iMinutesDelay: Integer;
 begin
-  iMinutesUntilStop := edMinutesDuration.Value;
+  iMinutesDuration := edMinutesDuration.Value;
   iTargetVolume := tbTargetVolume.Position;
-  iMinutesUntilStart := edMinutesDelay.Value;
-  dCurrentVolume := VolumeControl.GetMasterVolume();
-  dVolumeLevelAtStart := dCurrentVolume;
-  iMinutesLapsed := 0;
+  iMinutesRemaining := iMinutesDuration - iMinutesLapsed;
+  iMinutesDelay := edMinutesDelay.Value;
 
-  //Calculate Volume Steps
-  dVolumeStepsTotal := dCurrentVolume * 100 - iTargetVolume;
-  if (iMinutesUntilStop - iMinutesUntilStart <> 0) then
+  //calculate new volume level
+  dVolumeStepsTotal := dPreviousVolume * 100 - iTargetVolume;
+  if (iMinutesRemaining - iMinutesDelay > 0) then
   begin
-    dVolumeStepSize := (dVolumeStepsTotal / (iMinutesUntilStop - iMinutesUntilStart)) / 100;
+    dVolumeStepSize := (dVolumeStepsTotal / (iMinutesRemaining - iMinutesDelay)) / 100;
   end
   else begin
     dVolumeStepSize := 0.00000000000001;
   end;
+  dNewVolumeLevel := max((dPreviousVolume - dVolumeStepSize), 0);
+  dPreviousVolume := dNewVolumeLevel;
 
-  //Calculate Volume Levels
-  aVolumeLevels[0] := dCurrentVolume;
-  for i := 1 to iMinutesUntilStop do begin
-    aVolumeLevels[i] := aVolumeLevels[i-1] - dVolumeStepsize
-  end;
+  //Set new Volume
+  tbCurrentVolume.Position := Round(dNewVolumeLevel * 100);
+end;
+
+//Start Button
+//******************************************
+procedure TfMainform.btnStartClick(Sender: TObject);
+begin
+  dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
+  dPreviousVolume := dVolumeLevelAtStart;
+  iMinutesLapsed := 0;
 
   //if testmode -> faster contdown
   if bTestMode = true then
@@ -229,7 +247,7 @@ end;
 
 //edMinutesDelay OnChange of Delayed Start Field
 //*************************************************************
-procedure TfMainform.edMinutesDelayChange(Sender: TObject); //TODO: Rename
+procedure TfMainform.edMinutesDelayChange(Sender: TObject);
 begin
   edMinutesDelay.MaxValue := edMinutesDuration.Value;
   drawGraph;
@@ -269,6 +287,19 @@ begin
   fOptionsForm.Show;
 end;
 
+//Check CurrentVolumeMouseDown
+//*********************************************
+procedure TfMainform.tbCurrentVolumeMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  btbCurrentVolumeMouseDown:=True;
+end;
+procedure TfMainform.tbCurrentVolumeMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  btbCurrentVolumeMouseDown:=False;
+end;
+
 //tbTargetVolumeChange - Update Display of Target Volume near Slider
 //****************************************************
 procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
@@ -284,9 +315,11 @@ var
   iNewVolumeLevel: Integer;
 begin
   iNewVolumeLevel := tbCurrentVolume.Position;
+  dPreviousVolume := Double(iNewVolumeLevel) / 100;
   VolumeControl.SetMasterVolume(Double(iNewVolumeLevel) / 100);
   fMainform.lblShowCurrentVolume.Caption := IntToStr(tbCurrentVolume.Position) + '%';
-  drawGraph;
+  if {btnStart.Enabled and }btbCurrentVolumeMouseDown then
+    drawGraph;
 end;
 
 //Timer CountDown (default = 1 minute)
@@ -309,7 +342,8 @@ begin
   if bStartReached then
   begin
     Inc(iVolumeArrayCounter);
-    tbCurrentVolume.Position := Round(aVolumeLevels[iVolumeArrayCounter]*100);
+    //tbCurrentVolume.Position := Round(aVolumeLevels[iVolumeArrayCounter]*100);
+    AdjustVolume;
   end;
 
   if bTimeIsUp then
