@@ -35,6 +35,8 @@ uses
 
 { TfPopUp }
 
+//OK Button
+//******************************************************
 procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
   fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
@@ -42,13 +44,16 @@ begin
 
 end;
 
+
+//Form Close
+//*******************************************************
 procedure TfPopUp.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
    iniConfigFile: TINIFile;
 begin
    iniConfigFile := TINIFile.Create('config.ini');
   try
-    iniConfigFile.WriteString('main', 'PopUpLeft', IntToStr(fPopUp.Left));
+    iniConfigFile.WriteInteger('main', 'PopUpLeft', fPopUp.Left);
     iniConfigFile.WriteInteger('main', 'PopUpTop', fPopUp.Top);
   finally
     iniConfigFile.Free

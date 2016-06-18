@@ -18,7 +18,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TfMainform, fMainform);
   Application.CreateForm(TfPopUp, fPopUp);
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfOptionsForm, fOptionsForm);
   Application.Run;
 end.
 

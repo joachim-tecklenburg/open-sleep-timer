@@ -49,7 +49,7 @@ type
     procedure UpdateButtons;
     procedure StopCountDown(Sender: TObject);
     procedure UpdateShowCurrentVolumeLabel;
-    procedure parseConfigFile;
+    procedure readConfigFile;
     procedure saveSettings;
     procedure drawGraph;
 
@@ -82,7 +82,7 @@ var
   iniConfigFile: TINIFile; //TODO: Move config.ini access to func
   bStartCountdownAutomatically: Boolean;
 begin
-  parseConfigFile;
+  readConfigFile;
 
   //Check if Countdown should start immedately
   iniConfigFile := TINIFile.Create('config.ini'); //TODO: Move config.ini access to func
@@ -93,7 +93,7 @@ begin
   fMainform.Caption := sTitlebarCaption;
 end;
 
-//Update Diagram
+//Draw Graph
 //******************************************
 procedure TfMainform.drawGraph;
 var
@@ -124,7 +124,7 @@ begin
     dGraphEnd := iDuration;
   end;
 
-  //Draw Chart
+  //Draw Line
   for i := 0 to iDelayedStart do
   begin
     Chart1LineSeries1.AddXY(i, iCurrentVolume);
@@ -135,9 +135,9 @@ begin
   end;
 end;
 
-//Parse Config File
+//Read Config File
 //******************************************
-procedure TfMainform.parseConfigFile;
+procedure TfMainform.readConfigFile;
 var
   iniConfigFile: TINIFile;
 begin
@@ -155,10 +155,8 @@ begin
     fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
     fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
     fPopUp.Top := iniConfigFile.ReadInteger('main', 'PopUpTop', 270);
-
-    //TODO: Put in config file
-    Form1.Left := 300;
-    Form1.Top := 200;
+    fOptionsForm.Left := iniConfigFile.ReadInteger('main', 'OptionsFormLeft', 300);
+    fOptionsForm.Top := iniConfigFile.ReadInteger('main', 'OptionsFormTop', 300);
   finally
   end;
 end;
@@ -306,7 +304,7 @@ end;
 
 procedure TfMainform.MenuItem2Click(Sender: TObject);
 begin
-  Form1.Show;
+  fOptionsForm.Show;
 end;
 
 

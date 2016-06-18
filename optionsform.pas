@@ -10,12 +10,13 @@ uses
 
 type
 
-  { TForm1 }
+  { TfOptionsForm }
 
-  TForm1 = class(TForm)
+  TfOptionsForm = class(TForm)
     chkStartCountdownAutomatically: TCheckBox;
     MainMenu1: TMainMenu;
     procedure chkStartCountdownAutomaticallyChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -24,17 +25,17 @@ type
   end;
 
 var
-  Form1: TForm1;
+  fOptionsForm: TfOptionsForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TfOptionsForm }
 
 //OnChange - Start Countdown automatically
 //**********************************************
-procedure TForm1.chkStartCountdownAutomaticallyChange(Sender: TObject);
+procedure TfOptionsForm.chkStartCountdownAutomaticallyChange(Sender: TObject);
 var
   iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops
 begin
@@ -43,9 +44,26 @@ begin
 end;
 
 
+//Form Close
+//**********************************************
+procedure TfOptionsForm.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+var
+   iniConfigFile: TINIFile;
+begin
+   iniConfigFile := TINIFile.Create('config.ini');
+  try
+    iniConfigFile.WriteInteger('main', 'OptionsFormLeft', fOptionsForm.Left);
+    iniConfigFile.WriteInteger('main', 'OptionsFormTop', fOptionsForm.Top);
+  finally
+    iniConfigFile.Free
+  end;
+end;
+
+
 //Form Create
 //***********************************************
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfOptionsForm.FormCreate(Sender: TObject);
 var
   iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops;
 begin
