@@ -19,36 +19,35 @@ type
     Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
     chkStandby: TCheckBox;
-    edMinutesUntilStart: TSpinEdit;
+    edMinutesDelay: TSpinEdit;
     lblCurrentVolume: TLabel;
     lblShowCurrentVolume: TLabel;
     lblShowTargetVolume: TLabel;
     lblTargetVolume: TLabel;
     lblMinutesUntilStop: TLabel;
-    edMinutesUntilStop: TSpinEdit;
+    edMinutesDuration: TSpinEdit;
     lblMinutesUntilStart: TLabel;
-    MenuItem2: TMenuItem;
+    MenuItemOptions: TMenuItem;
     mnMainMenu: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem4: TMenuItem;
-    miAbout: TMenuItem;
+    MenuItemAbout: TMenuItem;
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
     tmrCountDown: TTimer;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
-    procedure edMinutesUntilStartChange(Sender: TObject);
-    procedure edMinutesUntilStopChange(Sender: TObject);
+    procedure edMinutesDelayChange(Sender: TObject);
+    procedure edMinutesDurationChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure MenuItem2Click(Sender: TObject);
-    procedure miAboutClick(Sender: TObject);
+    procedure MenuItemOptionsClick(Sender: TObject);
+    procedure MenuItemAboutClick(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure tbCurrentVolumeChange(Sender: TObject);
     procedure tmrCountDownTimer(Sender: TObject);
     procedure UpdateButtons;
     procedure StopCountDown(Sender: TObject);
-    procedure UpdateShowCurrentVolumeLabel;
     procedure readConfigFile;
     procedure saveSettings;
     procedure drawGraph;
@@ -100,10 +99,10 @@ var
   dSlope, dYintercept, dGraphEnd: Double;
   i, iDuration, iDelayedStart, iTargetVolume, iCurrentVolume: Integer;
 begin
-  iDelayedStart := edMinutesUntilStart.Value;
+  iDelayedStart := edMinutesDelay.Value;
   iTargetVolume := tbTargetVolume.Position;
   iCurrentVolume := tbCurrentVolume.Position;
-  iDuration := edMinutesUntilStop.Value;
+  iDuration := edMinutesDuration.Value;
 
   //Calculate Slope
   if (iDuration - iDelayedStart <> 0) then
@@ -125,6 +124,7 @@ begin
   end;
 
   //Draw Line
+  Chart1LineSeries1.Clear;
   for i := 0 to iDelayedStart do
   begin
     Chart1LineSeries1.AddXY(i, iCurrentVolume);
@@ -144,10 +144,10 @@ begin
    iniConfigFile := TINIFile.Create('config.ini');
   try
     bTestMode := iniConfigFile.ReadBool('development', 'TestMode', false);
-    edMinutesUntilStop.Value := iniConfigFile.ReadInteger('main', 'DurationDefault', 75);
-    edMinutesUntilStop.Increment := iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
-    edMinutesUntilStart.Value := iniConfigFile.ReadInteger('main', 'DelayDefault', 20);
-    edMinutesUntilStart.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
+    edMinutesDuration.Value := iniConfigFile.ReadInteger('main', 'DurationDefault', 75);
+    edMinutesDuration.Increment := iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
+    edMinutesDelay.Value := iniConfigFile.ReadInteger('main', 'DelayDefault', 20);
+    edMinutesDelay.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
     tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
     tbCurrentVolume.Position := iniConfigFile.ReadInteger('main', 'DefaultVolume', 30);
     chkStandby.Checked := iniConfigfile.Readbool('main', 'GoToStandby', False);
@@ -170,10 +170,10 @@ begin
   iniConfigFile := TINIFile.Create('config.ini');
   iniConfigFile.WriteInteger('main', 'TargetVolume', tbTargetVolume.Position);
   iniConfigFile.WriteInteger('main', 'DefaultVolume', tbCurrentVolume.Position);
-  iniConfigFile.WriteInteger('main', 'DurationDefault', edMinutesUntilStop.Value);
+  iniConfigFile.WriteInteger('main', 'DurationDefault', edMinutesDuration.Value);
   iniConfigFile.WriteInteger('main', 'MainformLeft', fMainform.Left);
   iniConfigFile.WriteInteger('main', 'MainformTop', fMainform.Top);
-  iniConfigFile.WriteInteger('main', 'DelayDefault', edMinutesUntilStart.Value);
+  iniConfigFile.WriteInteger('main', 'DelayDefault', edMinutesDelay.Value);
   iniConfigfile.Writebool('main', 'GoToStandby', chkStandby.Checked);
 end;
 
@@ -185,9 +185,9 @@ var
   i, iMinutesUntilStop, iMinutesUntilStart, iTargetVolume: Integer;
 
 begin
-  iMinutesUntilStop := edMinutesUntilStop.Value;
+  iMinutesUntilStop := edMinutesDuration.Value;
   iTargetVolume := tbTargetVolume.Position;
-  iMinutesUntilStart := edMinutesUntilStart.Value;
+  iMinutesUntilStart := edMinutesDelay.Value;
   dCurrentVolume := VolumeControl.GetMasterVolume();
   dVolumeLevelAtStart := dCurrentVolume;
   iMinutesLapsed := 0;
@@ -220,48 +220,28 @@ begin
 
 end;
 
-
 //Stop Button
 //***************************************
-procedure TfMainform.btnStopClick(Sender: TObject); //TODO: Rename
+procedure TfMainform.btnStopClick(Sender: TObject);
 begin
   StopCountDown(Sender);
 end;
 
-
-//edMinutesUntilStart OnChange of Delayed Start Field
+//edMinutesDelay OnChange of Delayed Start Field
 //*************************************************************
-procedure TfMainform.edMinutesUntilStartChange(Sender: TObject); //TODO: Rename
+procedure TfMainform.edMinutesDelayChange(Sender: TObject); //TODO: Rename
 begin
-  {if edMinutesUntilStart.Value > edMinutesUntilStop.Value then
-    edMinutesUntilStart.Value := edMinutesUntilStop.Value;}
-
-  edMinutesUntilStart.MaxValue := edMinutesUntilStop.Value;
-
-  if btnStart.Enabled then //Only if not running  TODO: Disable when Started
-  begin
-    Chart1LineSeries1.Clear;
-    drawGraph;
-  end;
+  edMinutesDelay.MaxValue := edMinutesDuration.Value;
+  drawGraph;
 end;
 
-//edMinutesUntilStop Change - On Change of Duration Field
+//edMinutesDuration Change - On Change of Duration Field
 //*****************************************************
-procedure TfMainform.edMinutesUntilStopChange(Sender: TObject);
+procedure TfMainform.edMinutesDurationChange(Sender: TObject);
 begin
-
-  if btnStart.Enabled then //if not running
-  begin
-    edMinutesUntilStop.MinValue := edMinutesUntilStart.Value;
-  end;
-
-  if btnStart.Enabled then //Only if not running TODO: Disable when started
-  begin
-    Chart1LineSeries1.Clear;
-    drawGraph;
-  end;
+  edMinutesDuration.MinValue := edMinutesDelay.Value;
+  drawGraph;
 end;
-
 
 //OnClose
 //***************************************
@@ -270,67 +250,43 @@ begin
   saveSettings;
 end;
 
-
 //Update Buttons
 //***************************************
 procedure TfMainform.UpdateButtons;
 begin
     btnStart.Enabled := not btnStart.Enabled;
     btnStop.Enabled := not btnStop.Enabled;
-    {
-    tbTargetVolume.Enabled := not tbTargetVolume.Enabled;
-    tbCurrentVolume.Enabled := not tbCurrentVolume.Enabled;
-    edMinutesUntilStart.Enabled := not edMinutesUntilStart.Enabled;
-    edMinutesUntilStop.Enabled := not edMinutesUntilStop.Enabled;
-    chkStandby.Enabled := not chkStandby.Enabled;
-    }
 end;
-
-
-procedure TfMainform.MenuItem2Click(Sender: TObject);
-begin
-  fOptionsForm.Show;
-end;
-
 
 //Menu Procedures
 //********************************************
-procedure TfMainform.miAboutClick(Sender: TObject);
+procedure TfMainform.MenuItemAboutClick(Sender: TObject);
 begin
   showmessage('Open Sleep Timer - https://github.com/achim-tecklenburg/open-sleep-timer');
 end;
-
-
+procedure TfMainform.MenuItemOptionsClick(Sender: TObject);
+begin
+  fOptionsForm.Show;
+end;
 
 //tbTargetVolumeChange - Update Display of Target Volume near Slider
 //****************************************************
 procedure TfMainform.tbTargetVolumeChange(Sender: TObject);
 begin
   lblShowTargetVolume.Caption := IntToStr(tbTargetVolume.Position) + '%';
-  if btnStart.Enabled then //Only if not running
-  begin
-    Chart1LineSeries1.Clear;
-    drawGraph;
-  end;
+  drawGraph;
 end;
-
 
 //Current Volume Trackbar OnChange
 //****************************************************
 procedure TfMainform.tbCurrentVolumeChange(Sender: TObject);
 var
-  dNewVolumeLevel: Double;
   iNewVolumeLevel: Integer;
 begin
   iNewVolumeLevel := tbCurrentVolume.Position;
-  dNewVolumeLevel := Double(iNewVolumeLevel);
-  VolumeControl.SetMasterVolume(dNewVolumeLevel / 100);
-  UpdateShowCurrentVolumeLabel;
-  if btnStart.Enabled then //Only if not running
-  begin
-    Chart1LineSeries1.Clear;
-    drawGraph;
-  end;
+  VolumeControl.SetMasterVolume(Double(iNewVolumeLevel) / 100);
+  fMainform.lblShowCurrentVolume.Caption := IntToStr(tbCurrentVolume.Position) + '%';
+  drawGraph;
 end;
 
 //Timer CountDown (default = 1 minute)
@@ -342,8 +298,8 @@ var
   bTimeIsUp: Boolean;
   bStartReached: Boolean;
 begin
-  iMinutesDelay := edMinutesUntilStart.Value;
-  iMinutesDuration := edMinutesUntilStop.Value;
+  iMinutesDelay := edMinutesDelay.Value;
+  iMinutesDuration := edMinutesDuration.Value;
   iMinutesLapsed := iMinutesLapsed + 1;
   fMainform.Caption := sTitlebarCaption + ' - Remaining Minutes: ' + IntToStr(iMinutesDuration - iMinutesLapsed);
 
@@ -384,11 +340,7 @@ begin
 end;
 
 
-//Update ShowCurrentVolumeLabel
-procedure TfMainform.UpdateShowCurrentVolumeLabel;
-begin
-  fMainform.lblShowCurrentVolume.Caption := IntToStr(tbCurrentVolume.Position) + '%';
-end;
+
 
 end.
 
