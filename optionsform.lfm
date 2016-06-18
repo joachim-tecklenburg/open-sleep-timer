@@ -1,11 +1,12 @@
 object fOptionsForm: TfOptionsForm
-  Left = 339
+  Left = 288
   Height = 82
-  Top = 285
+  Top = 303
   Width = 320
   Caption = 'Options'
   ClientHeight = 82
   ClientWidth = 320
+  Color = clWhite
   Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate

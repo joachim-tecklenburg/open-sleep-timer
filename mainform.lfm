@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 122
+  Left = 245
   Height = 433
-  Top = -887
+  Top = 199
   Width = 435
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 413
@@ -32,14 +32,14 @@ object fMainform: TfMainform
     OnClick = btnStopClick
     TabOrder = 4
   end
-  object edMinutesUntilStop: TSpinEdit
+  object edMinutesDuration: TSpinEdit
     Left = 137
     Height = 23
     Top = 372
     Width = 95
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
-    OnChange = edMinutesUntilStopChange
+    OnChange = edMinutesDurationChange
     TabOrder = 2
     Value = 75
   end
@@ -52,14 +52,14 @@ object fMainform: TfMainform
     Caption = 'Duration in minutes:'
     ParentColor = False
   end
-  object edMinutesUntilStart: TSpinEdit
+  object edMinutesDelay: TSpinEdit
     Left = 137
     Height = 23
     Top = 332
     Width = 95
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
-    OnChange = edMinutesUntilStartChange
+    OnChange = edMinutesDelayChange
     TabOrder = 1
     Value = 15
   end
@@ -131,6 +131,8 @@ object fMainform: TfMainform
     ShowSelRange = False
     TickStyle = tsNone
     Anchors = [akTop, akLeft, akRight]
+    OnMouseDown = tbCurrentVolumeMouseDown
+    OnMouseUp = tbCurrentVolumeMouseUp
     TabOrder = 5
   end
   object chkStandby: TCheckBox
@@ -182,16 +184,16 @@ object fMainform: TfMainform
     top = 152
     object MenuItem1: TMenuItem
       Caption = 'Menu'
-      object MenuItem2: TMenuItem
+      object MenuItemOptions: TMenuItem
         Caption = 'Options'
-        OnClick = MenuItem2Click
+        OnClick = MenuItemOptionsClick
       end
       object MenuItem4: TMenuItem
         Caption = '-'
       end
-      object miAbout: TMenuItem
+      object MenuItemAbout: TMenuItem
         Caption = 'About'
-        OnClick = miAboutClick
+        OnClick = MenuItemAboutClick
       end
     end
   end
