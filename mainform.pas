@@ -5,9 +5,9 @@ unit mainform;
 interface
 
 uses
-  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, {TASources,} TASeries,
+  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASeries,
   Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, Math, IniFiles;
+  VolumeControl, PopUp, optionsform, IniFiles;
 
 type
 
@@ -61,16 +61,13 @@ type
 
 var
   fMainform: TfMainform;
-  bIsStopped: Boolean = False;
-  iDurationDefault: Integer;
-  iDurationSetByUser: Integer;
+  //iMinutesRemaining: Integer;
   dVolumeLevelAtStart: Double;
   bTestMode: Boolean;
   iMinutesLapsed: Integer;
   aVolumeLevels: Array[0..1000] of Double;
   iVolumeArrayCounter: Integer = 0;
-  sTitlebarCaption: String = 'Open Sleep Timer v0.4';
-  //TODO: Define default values as constants
+  const sTitlebarCaption: String = 'Open Sleep Timer v0.4';
 
 
 implementation
@@ -245,7 +242,7 @@ begin
 
   UpdateButtons; //enable/disable start/stop-buttons
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume(); //Save current volume for later
-  iDurationSetByUser := edMinutesUntilStop.Value; //Keep initial Duration in Mind
+  //iMinutesRemaining := edMinutesUntilStop.Value; //Keep initial Duration in Mind
 
   //if testmode -> faster contdown
   if bTestMode = true then
@@ -377,43 +374,26 @@ end;
 //***********************************
 procedure TfMainform.tmrCountDownTimer(Sender: TObject);
 var
-  //iMinutesLapsed: Integer = 0;
   iMinutesDelay: Integer;
+  iMinutesDuration: Integer;
   bTimeIsUp: Boolean;
-  bTargetVolumeNotReached: Boolean;
-  iCurrentVolume: Integer;
+  bStartReached: Boolean;
 begin
   iMinutesDelay := edMinutesUntilStart.Value;
+  iMinutesDuration := edMinutesUntilStop.Value;
+  iMinutesLapsed := iMinutesLapsed + 1;
+  fMainform.Caption := sTitlebarCaption + ' - Remaining Minutes: ' + IntToStr(iMinutesDuration - iMinutesLapsed);
 
-  //TODO: calculate remaining minutes beforehand, then make timer interval shorter (for responsiveness)
-  //edMinutesUntilStop.Value := edMinutesUntilStop.Value - 1; //Count Minutes until stop
-  iMinutesLapsed := iMinutesLapsed + 1; //Count Minutes since start
-  fMainform.Caption := sTitlebarCaption + ' - Remaining Minutes: ' + IntToStr(iDurationSetByUser - iMinutesLapsed);
+  bTimeIsUp := iMinutesLapsed >= iMinutesDuration;
+  bStartReached := iMinutesLapsed > iMinutesDelay;
 
-  //check current parameters
-  //bTimeIsUp := edMinutesUntilStop.Value <= 0;
-  bTimeIsUp := (iDurationSetByUser - iMinutesLapsed) <= 0;
-  iCurrentVolume := Trunc(VolumeControl.GetMasterVolume() * 100); //Get current Volume
-
-  //check if target volume reached depending on rising/falling curve
-  if tbTargetVolume.Position <= tbCurrentVolume.Position then
-  begin
-    bTargetVolumeNotReached := iCurrentVolume > tbTargetVolume.Position;
-  end
-  else begin
-    bTargetVolumeNotReached := iCurrentVolume < tbTargetVolume.Position;
-  end;
-
-  // if Start of vol red. reached, but TargetVolume NOT reached
-  if (iMinutesLapsed > iMinutesDelay) and (bTargetVolumeNotReached) then
+  if bStartReached then
   begin
     Inc(iVolumeArrayCounter);
-    tbCurrentVolume.Position := trunc(aVolumeLevels[iVolumeArrayCounter]*100);
-    //AdjustVolume(edMinutesUntilStop.Value, tbTargetVolume.Position);
+    tbCurrentVolume.Position := Round(aVolumeLevels[iVolumeArrayCounter]*100);
   end;
 
-  //Stop if time is up
-  if bTimeIsUp {or bTargetVolumeReached} then
+  if bTimeIsUp then
     StopCountDown(Self);
 end;
 
@@ -424,19 +404,17 @@ procedure TfMainform.StopCountDown(Sender: TObject);
 var
   s: String;
 begin
-  fPopUp.lblQuestion.Caption := 'Stopped. Restore volume level?';
-  //tmrWaitForStop.Enabled := False; TODO: Remove
   tmrCountDown.Enabled := False;
   fPopUp.Show;
   UpdateButtons;
 
   //Go to Standby at the end (if checked)
-  if (chkStandby.Checked) AND (Sender <> btnStop) then //Standby option / Stop Buttton NOT pressed
+  if (chkStandby.Checked) AND (Sender <> btnStop) then
     process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState Standby', s);
 
   //Reset Counter
   iVolumeArrayCounter := 0;
-
+  //Reset Titlebar
   fMainform.Caption := sTitlebarCaption;
 
 
