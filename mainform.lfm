@@ -19,7 +19,7 @@ object fMainform: TfMainform
     Anchors = [akRight, akBottom]
     Caption = 'Start'
     OnClick = btnStartClick
-    TabOrder = 3
+    TabOrder = 4
   end
   object btnStop: TButton
     Left = 338
@@ -30,7 +30,7 @@ object fMainform: TfMainform
     Caption = 'Stop'
     Enabled = False
     OnClick = btnStopClick
-    TabOrder = 4
+    TabOrder = 5
   end
   object edMinutesDuration: TSpinEdit
     Left = 137
@@ -40,7 +40,7 @@ object fMainform: TfMainform
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
     OnChange = edMinutesDurationChange
-    TabOrder = 2
+    TabOrder = 3
     Value = 75
   end
   object lblMinutesUntilStop: TLabel
@@ -60,7 +60,7 @@ object fMainform: TfMainform
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
     OnChange = edMinutesDelayChange
-    TabOrder = 1
+    TabOrder = 2
     Value = 15
   end
   object lblMinutesUntilStart: TLabel
@@ -133,7 +133,7 @@ object fMainform: TfMainform
     Anchors = [akTop, akLeft, akRight]
     OnMouseDown = tbCurrentVolumeMouseDown
     OnMouseUp = tbCurrentVolumeMouseUp
-    TabOrder = 5
+    TabOrder = 1
   end
   object chkStandby: TCheckBox
     Left = 254
@@ -203,5 +203,19 @@ object fMainform: TfMainform
     OnTimer = tmrCountDownTimer
     left = 416
     top = 72
+  end
+  object ActionList1: TActionList
+    left = 176
+    top = 208
+    object VolumeUp: TAction
+      Caption = 'VolumeUp'
+      OnExecute = VolumeUpExecute
+      ShortCut = 45
+    end
+    object VolumeDown: TAction
+      Caption = 'VolumeDown'
+      OnExecute = VolumeDownExecute
+      ShortCut = 46
+    end
   end
 end

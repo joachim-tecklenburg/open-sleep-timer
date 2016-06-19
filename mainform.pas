@@ -7,13 +7,16 @@ interface
 uses
   Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASeries,
   Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, func;
+  VolumeControl, PopUp, optionsform, math, func, ActnList;
 
 type
 
   { TfMainform }
 
   TfMainform = class(TForm)
+    VolumeDown: TAction;
+    VolumeUp: TAction;
+    ActionList1: TActionList;
     btnStop: TButton;
     btnStart: TButton;
     Chart1: TChart;
@@ -35,6 +38,8 @@ type
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
     tmrCountDown: TTimer;
+    procedure VolumeDownExecute(Sender: TObject);
+    procedure VolumeUpExecute(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure edMinutesDelayChange(Sender: TObject);
@@ -225,6 +230,17 @@ begin
   //start count down
   tmrCountDown.Enabled := True;
 
+end;
+
+//Volume UP/DOWN Shortcuts
+//*************************************
+procedure TfMainform.VolumeUpExecute(Sender: TObject);
+begin
+  tbCurrentVolume.Position := tbCurrentVolume.Position + 1;
+end;
+procedure TfMainform.VolumeDownExecute(Sender: TObject);
+begin
+  tbCurrentVolume.Position := tbCurrentVolume.Position - 1;
 end;
 
 //Stop Button
