@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, IniFiles;
+  Menus, func;
 
 type
 
@@ -41,23 +41,15 @@ procedure TfPopUp.bntRestoreVolumeClick(Sender: TObject);
 begin
   fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
   fPopUp.Close;
-
 end;
 
 
 //Form Close
 //*******************************************************
 procedure TfPopUp.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-var
-   iniConfigFile: TINIFile;
 begin
-   iniConfigFile := TINIFile.Create('config.ini');
-  try
-    iniConfigFile.WriteInteger('main', 'PopUpLeft', fPopUp.Left);
-    iniConfigFile.WriteInteger('main', 'PopUpTop', fPopUp.Top);
-  finally
-    iniConfigFile.Free
-  end;
+  func.writeConfig('main', 'PopUpLeft', fPopUp.Left);
+  func.writeConfig('main', 'PopUpTop', fPopUp.Top);
 end;
 
 end.

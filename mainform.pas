@@ -7,7 +7,7 @@ interface
 uses
   Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASeries,
   Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, IniFiles;
+  VolumeControl, PopUp, optionsform, math, func;
 
 type
 
@@ -52,7 +52,7 @@ type
     procedure tmrCountDownTimer(Sender: TObject);
     procedure UpdateButtons;
     procedure StopCountDown(Sender: TObject);
-    procedure readConfigFile;
+    procedure loadSettings;
     procedure saveSettings;
     procedure drawGraph;
     procedure AdjustVolume;
@@ -85,14 +85,12 @@ implementation
 //*****************************************
 procedure TfMainform.FormShow(Sender: TObject);
 var
-  iniConfigFile: TINIFile; //TODO: Move config.ini access to func
   bStartCountdownAutomatically: Boolean;
 begin
-  readConfigFile;
+  loadSettings;
 
   //Check if Countdown should start immedately
-  iniConfigFile := TINIFile.Create('config.ini'); //TODO: Move config.ini access to func
-  bStartCountdownAutomatically := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically', False);
+  bStartCountdownAutomatically := func.readConfig('options', 'StartCountdownAutomatically', False);
   if bStartCountdownAutomatically then
     btnStartClick(Application);
 
@@ -144,44 +142,35 @@ end;
 
 //Read Config File
 //******************************************
-procedure TfMainform.readConfigFile;
-var
-  iniConfigFile: TINIFile;
+procedure TfMainform.loadSettings;
 begin
-   iniConfigFile := TINIFile.Create('config.ini');
-  try
-    bTestMode := iniConfigFile.ReadBool('development', 'TestMode', false);
-    edMinutesDuration.Value := iniConfigFile.ReadInteger('main', 'DurationDefault', 75);
-    edMinutesDuration.Increment := iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
-    edMinutesDelay.Value := iniConfigFile.ReadInteger('main', 'DelayDefault', 20);
-    edMinutesDelay.Increment:= iniConfigFile.ReadInteger('main', 'MinutesIncrement', 15);
-    tbTargetVolume.Position := iniConfigFile.ReadInteger('main', 'TargetVolume', 10);
-    tbCurrentVolume.Position := iniConfigFile.ReadInteger('main', 'DefaultVolume', 30);
-    chkStandby.Checked := iniConfigfile.Readbool('main', 'GoToStandby', False);
-    fMainform.Left := iniConfigFile.ReadInteger('main', 'MainformLeft', 300);
-    fMainform.Top := iniConfigFile.ReadInteger('main', 'MainformTop', 200);
-    fPopUp.Left := iniConfigFile.ReadInteger('main', 'PopUpLeft', 330);
-    fPopUp.Top := iniConfigFile.ReadInteger('main', 'PopUpTop', 270);
-    fOptionsForm.Left := iniConfigFile.ReadInteger('main', 'OptionsFormLeft', 300);
-    fOptionsForm.Top := iniConfigFile.ReadInteger('main', 'OptionsFormTop', 300);
-  finally
-  end;
+    bTestMode := func.readConfig('development', 'TestMode', false);
+    edMinutesDuration.Value := func.readConfig('main', 'DurationDefault', 75);
+    edMinutesDuration.Increment := func.readConfig('main', 'MinutesIncrement', 15);
+    edMinutesDelay.Value := func.readConfig('main', 'DelayDefault', 20);
+    edMinutesDelay.Increment:= func.readConfig('main', 'MinutesIncrement', 15);
+    tbTargetVolume.Position := func.readConfig('main', 'TargetVolume', 10);
+    tbCurrentVolume.Position := func.readConfig('main', 'DefaultVolume', 30);
+    chkStandby.Checked := func.readConfig('main', 'GoToStandby', False);
+    fMainform.Left := func.readConfig('main', 'MainformLeft', 300);
+    fMainform.Top := func.readConfig('main', 'MainformTop', 200);
+    fPopUp.Left := func.readConfig('main', 'PopUpLeft', 330);
+    fPopUp.Top := func.readConfig('main', 'PopUpTop', 270);
+    fOptionsForm.Left := func.readConfig('main', 'OptionsFormLeft', 300);
+    fOptionsForm.Top := func.readConfig('main', 'OptionsFormTop', 300);
 end;
 
 //Save to Config File
 //*****************************************
 procedure TfMainform.saveSettings;
-var
-  iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create('config.ini');
-  iniConfigFile.WriteInteger('main', 'TargetVolume', tbTargetVolume.Position);
-  iniConfigFile.WriteInteger('main', 'DefaultVolume', tbCurrentVolume.Position);
-  iniConfigFile.WriteInteger('main', 'DurationDefault', edMinutesDuration.Value);
-  iniConfigFile.WriteInteger('main', 'MainformLeft', fMainform.Left);
-  iniConfigFile.WriteInteger('main', 'MainformTop', fMainform.Top);
-  iniConfigFile.WriteInteger('main', 'DelayDefault', edMinutesDelay.Value);
-  iniConfigfile.Writebool('main', 'GoToStandby', chkStandby.Checked);
+  func.writeConfig('main', 'TargetVolume', tbTargetVolume.Position);
+  func.writeConfig('main', 'DefaultVolume', tbCurrentVolume.Position);
+  func.writeConfig('main', 'DurationDefault', edMinutesDuration.Value);
+  func.writeConfig('main', 'MainformLeft', fMainform.Left);
+  func.writeConfig('main', 'MainformTop', fMainform.Top);
+  func.writeConfig('main', 'DelayDefault', edMinutesDelay.Value);
+  func.writeConfig('main', 'GoToStandby', chkStandby.Checked);
 end;
 
 //Adjust Volume

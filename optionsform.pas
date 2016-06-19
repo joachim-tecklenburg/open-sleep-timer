@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus, IniFiles;
+  Graphics, Dialogs, StdCtrls, Menus, func;
 
 type
 
@@ -36,11 +36,9 @@ implementation
 //OnChange - Start Countdown automatically
 //**********************************************
 procedure TfOptionsForm.chkStartCountdownAutomaticallyChange(Sender: TObject);
-var
-  iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops
 begin
-  iniConfigFile := TINIFile.Create('config.ini');
-  iniConfigFile.WriteBool('options', 'StartCountdownAutomatically', chkStartCountDownAutomatically.Checked);
+  func.writeConfig('options', 'StartCountdownAutomatically',
+    chkStartCountDownAutomatically.Checked);
 end;
 
 
@@ -48,28 +46,17 @@ end;
 //**********************************************
 procedure TfOptionsForm.FormClose(Sender: TObject; var CloseAction: TCloseAction
   );
-var
-   iniConfigFile: TINIFile;
 begin
-   iniConfigFile := TINIFile.Create('config.ini');
-  try
-    iniConfigFile.WriteInteger('main', 'OptionsFormLeft', fOptionsForm.Left);
-    iniConfigFile.WriteInteger('main', 'OptionsFormTop', fOptionsForm.Top);
-  finally
-    iniConfigFile.Free
-  end;
+  func.writeConfig('main', 'OptionsFormLeft', fOptionsForm.Left);
+  func.writeConfig('main', 'OptionsFormTop', fOptionsForm.Top);
 end;
 
 
 //Form Create
 //***********************************************
 procedure TfOptionsForm.FormCreate(Sender: TObject);
-var
-  iniConfigFile: TINIFile;  //TODO: One function for all config read / write ops;
 begin
-  //read config file
-  iniConfigFile := TINIFile.Create('config.ini');
-  chkStartCountDownAutomatically.Checked := iniConfigFile.ReadBool('options', 'StartCountdownAutomatically',  false);
+  chkStartCountDownAutomatically.Checked := func.readConfig('options', 'StartCountdownAutomatically', false);
 end;
 
 
