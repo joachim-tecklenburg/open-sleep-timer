@@ -5,9 +5,9 @@ unit mainform;
 interface
 
 uses
-  Classes, Process, SysUtils, FileUtil, RTTICtrls, TAGraph, TASeries,
-  Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, func, ActnList;
+  {Classes,} Process, SysUtils, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
+  Forms, {Controls,} {Graphics,} Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
+  VolumeControl, PopUp, optionsform, math, func, ActnList, about;
 
 type
 
@@ -44,14 +44,12 @@ type
     procedure btnStopClick(Sender: TObject);
     procedure edMinutesDelayChange(Sender: TObject);
     procedure edMinutesDurationChange(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormClose(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure MenuItemOptionsClick(Sender: TObject);
     procedure MenuItemAboutClick(Sender: TObject);
-    procedure tbCurrentVolumeMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure tbCurrentVolumeMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure tbCurrentVolumeMouseDown(Sender: TObject);
+    procedure tbCurrentVolumeMouseUp(Sender: TObject);
     procedure tbTargetVolumeChange(Sender: TObject);
     procedure tbCurrentVolumeChange(Sender: TObject);
     procedure tmrCountDownTimer(Sender: TObject);
@@ -268,7 +266,7 @@ end;
 
 //OnClose
 //***************************************
-procedure TfMainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TfMainform.FormClose(Sender: TObject);
 begin
   saveSettings;
 end;
@@ -285,7 +283,8 @@ end;
 //********************************************
 procedure TfMainform.MenuItemAboutClick(Sender: TObject);
 begin
-  showmessage('Open Sleep Timer - https://github.com/achim-tecklenburg/open-sleep-timer');
+  fAbout.Show;
+  //showmessage('Open Sleep Timer - https://github.com/achim-tecklenburg/open-sleep-timer');
 end;
 procedure TfMainform.MenuItemOptionsClick(Sender: TObject);
 begin
@@ -294,13 +293,11 @@ end;
 
 //Check CurrentVolumeMouseDown
 //*********************************************
-procedure TfMainform.tbCurrentVolumeMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfMainform.tbCurrentVolumeMouseDown(Sender: TObject);
 begin
   btbCurrentVolumeMouseDown:=True;
 end;
-procedure TfMainform.tbCurrentVolumeMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfMainform.tbCurrentVolumeMouseUp(Sender: TObject);
 begin
   btbCurrentVolumeMouseDown:=False;
 end;

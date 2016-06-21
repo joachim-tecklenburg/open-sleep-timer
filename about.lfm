@@ -1,0 +1,30 @@
+object fAbout: TfAbout
+  Left = 318
+  Height = 112
+  Top = 292
+  Width = 320
+  Caption = 'About'
+  ClientHeight = 112
+  ClientWidth = 320
+  LCLVersion = '1.6.0.4'
+  object lnkWebsite: TECLink
+    Left = 136
+    Height = 15
+    Top = 64
+    Width = 40
+    Caption = 'website'
+    Font.Color = clMenuHighlight
+    Font.Style = [fsUnderline]
+    Link = 'http://tecklenburg.at/opensleeptimer/'
+    LinkType = eltWWW
+    ParentFont = False
+  end
+  object Label1: TLabel
+    Left = 48
+    Height = 15
+    Top = 24
+    Width = 226
+    Caption = 'Open Sleep Timer by Joachim Tecklenburg'
+    ParentColor = False
+  end
+end

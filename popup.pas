@@ -16,7 +16,7 @@ type
     bntRestoreVolume: TButton;
     lblQuestion: TLabel;
     procedure bntRestoreVolumeClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormClose(Sender: TObject);
   private
     { private declarations }
   public
@@ -46,7 +46,7 @@ end;
 
 //Form Close
 //*******************************************************
-procedure TfPopUp.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TfPopUp.FormClose(Sender: TObject);
 begin
   func.writeConfig('main', 'PopUpLeft', fPopUp.Left);
   func.writeConfig('main', 'PopUpTop', fPopUp.Top);
