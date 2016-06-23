@@ -31,3 +31,5 @@ lib/
 
 # Misc
 ppas.bat
+*.mo
+*.csv
