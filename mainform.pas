@@ -7,7 +7,7 @@ interface
 uses
   {Classes,} Process, SysUtils, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
   Forms, {Controls,} {Graphics,} Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator;
+  VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator, lclintf;
 
 type
 
@@ -213,6 +213,8 @@ end;
 //Start Button
 //******************************************
 procedure TfMainform.btnStartClick(Sender: TObject);
+var
+  sWebsiteLink: String;
 begin
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
   dPreviousVolume := dVolumeLevelAtStart;
@@ -227,6 +229,14 @@ begin
 
   //start count down
   tmrCountDown.Enabled := True;
+
+  //open Website
+  if fOptionsForm.chkWebsiteLinkAtStart.Checked then
+  sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
+  begin
+    if (sWebsiteLink <> '') then
+      OpenDocument(sWebsiteLink);
+  end;
 
 end;
 

@@ -1,10 +1,10 @@
 object fOptionsForm: TfOptionsForm
   Left = 309
-  Height = 82
+  Height = 168
   Top = 374
   Width = 320
   Caption = 'Options'
-  ClientHeight = 82
+  ClientHeight = 168
   ClientWidth = 320
   Color = clWhite
   Menu = MainMenu1
@@ -19,6 +19,34 @@ object fOptionsForm: TfOptionsForm
     Caption = 'Start countdown automatically at program start'
     OnChange = chkStartCountdownAutomaticallyChange
     TabOrder = 0
+  end
+  object cbSelectWebsite: TComboBox
+    Left = 24
+    Height = 23
+    Top = 80
+    Width = 272
+    Enabled = False
+    ItemHeight = 15
+    TabOrder = 1
+    Text = 'cbSelectWebsite'
+  end
+  object chkWebsiteLinkAtStart: TCheckBox
+    Left = 24
+    Height = 19
+    Top = 54
+    Width = 143
+    Caption = 'Open selected Website:'
+    OnChange = chkWebsiteLinkAtStartChange
+    TabOrder = 2
+  end
+  object btnEditLinkList: TButton
+    Left = 220
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Edit List'
+    OnClick = btnEditLinkListClick
+    TabOrder = 3
   end
   object MainMenu1: TMainMenu
     left = 158
