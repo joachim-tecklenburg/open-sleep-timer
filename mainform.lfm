@@ -2,10 +2,10 @@ object fMainform: TfMainform
   Left = 245
   Height = 433
   Top = 199
-  Width = 435
+  Width = 442
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 413
-  ClientWidth = 435
+  ClientWidth = 442
   Color = clWhite
   Menu = mnMainMenu
   OnClose = FormClose
@@ -22,7 +22,7 @@ object fMainform: TfMainform
     TabOrder = 4
   end
   object btnStop: TButton
-    Left = 338
+    Left = 345
     Height = 25
     Top = 370
     Width = 75
@@ -33,10 +33,10 @@ object fMainform: TfMainform
     TabOrder = 5
   end
   object edMinutesDuration: TSpinEdit
-    Left = 137
+    Left = 157
     Height = 23
     Top = 372
-    Width = 95
+    Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
     OnChange = edMinutesDurationChange
@@ -53,10 +53,10 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object edMinutesDelay: TSpinEdit
-    Left = 137
+    Left = 157
     Height = 23
     Top = 332
-    Width = 95
+    Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
     OnChange = edMinutesDelayChange
@@ -76,7 +76,7 @@ object fMainform: TfMainform
     Left = 131
     Height = 25
     Top = 13
-    Width = 243
+    Width = 250
     Max = 100
     OnChange = tbTargetVolumeChange
     Position = 20
@@ -95,7 +95,7 @@ object fMainform: TfMainform
     ParentFont = False
   end
   object lblShowTargetVolume: TLabel
-    Left = 391
+    Left = 398
     Height = 15
     Top = 15
     Width = 22
@@ -112,7 +112,7 @@ object fMainform: TfMainform
     ParentColor = False
   end
   object lblShowCurrentVolume: TLabel
-    Left = 391
+    Left = 398
     Height = 15
     Top = 55
     Width = 22
@@ -124,7 +124,7 @@ object fMainform: TfMainform
     Left = 131
     Height = 25
     Top = 55
-    Width = 243
+    Width = 250
     Max = 100
     OnChange = tbCurrentVolumeChange
     Position = 50
@@ -136,10 +136,11 @@ object fMainform: TfMainform
     TabOrder = 1
   end
   object chkStandby: TCheckBox
-    Left = 254
+    Left = 267
     Height = 19
     Top = 334
     Width = 151
+    Alignment = taLeftJustify
     Anchors = [akRight, akBottom]
     Caption = 'Go to Standby at the end'
     TabOrder = 6
@@ -148,7 +149,7 @@ object fMainform: TfMainform
     Left = 16
     Height = 216
     Top = 96
-    Width = 397
+    Width = 404
     AntialiasingMode = amOn
     AxisList = <    
       item

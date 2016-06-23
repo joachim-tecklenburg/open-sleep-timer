@@ -13,8 +13,8 @@ object fPopUp: TfPopUp
     Left = 22
     Height = 15
     Top = 29
-    Width = 175
-    Caption = 'Time is up. Restore volume level?'
+    Width = 164
+    Caption = 'Stopped. Restore volume level?'
     ParentColor = False
   end
   object bntRestoreVolume: TButton

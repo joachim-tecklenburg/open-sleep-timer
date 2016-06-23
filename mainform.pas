@@ -7,7 +7,7 @@ interface
 uses
   {Classes,} Process, SysUtils, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
   Forms, {Controls,} {Graphics,} Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, func, ActnList, about;
+  VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator;
 
 type
 

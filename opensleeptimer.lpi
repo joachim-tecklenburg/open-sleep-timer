@@ -12,7 +12,8 @@
       <Icon Value="0"/>
     </General>
     <i18n>
-      <EnableI18N LFM="False"/>
+      <EnableI18N Value="True"/>
+      <OutDir Value="\po_files"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
@@ -86,6 +87,7 @@
         <Filename Value="about.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fAbout"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit6>
     </Units>
