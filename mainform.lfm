@@ -1,10 +1,10 @@
 object fMainform: TfMainform
   Left = 245
-  Height = 433
+  Height = 341
   Top = 199
   Width = 442
   Caption = 'Open Sleep Timer v0.3'
-  ClientHeight = 413
+  ClientHeight = 321
   ClientWidth = 442
   Color = clWhite
   Menu = mnMainMenu
@@ -14,7 +14,7 @@ object fMainform: TfMainform
   object btnStart: TButton
     Left = 254
     Height = 25
-    Top = 371
+    Top = 279
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Start'
@@ -24,7 +24,7 @@ object fMainform: TfMainform
   object btnStop: TButton
     Left = 345
     Height = 25
-    Top = 370
+    Top = 278
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
@@ -35,7 +35,7 @@ object fMainform: TfMainform
   object edMinutesDuration: TSpinEdit
     Left = 157
     Height = 23
-    Top = 372
+    Top = 280
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
@@ -46,7 +46,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStop: TLabel
     Left = 16
     Height = 15
-    Top = 375
+    Top = 283
     Width = 108
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
@@ -55,7 +55,7 @@ object fMainform: TfMainform
   object edMinutesDelay: TSpinEdit
     Left = 157
     Height = 23
-    Top = 332
+    Top = 240
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
@@ -66,7 +66,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStart: TLabel
     Left = 16
     Height = 15
-    Top = 335
+    Top = 243
     Width = 111
     Anchors = [akLeft, akBottom]
     Caption = 'Delayed start in min.:'
@@ -138,7 +138,7 @@ object fMainform: TfMainform
   object chkStandby: TCheckBox
     Left = 267
     Height = 19
-    Top = 334
+    Top = 242
     Width = 151
     Alignment = taLeftJustify
     Anchors = [akRight, akBottom]
@@ -147,7 +147,7 @@ object fMainform: TfMainform
   end
   object Chart1: TChart
     Left = 16
-    Height = 216
+    Height = 124
     Top = 96
     Width = 404
     AntialiasingMode = amOn

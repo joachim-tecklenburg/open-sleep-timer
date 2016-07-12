@@ -98,6 +98,8 @@ begin
     btnStartClick(Application);
 
   fMainform.Caption := sTitlebarCaption;
+
+  CreateDir(GetAppConfigDir(True));
 end;
 
 //Draw Graph

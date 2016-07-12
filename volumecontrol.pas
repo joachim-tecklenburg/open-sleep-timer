@@ -43,9 +43,11 @@ type
     function GetVolumeRange(out pflVolumeMindB: double; out pflVolumeMaxdB: double; out pflVolumeIncrementdB: double): HRESULT; stdcall;
   end;
 
+  {
   IAudioMeterInformation = interface(IUnknown)
   ['{C02216F6-8C67-4B5B-9D00-D008E73E0064}']
   end;
+  }
 
   IPropertyStore = interface(IUnknown)
   end;

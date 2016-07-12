@@ -5,7 +5,7 @@ unit func;
 interface
 
 uses
-  Classes, SysUtils, IniFiles;
+  Classes, SysUtils, IniFiles, LazUTF8;
   procedure writeConfig(sSection: String; sName: String; sValue: String);
   procedure writeConfig(sSection: String; sName: String; iValue: Integer);
   procedure writeConfig(sSection: String; sName: String; bValue: Boolean);
@@ -15,13 +15,17 @@ uses
 
 implementation
 
+function CreateConfigFile():TINIFile;
+begin
+  Result := TINIFile.Create(GetAppConfigFile(True));
+end;
+
 procedure writeConfig(sSection: String; sName: String; sValue: String);
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
+    iniConfigFile := CreateConfigFile;
     iniConfigFile.WriteString(sSection, sName, sValue);
   finally
     iniConfigFile.Free
@@ -32,9 +36,8 @@ procedure writeConfig(sSection: String; sName: String; iValue: Integer);
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
+    iniConfigFile := CreateConfigFile;
     iniConfigFile.WriteInteger(sSection, sName, iValue);
   finally
     iniConfigFile.Free
@@ -45,9 +48,8 @@ procedure writeConfig(sSection: String; sName: String; bValue: Boolean);
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
+    iniConfigFile := CreateConfigFile;
     iniConfigFile.WriteBool(sSection, sName, bValue);
   finally
     iniConfigFile.Free
@@ -58,10 +60,9 @@ function readConfig(sSection: String; sName: String; sValue: String): String;
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
-    result := iniConfigFile.ReadString(sSection, sName, sValue);
+    iniConfigFile := CreateConfigFile;
+    Result := iniConfigFile.ReadString(sSection, sName, sValue);
   finally
     iniConfigFile.Free
   end;
@@ -71,10 +72,9 @@ function readConfig(sSection: String; sName: String; iValue: Integer): Integer;
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
-    result := iniConfigFile.ReadInteger(sSection, sName, iValue);
+    iniConfigFile := CreateConfigFile;
+    Result := iniConfigFile.ReadInteger(sSection, sName, iValue);
   finally
     iniConfigFile.Free
   end;
@@ -84,10 +84,9 @@ function readConfig(sSection: String; sName: String; bValue: Boolean): Boolean;
 var
   iniConfigFile: TINIFile;
 begin
-  iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
   try
-    iniConfigFile := TINIFile.Create(GetAppConfigFile(False));
-    result := iniConfigFile.ReadBool(sSection, sName, bValue);
+    iniConfigFile := CreateConfigFile;
+    Result := iniConfigFile.ReadBool(sSection, sName, bValue);
   finally
     iniConfigFile.Free
   end;

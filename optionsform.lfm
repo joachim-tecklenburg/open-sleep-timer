@@ -7,9 +7,8 @@ object fOptionsForm: TfOptionsForm
   ClientHeight = 168
   ClientWidth = 320
   Color = clWhite
-  Menu = MainMenu1
   OnClose = FormClose
-  OnCreate = FormCreate
+  OnShow = FormShow
   LCLVersion = '1.6.0.4'
   object chkStartCountdownAutomatically: TCheckBox
     Left = 24
@@ -47,9 +46,5 @@ object fOptionsForm: TfOptionsForm
     Caption = 'Edit List'
     OnClick = btnEditLinkListClick
     TabOrder = 3
-  end
-  object MainMenu1: TMainMenu
-    left = 158
-    top = 99
   end
 end

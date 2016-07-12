@@ -33,3 +33,4 @@ lib/
 ppas.bat
 *.mo
 *.csv
+po_files/
