@@ -90,14 +90,26 @@ msgstr ""
 msgid "VolumeUp"
 msgstr ""
 
+#: tfoptionsform.btneditlinklist.caption
+msgid "Edit List"
+msgstr ""
+
 #: tfoptionsform.caption
 msgctxt "TFOPTIONSFORM.CAPTION"
 msgid "Options"
 msgstr "Optionen"
 
+#: tfoptionsform.cbselectwebsite.text
+msgid "cbSelectWebsite"
+msgstr ""
+
 #: tfoptionsform.chkstartcountdownautomatically.caption
 msgid "Start countdown automatically at program start"
 msgstr "Sofort nach Programmstart starten."
+
+#: tfoptionsform.chkwebsitelinkatstart.caption
+msgid "Open selected Website:"
+msgstr ""
 
 #: tfpopup.bntrestorevolume.caption
 msgid "OK"
@@ -112,3 +124,4 @@ msgstr "Vorbei!"
 #| msgid "Time is up. Restore volume level?"
 msgid "Stopped. Restore volume level?"
 msgstr "Gestoppt. Lautstärke wiederherstellen?"
+
