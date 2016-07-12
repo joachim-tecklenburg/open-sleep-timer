@@ -17,7 +17,7 @@ implementation
 
 function CreateConfigFile():TINIFile;
 begin
-  Result := TINIFile.Create(GetAppConfigFile(True));
+  Result := TINIFile.Create(WinCPToUTF8(GetAppConfigFile(False)));
 end;
 
 procedure writeConfig(sSection: String; sName: String; sValue: String);

@@ -99,7 +99,7 @@ begin
 
   fMainform.Caption := sTitlebarCaption;
 
-  CreateDir(GetAppConfigDir(True));
+  CreateDir(GetAppConfigDir(False));
 end;
 
 //Draw Graph

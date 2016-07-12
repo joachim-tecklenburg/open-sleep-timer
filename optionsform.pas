@@ -65,23 +65,40 @@ begin
     chkStartCountDownAutomatically.Checked);
 end;
 
+
+//Get Path: ListOfWebsites.txt
+//*******************************
+function GetPathListOfWebsitesTXT():String;
+begin
+  Result := WinCPToUTF8(GetAppConfigDir(False))+'ListOfWebsites.txt';
+end;
+
+//Create ListOfWebsites.txt
+//***********************************
+procedure CreateListOfWebsitesTXT;
+begin
+  linklist.Add('http://asoftmurmur.com/');
+  linklist.Add('https://www.youtube.com/watch?v=eyU3bRy2x44');
+  //FileCreate(GetPathListOfWebsitesTXT());
+  //FileClose(GetPathListOfWebsitesTXT());
+  linklist.SaveToFile(GetPathListOfWebsitesTXT());
+end;
+
 //Load LinkList
 //***********************************************
 procedure TfOptionsForm.LoadLinkList;
 begin
   try
-    linklist.LoadFromFile(GetAppConfigDir(True)+'ListOfWebsites.txt');
+    linklist.LoadFromFile(GetPathListOfWebsitesTXT);
   except
-    linklist.Add('http://asoftmurmur.com/');
-    linklist.Add('https://www.youtube.com/watch?v=eyU3bRy2x44');
-    linklist.SaveToFile(GetAppConfigDir(True)+'ListOfWebsites.txt');
+    CreateListOfWebsitesTXT;
   end;
 end;
 
 //Edit LinkList
 procedure TfOptionsForm.btnEditLinkListClick(Sender: TObject);
 begin
-  OpenDocument(GetAppConfigDir(True)+'ListOfWebsites.txt');
+  OpenDocument(GetPathListOfWebsitesTXT);
 end;
 
 //Enable LinkList DropDown
