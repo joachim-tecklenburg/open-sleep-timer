@@ -91,6 +91,12 @@ msgid "VolumeUp"
 msgstr ""
 
 #: tfoptionsform.btneditlinklist.caption
+msgctxt "tfoptionsform.btneditlinklist.caption"
+msgid "Edit List"
+msgstr ""
+
+#: tfoptionsform.btneditscriptlist.caption
+msgctxt "tfoptionsform.btneditscriptlist.caption"
 msgid "Edit List"
 msgstr ""
 
@@ -99,16 +105,20 @@ msgctxt "TFOPTIONSFORM.CAPTION"
 msgid "Options"
 msgstr "Optionen"
 
-#: tfoptionsform.cbselectwebsite.text
-msgid "cbSelectWebsite"
-msgstr ""
-
 #: tfoptionsform.chkstartcountdownautomatically.caption
 msgid "Start countdown automatically at program start"
 msgstr "Sofort nach Programmstart starten."
 
+#: tfoptionsform.chkstartprogramatstart.caption
+msgid "Start selected Program:"
+msgstr ""
+
 #: tfoptionsform.chkwebsitelinkatstart.caption
 msgid "Open selected Website:"
+msgstr ""
+
+#: tfoptionsform.label1.caption
+msgid "Execute at Countdown Start"
 msgstr ""
 
 #: tfpopup.bntrestorevolume.caption

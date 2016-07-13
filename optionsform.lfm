@@ -1,14 +1,15 @@
 object fOptionsForm: TfOptionsForm
-  Left = 309
-  Height = 168
-  Top = 374
+  Left = 37
+  Height = 270
+  Top = -851
   Width = 320
   Caption = 'Options'
-  ClientHeight = 168
+  ClientHeight = 270
   ClientWidth = 320
   Color = clWhite
   OnClose = FormClose
   OnShow = FormShow
+  Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'
   object chkStartCountdownAutomatically: TCheckBox
     Left = 24
@@ -22,17 +23,16 @@ object fOptionsForm: TfOptionsForm
   object cbSelectWebsite: TComboBox
     Left = 24
     Height = 23
-    Top = 80
-    Width = 272
+    Top = 104
+    Width = 184
     Enabled = False
     ItemHeight = 15
     TabOrder = 1
-    Text = 'cbSelectWebsite'
   end
   object chkWebsiteLinkAtStart: TCheckBox
     Left = 24
     Height = 19
-    Top = 54
+    Top = 78
     Width = 143
     Caption = 'Open selected Website:'
     OnChange = chkWebsiteLinkAtStartChange
@@ -40,11 +40,48 @@ object fOptionsForm: TfOptionsForm
   end
   object btnEditLinkList: TButton
     Left = 220
-    Height = 25
-    Top = 112
+    Height = 23
+    Top = 104
     Width = 75
     Caption = 'Edit List'
     OnClick = btnEditLinkListClick
     TabOrder = 3
+  end
+  object cbSelectScriptAtStart: TComboBox
+    Left = 24
+    Height = 23
+    Top = 167
+    Width = 184
+    Enabled = False
+    ItemHeight = 15
+    TabOrder = 4
+  end
+  object btnEditScriptList: TButton
+    Left = 221
+    Height = 23
+    Top = 167
+    Width = 75
+    Caption = 'Edit List'
+    OnClick = btnEditScriptListClick
+    TabOrder = 5
+  end
+  object chkStartProgramAtStart: TCheckBox
+    Left = 24
+    Height = 19
+    Top = 139
+    Width = 142
+    Caption = 'Start selected Program:'
+    OnChange = chkStartProgramAtStartChange
+    TabOrder = 6
+  end
+  object Label1: TLabel
+    Left = 24
+    Height = 15
+    Top = 53
+    Width = 157
+    Caption = 'Execute at Countdown Start'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
 end

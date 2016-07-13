@@ -217,6 +217,8 @@ end;
 procedure TfMainform.btnStartClick(Sender: TObject);
 var
   sWebsiteLink: String;
+  sProgramExecutedAtStart: String;
+  s: String;
 begin
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
   dPreviousVolume := dVolumeLevelAtStart;
@@ -234,10 +236,18 @@ begin
 
   //open Website
   if fOptionsForm.chkWebsiteLinkAtStart.Checked then
-  sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
   begin
+    sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
     if (sWebsiteLink <> '') then
       OpenDocument(sWebsiteLink);
+  end;
+
+  //Start Program / Script
+  if fOptionsForm.chkStartProgramAtStart.Checked then
+  begin
+    sProgramExecutedAtStart := func.readConfig('options', 'ExecuteAtStart', '');
+    if (sProgramExecutedAtStart <> '') then
+      process.RunCommand(sProgramExecutedAtStart, s);
   end;
 
 end;

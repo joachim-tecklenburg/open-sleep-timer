@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 245
+  Left = 86
   Height = 341
-  Top = 199
+  Top = -816
   Width = 442
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 321
@@ -10,6 +10,7 @@ object fMainform: TfMainform
   Menu = mnMainMenu
   OnClose = FormClose
   OnShow = FormShow
+  Position = poDesktopCenter
   LCLVersion = '1.6.0.4'
   object btnStart: TButton
     Left = 254
@@ -160,6 +161,7 @@ object fMainform: TfMainform
       item
         Grid.Color = clSilver
         Alignment = calBottom
+        AxisPen.Color = clSilver
         AxisPen.Visible = True
         Minors = <>
       end>
@@ -169,6 +171,7 @@ object fMainform: TfMainform
     Extent.YMax = 100
     Foot.Brush.Color = clBtnFace
     Foot.Font.Color = clBlue
+    Frame.Color = clSilver
     Title.Brush.Color = clBtnFace
     Title.Font.Color = clBlue
     Title.Text.Strings = (
@@ -176,6 +179,7 @@ object fMainform: TfMainform
     )
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWhite
+    DoubleBuffered = True
     object Chart1LineSeries1: TLineSeries
       LinePen.Color = clMenuHighlight
     end
@@ -206,8 +210,8 @@ object fMainform: TfMainform
     top = 72
   end
   object ActionList1: TActionList
-    left = 176
-    top = 208
+    left = 120
+    top = 120
     object VolumeUp: TAction
       Caption = 'VolumeUp'
       OnExecute = VolumeUpExecute

@@ -1,11 +1,13 @@
 object fAbout: TfAbout
-  Left = 318
+  Left = 64
   Height = 112
-  Top = 292
+  Top = -740
   Width = 320
+  BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 112
   ClientWidth = 320
+  Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'
   object lnkWebsite: TECLink
     Left = 136
