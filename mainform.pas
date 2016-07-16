@@ -194,6 +194,7 @@ var
   iMinutesRemaining: Integer;
   iMinutesDelay: Integer;
 begin
+  tbCurrentVolume.Position := Round(VolumeControl.GetMasterVolume()*100);//get current System Volume
   iMinutesDuration := edMinutesDuration.Value;
   iTargetVolume := tbTargetVolume.Position;
   iMinutesRemaining := iMinutesDuration - iMinutesLapsed;
@@ -255,13 +256,13 @@ begin
     sProgramExecutedAtStart := func.readConfig('options', 'ExecuteAtStart', '');
     if (sProgramExecutedAtStart <> '') then
       try
-        process.RunCommand(sProgramExecutedAtStart, s);
+        OpenDocument(sProgramExecutedAtStart);
+        //process.RunCommand(sProgramExecutedAtStart, s);
       except
         on Exception do
         showmessage('File not found. Go to Options and change selected Program.');
       end;
   end;
-
 end;
 
 //Volume UP/DOWN Shortcuts
