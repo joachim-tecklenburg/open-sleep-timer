@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, runtimetypeinfocontrols, lazcontrols, tachartlazaruspkg, mainform,
-  VolumeControl, popup, optionsform, func, about
+  Forms, runtimetypeinfocontrols, lazcontrols, tachartlazaruspkg, sdflaz,
+  mainform, VolumeControl, popup, optionsform, func, about, listedit
   { you can add units after this };
 
 {$R *.res}
@@ -20,6 +20,7 @@ begin
   Application.CreateForm(TfPopUp, fPopUp);
   Application.CreateForm(TfOptionsForm, fOptionsForm);
   Application.CreateForm(TfAbout, fAbout);
+  Application.CreateForm(TfListEdit, fListEdit);
   Application.Run;
 end.
 

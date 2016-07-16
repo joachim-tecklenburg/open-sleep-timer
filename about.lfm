@@ -1,7 +1,7 @@
 object fAbout: TfAbout
-  Left = 64
+  Left = 82
   Height = 112
-  Top = -740
+  Top = -611
   Width = 320
   BorderStyle = bsDialog
   Caption = 'About'

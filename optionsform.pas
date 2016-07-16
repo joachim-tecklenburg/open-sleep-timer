@@ -5,8 +5,8 @@ unit optionsform;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus, func, DefaultTranslator, lclintf, LazUTF8;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, func,
+  DefaultTranslator, lclintf, DbCtrls, LazUTF8, listedit;
 
 type
 
@@ -20,6 +20,8 @@ type
     cbSelectWebsite: TComboBox;
     cbSelectScriptAtStart: TComboBox;
     chkStartProgramAtStart: TCheckBox;
+    edSelectedWebsite: TEdit;
+    edSelectedScript: TEdit;
     Label1: TLabel;
     procedure btnEditLinkListClick(Sender: TObject);
     procedure btnEditScriptListClick(Sender: TObject);
@@ -27,6 +29,7 @@ type
     procedure chkStartProgramAtStartChange(Sender: TObject);
     procedure chkWebsiteLinkAtStartChange(Sender: TObject);
     procedure FormClose(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure LoadLinkList;
     procedure LoadScriptList;
@@ -54,23 +57,27 @@ begin
   //load options
   chkStartCountDownAutomatically.Checked :=
     func.readConfig('options', 'StartCountdownAutomatically', false);
-  cbSelectWebsite.Text := func.readConfig('options', 'WebsiteLink', '');
+  edSelectedWebsite.Text := func.readConfig('options', 'WebsiteLinkName', '');
+  edSelectedScript.Text := func.readConfig('options', 'ExecuteAtStartName', '');
+  chkWebsiteLinkAtStart.Checked := func.readConfig('options', 'WebsiteLinkEnabled', False);
+  chkStartProgramAtStart.Checked := func.readConfig('options', 'ExecuteAtStartEnabled', False);
   //load website-links
-  LinkList := TStringlist.Create;
+  {LinkList := TStringlist.Create;
   LoadLinkList;
   cbSelectWebsite.Items.Assign(LinkList);
   if cbSelectWebsite.Text = '' then
   begin
     cbSelectWebsite.Text := LinkList[0];
-  end;
+  end;}
+
   //load script-list
-  ScriptList := TStringlist.Create;
+  {ScriptList := TStringlist.Create;
   LoadScriptList;
   cbSelectScriptAtStart.Items.Assign(ScriptList);
   if cbSelectScriptAtStart.Text = '' then
   begin
     cbSelectScriptAtStart.Text := ScriptList[0];
-  end;
+  end;}
 end;
 
 //OnChange - Start Countdown automatically
@@ -81,19 +88,24 @@ begin
     chkStartCountDownAutomatically.Checked);
 end;
 
-//Get Path of Text-File
+//Get Path of File
 //*******************************
-function GetPathOfTextfile(Filename: String):String;
+function GetPathOfFile(Filename: String):String;
+var
+  sPath: String;
 begin
   //Windows: make sure special charactars in path are treated correctly
-  Result := WinCPToUTF8(GetAppConfigDir(False)) + Filename;
+  sPath := WinCPToUTF8(GetAppConfigDir(False));
+  if not FileExists(sPath + Filename) then //create if does not exist
+    FileClose(FileCreate(sPath + Filename));
+  Result := sPath + Filename;
 end;
 
 //Create Text-File
 //***********************************
 procedure CreateTextFile(Filename: String);
 begin
-  LinkList.SaveToFile(GetPathOfTextfile(Filename));
+  LinkList.SaveToFile(GetPathOfFile(Filename));
 end;
 
 //Load LinkList
@@ -101,7 +113,7 @@ end;
 procedure TfOptionsForm.LoadLinkList;
 begin
   try
-    LinkList.LoadFromFile(GetPathOfTextfile('ListOfWebsites.txt'));
+    LinkList.LoadFromFile(GetPathOfFile('ListOfWebsites.txt'));
   except
     LinkList.Add('http://asoftmurmur.com/');
     LinkList.Add('https://www.youtube.com/watch?v=eyU3bRy2x44');
@@ -112,22 +124,27 @@ end;
 //Edit LinkList
 procedure TfOptionsForm.btnEditLinkListClick(Sender: TObject);
 begin
-  OpenDocument(GetPathOfTextfile('ListOfWebsites.txt'));
+  fListEdit.Caption := 'List of Websites';
+  fListEdit.SdfDataSet1.FileName := GetPathOfFile('ListOfWebsites.csv');
+  listedit.TEditSelect := edSelectedWebsite;
+  listedit.sConfigListPath := 'WebsiteLink';
+  listedit.sConfigSelectedItem := 'WebsiteLinkName';
+  fListEdit.Show;
+  //OpenDocument(GetPathOfFile('ListOfWebsites.txt'));
 end;
 
 //Enable LinkList DropDown
 procedure TfOptionsForm.chkWebsiteLinkAtStartChange(Sender: TObject);
 begin
-  cbSelectWebsite.Enabled := chkWebsiteLinkAtStart.Checked;
+  edSelectedWebsite.Enabled := chkWebsiteLinkAtStart.Checked;
 end;
-
 
 //Load ScriptList
 //**********************************************
 procedure TfOptionsForm.LoadScriptList;
 begin
   try
-    ScriptList.LoadFromFile(GetPathOfTextfile('ListOfScripts.txt'));
+    ScriptList.LoadFromFile(GetPathOfFile('ListOfScripts.txt'));
   except
     CreateTextFile('ListOfScripts.txt');
   end;
@@ -136,13 +153,19 @@ end;
 //Edit Script List
 procedure TfOptionsForm.btnEditScriptListClick(Sender: TObject);
 begin
-  OpenDocument(GetPathOfTextfile('ListOfScripts.txt'));
+  fListEdit.Caption := 'List of executable Programs';
+  fListEdit.SdfDataSet1.FileName := GetPathOfFile('ListOfPrograms.csv');
+  listedit.TEditSelect := edSelectedScript;
+  listedit.sConfigListPath := 'ExecuteAtStart';
+  listedit.sConfigSelectedItem := 'ExecuteAtStartName';
+  fListEdit.Show;
+  //OpenDocument(GetPathOfFile('ListOfScripts.txt'));
 end;
 
 //Enable Script List Dropdown
 procedure TfOptionsForm.chkStartProgramAtStartChange(Sender: TObject);
 begin
-  cbSelectScriptAtStart.Enabled := chkStartProgramAtStart.Checked;
+  edSelectedScript.Enabled := chkStartProgramAtStart.Checked;
 end;
 
 
@@ -152,8 +175,13 @@ procedure TfOptionsForm.FormClose(Sender: TObject);
 begin
   func.writeConfig('main', 'OptionsFormLeft', fOptionsForm.Left);
   func.writeConfig('main', 'OptionsFormTop', fOptionsForm.Top);
-  func.writeConfig('options', 'WebsiteLink', cbSelectWebsite.Text);
-  func.writeConfig('options', 'ExecuteAtStart',  cbSelectScriptAtStart.Text);
+  func.writeConfig('options', 'WebsiteLinkEnabled', chkWebsiteLinkAtStart.Checked);
+  func.writeConfig('options', 'ExecuteAtStartEnabled', chkStartProgramAtStart.Checked);
+end;
+
+procedure TfOptionsForm.FormCreate(Sender: TObject);
+begin
+
 end;
 
 

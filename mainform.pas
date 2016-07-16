@@ -5,9 +5,10 @@ unit mainform;
 interface
 
 uses
-  {Classes,} Process, SysUtils, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
+  {Classes,} SysUtils, Process, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
   Forms, {Controls,} {Graphics,} Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
-  VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator, lclintf;
+  VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator,
+  lclintf, Classes, listedit;
 
 type
 
@@ -38,6 +39,8 @@ type
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
     tmrCountDown: TTimer;
+    procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure VolumeDownExecute(Sender: TObject);
     procedure VolumeUpExecute(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
@@ -219,10 +222,14 @@ var
   sWebsiteLink: String;
   sProgramExecutedAtStart: String;
   s: String;
+  bWebsiteLinkEnabled: Boolean;
+  bProgramExecuteAtStartEnabled: Boolean;
 begin
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
   dPreviousVolume := dVolumeLevelAtStart;
   iMinutesLapsed := 0;
+  bWebsiteLinkEnabled := func.readConfig('options', 'WebsiteLinkEnabled', False);
+  bProgramExecuteAtStartEnabled := func.readConfig('options', 'ExecuteAtStartEnabled', False);
 
   //if testmode -> faster contdown
   if bTestMode = true then
@@ -235,7 +242,7 @@ begin
   tmrCountDown.Enabled := True;
 
   //open Website
-  if fOptionsForm.chkWebsiteLinkAtStart.Checked then
+  if bWebsiteLinkEnabled then
   begin
     sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
     if (sWebsiteLink <> '') then
@@ -243,11 +250,16 @@ begin
   end;
 
   //Start Program / Script
-  if fOptionsForm.chkStartProgramAtStart.Checked then
+  if bProgramExecuteAtStartEnabled then
   begin
     sProgramExecutedAtStart := func.readConfig('options', 'ExecuteAtStart', '');
     if (sProgramExecutedAtStart <> '') then
-      process.RunCommand(sProgramExecutedAtStart, s);
+      try
+        process.RunCommand(sProgramExecutedAtStart, s);
+      except
+        on Exception do
+        showmessage('File not found. Go to Options and change selected Program.');
+      end;
   end;
 
 end;
@@ -261,6 +273,16 @@ end;
 procedure TfMainform.VolumeDownExecute(Sender: TObject);
 begin
   tbCurrentVolume.Position := tbCurrentVolume.Position - 1;
+end;
+
+procedure TfMainform.Button1Click(Sender: TObject);
+begin
+  fListEdit.Show;
+end;
+
+procedure TfMainform.FormCreate(Sender: TObject);
+begin
+
 end;
 
 //Stop Button

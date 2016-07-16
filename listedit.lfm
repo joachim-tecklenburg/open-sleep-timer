@@ -1,0 +1,100 @@
+object fListEdit: TfListEdit
+  Left = 41
+  Height = 269
+  Top = -670
+  Width = 582
+  Caption = 'fListEdit'
+  ClientHeight = 269
+  ClientWidth = 582
+  OnClose = FormClose
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '1.6.0.4'
+  object btnAdd: TButton
+    Left = 16
+    Height = 25
+    Top = 233
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    Caption = 'Add'
+    OnClick = btnAddClick
+    TabOrder = 0
+  end
+  object DBGrid2: TDBGrid
+    Left = 0
+    Height = 220
+    Top = 0
+    Width = 582
+    Align = alTop
+    Color = clWindow
+    Columns = <    
+      item
+        Title.Caption = 'Name'
+        Width = 120
+        FieldName = 'Name'
+      end    
+      item
+        Title.Caption = 'Path'
+        Width = 430
+        FieldName = 'Path'
+      end>
+    DataSource = DataSource1
+    FixedCols = 0
+    Flat = True
+    Options = [dgEditing, dgTitles, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgRowHighlight]
+    Scrollbars = ssVertical
+    TabOrder = 1
+    OnMouseUp = ToggleChooseBtn
+  end
+  object btnDeleteRow: TButton
+    Left = 104
+    Height = 25
+    Top = 233
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    Caption = 'Delete'
+    OnClick = btnDeleteRowClick
+    TabOrder = 2
+  end
+  object btnChoose: TButton
+    Left = 489
+    Height = 25
+    Top = 233
+    Width = 75
+    Anchors = [akRight, akBottom]
+    Caption = 'Choose'
+    OnClick = btnChooseClick
+    TabOrder = 3
+  end
+  object DataSource1: TDataSource
+    DataSet = SdfDataSet1
+    left = 496
+    top = 48
+  end
+  object SdfDataSet1: TSdfDataSet
+    FileMustExist = True
+    ReadOnly = False
+    Schema.Strings = (
+      'Name'
+      'Path'
+    )
+    FieldDefs = <    
+      item
+        Name = 'Name'
+        Attributes = [faRequired]
+        DataType = ftString
+        Size = 255
+      end    
+      item
+        Name = 'Path'
+        DataType = ftString
+        Size = 10000
+      end>
+    AllowMultiLine = False
+    Delimiter = ','
+    FirstLineAsSchema = False
+    StripTrailingDelimiters = False
+    left = 432
+    top = 48
+  end
+end

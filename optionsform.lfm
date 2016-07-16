@@ -1,13 +1,14 @@
 object fOptionsForm: TfOptionsForm
-  Left = 37
+  Left = 115
   Height = 270
-  Top = -851
+  Top = -769
   Width = 320
   Caption = 'Options'
   ClientHeight = 270
   ClientWidth = 320
   Color = clWhite
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'
@@ -21,14 +22,15 @@ object fOptionsForm: TfOptionsForm
     TabOrder = 0
   end
   object cbSelectWebsite: TComboBox
-    Left = 24
+    Left = 104
     Height = 23
-    Top = 104
+    Top = 224
     Width = 184
     Enabled = False
     ItemHeight = 15
     Style = csDropDownList
     TabOrder = 1
+    Visible = False
   end
   object chkWebsiteLinkAtStart: TCheckBox
     Left = 24
@@ -40,30 +42,31 @@ object fOptionsForm: TfOptionsForm
     TabOrder = 2
   end
   object btnEditLinkList: TButton
-    Left = 220
+    Left = 263
     Height = 25
     Top = 103
-    Width = 75
-    Caption = 'Edit List'
+    Width = 32
+    Caption = '...'
     OnClick = btnEditLinkListClick
     TabOrder = 3
   end
   object cbSelectScriptAtStart: TComboBox
-    Left = 24
+    Left = 104
     Height = 23
-    Top = 167
+    Top = 232
     Width = 184
     Enabled = False
     ItemHeight = 15
     Style = csDropDownList
     TabOrder = 4
+    Visible = False
   end
   object btnEditScriptList: TButton
-    Left = 221
+    Left = 263
     Height = 25
     Top = 166
-    Width = 75
-    Caption = 'Edit List'
+    Width = 32
+    Caption = '...'
     OnClick = btnEditScriptListClick
     TabOrder = 5
   end
@@ -85,5 +88,25 @@ object fOptionsForm: TfOptionsForm
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+  end
+  object edSelectedWebsite: TEdit
+    Left = 24
+    Height = 23
+    Top = 103
+    Width = 224
+    Enabled = False
+    OnDblClick = btnEditLinkListClick
+    ReadOnly = True
+    TabOrder = 7
+  end
+  object edSelectedScript: TEdit
+    Left = 24
+    Height = 23
+    Top = 167
+    Width = 224
+    Enabled = False
+    OnDblClick = btnEditScriptListClick
+    ReadOnly = True
+    TabOrder = 8
   end
 end

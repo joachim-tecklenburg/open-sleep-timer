@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 86
+  Left = -21
   Height = 341
-  Top = -816
+  Top = -885
   Width = 442
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 321
@@ -9,6 +9,7 @@ object fMainform: TfMainform
   Color = clWhite
   Menu = mnMainMenu
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poDesktopCenter
   LCLVersion = '1.6.0.4'
