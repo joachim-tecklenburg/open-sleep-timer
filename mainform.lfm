@@ -1,10 +1,10 @@
 object fMainform: TfMainform
-  Left = -21
+  Left = 28
   Height = 341
-  Top = -885
+  Top = 171
   Width = 442
   Caption = 'Open Sleep Timer v0.3'
-  ClientHeight = 321
+  ClientHeight = 341
   ClientWidth = 442
   Color = clWhite
   Menu = mnMainMenu
@@ -16,7 +16,7 @@ object fMainform: TfMainform
   object btnStart: TButton
     Left = 254
     Height = 25
-    Top = 279
+    Top = 299
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Start'
@@ -26,7 +26,7 @@ object fMainform: TfMainform
   object btnStop: TButton
     Left = 345
     Height = 25
-    Top = 278
+    Top = 298
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
@@ -36,8 +36,8 @@ object fMainform: TfMainform
   end
   object edMinutesDuration: TSpinEdit
     Left = 157
-    Height = 23
-    Top = 280
+    Height = 16
+    Top = 307
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
@@ -47,17 +47,17 @@ object fMainform: TfMainform
   end
   object lblMinutesUntilStop: TLabel
     Left = 16
-    Height = 15
-    Top = 283
-    Width = 108
+    Height = 16
+    Top = 302
+    Width = 130
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
     ParentColor = False
   end
   object edMinutesDelay: TSpinEdit
     Left = 157
-    Height = 23
-    Top = 240
+    Height = 16
+    Top = 267
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
@@ -67,9 +67,9 @@ object fMainform: TfMainform
   end
   object lblMinutesUntilStart: TLabel
     Left = 16
-    Height = 15
-    Top = 243
-    Width = 111
+    Height = 16
+    Top = 262
+    Width = 135
     Anchors = [akLeft, akBottom]
     Caption = 'Delayed start in min.:'
     ParentColor = False
@@ -89,35 +89,35 @@ object fMainform: TfMainform
   end
   object lblTargetVolume: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 15
-    Width = 80
+    Width = 95
     Caption = 'Target volume:'
     ParentColor = False
     ParentFont = False
   end
   object lblShowTargetVolume: TLabel
-    Left = 398
-    Height = 15
+    Left = 395
+    Height = 16
     Top = 15
-    Width = 22
+    Width = 25
     Anchors = [akTop, akRight]
     Caption = '20%'
     ParentColor = False
   end
   object lblCurrentVolume: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 55
-    Width = 90
+    Width = 108
     Caption = 'Current Volume: '
     ParentColor = False
   end
   object lblShowCurrentVolume: TLabel
-    Left = 398
-    Height = 15
+    Left = 395
+    Height = 16
     Top = 55
-    Width = 22
+    Width = 25
     Anchors = [akTop, akRight]
     Caption = '50%'
     ParentColor = False
@@ -138,10 +138,10 @@ object fMainform: TfMainform
     TabOrder = 1
   end
   object chkStandby: TCheckBox
-    Left = 267
-    Height = 19
-    Top = 242
-    Width = 151
+    Left = 246
+    Height = 18
+    Top = 263
+    Width = 172
     Alignment = taLeftJustify
     Anchors = [akRight, akBottom]
     Caption = 'Go to Standby at the end'
@@ -149,7 +149,7 @@ object fMainform: TfMainform
   end
   object Chart1: TChart
     Left = 16
-    Height = 124
+    Height = 144
     Top = 96
     Width = 404
     AntialiasingMode = amOn

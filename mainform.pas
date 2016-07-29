@@ -5,8 +5,8 @@ unit mainform;
 interface
 
 uses
-  {Classes,} SysUtils, Process, {FileUtil,} {RTTICtrls,} TAGraph, TASeries,
-  Forms, {Controls,} {Graphics,} Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
+  SysUtils, Process, TAGraph, TASeries,
+  Forms, Dialogs, StdCtrls, ExtCtrls, Spin, Menus, ComCtrls,
   VolumeControl, PopUp, optionsform, math, func, ActnList, about, DefaultTranslator,
   lclintf, Classes, listedit;
 
@@ -194,7 +194,9 @@ var
   iMinutesRemaining: Integer;
   iMinutesDelay: Integer;
 begin
+  {$IFDEF Windows}
   tbCurrentVolume.Position := Round(VolumeControl.GetMasterVolume()*100);//get current System Volume
+  {$ENDIF}
   iMinutesDuration := edMinutesDuration.Value;
   iTargetVolume := tbTargetVolume.Position;
   iMinutesRemaining := iMinutesDuration - iMinutesLapsed;
@@ -226,7 +228,9 @@ var
   bWebsiteLinkEnabled: Boolean;
   bProgramExecuteAtStartEnabled: Boolean;
 begin
+  {$IFDEF Windows}
   dVolumeLevelAtStart := VolumeControl.GetMasterVolume();
+  {$ENDIF}
   dPreviousVolume := dVolumeLevelAtStart;
   iMinutesLapsed := 0;
   bWebsiteLinkEnabled := func.readConfig('options', 'WebsiteLinkEnabled', False);
@@ -363,7 +367,9 @@ var
 begin
   iNewVolumeLevel := tbCurrentVolume.Position;
   dPreviousVolume := Double(iNewVolumeLevel) / 100;
+  {$IFDEF Windows}
   VolumeControl.SetMasterVolume(Double(iNewVolumeLevel) / 100);
+  {$ENDIF}
   fMainform.lblShowCurrentVolume.Caption := IntToStr(tbCurrentVolume.Position) + '%';
   if {btnStart.Enabled and }btbCurrentVolumeMouseDown then
     drawGraph;

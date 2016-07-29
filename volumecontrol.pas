@@ -3,14 +3,14 @@ unit VolumeControl;
 {$mode objfpc}{$H+}
 
 interface
-
+{$IFDEF Windows}
 uses
   Classes, SysUtils, Windows, ActiveX, ComObj;
   procedure SetMasterVolume(fLevelDB: single);
   function GetMasterVolume(): Double;
-
+  {$ENDIF}
 implementation
-
+{$IFDEF Windows}
 const
   CLASS_IMMDeviceEnumerator : TGUID = '{BCDE0395-E52F-467C-8E3D-C4579291692E}';
   IID_IMMDeviceEnumerator : TGUID = '{A95664D2-9614-4F35-A746-DE8DB63617E6}';
@@ -114,6 +114,6 @@ begin
    RaiseLastOSError;
   result := dMasterVolume;
 end;
-
+{$ENDIF}
 end.
 
