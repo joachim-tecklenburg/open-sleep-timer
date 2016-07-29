@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 28
+  Left = 429
   Height = 341
-  Top = 171
+  Top = 153
   Width = 442
   Caption = 'Open Sleep Timer v0.3'
   ClientHeight = 341
@@ -9,14 +9,13 @@ object fMainform: TfMainform
   Color = clWhite
   Menu = mnMainMenu
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   Position = poDesktopCenter
   LCLVersion = '1.6.0.4'
   object btnStart: TButton
     Left = 254
     Height = 25
-    Top = 299
+    Top = 298
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Start'
@@ -48,7 +47,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStop: TLabel
     Left = 16
     Height = 16
-    Top = 302
+    Top = 307
     Width = 130
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
@@ -68,7 +67,7 @@ object fMainform: TfMainform
   object lblMinutesUntilStart: TLabel
     Left = 16
     Height = 16
-    Top = 262
+    Top = 267
     Width = 135
     Anchors = [akLeft, akBottom]
     Caption = 'Delayed start in min.:'
@@ -140,7 +139,7 @@ object fMainform: TfMainform
   object chkStandby: TCheckBox
     Left = 246
     Height = 18
-    Top = 263
+    Top = 265
     Width = 172
     Alignment = taLeftJustify
     Anchors = [akRight, akBottom]

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, func, DefaultTranslator;
+  Menus, func, DefaultTranslator, Types;
 
 type
 
@@ -51,6 +51,7 @@ begin
   func.writeConfig('main', 'PopUpLeft', fPopUp.Left);
   func.writeConfig('main', 'PopUpTop', fPopUp.Top);
 end;
+
 
 end.
 

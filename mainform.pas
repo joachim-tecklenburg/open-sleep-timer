@@ -39,8 +39,6 @@ type
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
     tmrCountDown: TTimer;
-    procedure Button1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure VolumeDownExecute(Sender: TObject);
     procedure VolumeUpExecute(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
@@ -251,7 +249,8 @@ begin
   begin
     sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
     if (sWebsiteLink <> '') then
-      OpenDocument(sWebsiteLink);
+      OpenURL(sWebsiteLink);
+      //OpenDocument(sWebsiteLink);
   end;
 
   //Start Program / Script
@@ -278,16 +277,6 @@ end;
 procedure TfMainform.VolumeDownExecute(Sender: TObject);
 begin
   tbCurrentVolume.Position := tbCurrentVolume.Position - 1;
-end;
-
-procedure TfMainform.Button1Click(Sender: TObject);
-begin
-  fListEdit.Show;
-end;
-
-procedure TfMainform.FormCreate(Sender: TObject);
-begin
-
 end;
 
 //Stop Button

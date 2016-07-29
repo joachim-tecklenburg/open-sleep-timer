@@ -1,27 +1,28 @@
 object fPopUp: TfPopUp
   Left = 136
-  Height = 116
-  Top = -794
-  Width = 219
+  Height = 118
+  Top = 23
+  Width = 228
   BorderStyle = bsDialog
   Caption = 'Time is Up!'
-  ClientHeight = 116
-  ClientWidth = 219
+  ClientHeight = 118
+  ClientWidth = 228
   Color = clWhite
   OnClose = FormClose
   LCLVersion = '1.6.0.4'
   object lblQuestion: TLabel
-    Left = 22
-    Height = 15
-    Top = 29
-    Width = 164
+    Left = 16
+    Height = 16
+    Top = 32
+    Width = 196
+    Alignment = taCenter
     Caption = 'Stopped. Restore volume level?'
     ParentColor = False
   end
   object bntRestoreVolume: TButton
-    Left = 122
+    Left = 136
     Height = 25
-    Top = 74
+    Top = 72
     Width = 75
     Caption = 'OK'
     OnClick = bntRestoreVolumeClick

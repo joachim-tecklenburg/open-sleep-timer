@@ -5,8 +5,7 @@ unit about;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ECLink, DefaultTranslator;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, DefaultTranslator;
 
 type
 
@@ -14,7 +13,6 @@ type
 
   TfAbout = class(TForm)
     Label1: TLabel;
-    lnkWebsite: TECLink;
   private
     { private declarations }
   public
@@ -27,6 +25,8 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TfAbout }
 
 end.
 
