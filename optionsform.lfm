@@ -1,7 +1,7 @@
 object fOptionsForm: TfOptionsForm
-  Left = 115
+  Left = 298
   Height = 270
-  Top = -769
+  Top = 276
   Width = 320
   Caption = 'Options'
   ClientHeight = 270

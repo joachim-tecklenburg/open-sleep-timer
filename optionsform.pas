@@ -31,8 +31,8 @@ type
     procedure FormClose(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure LoadLinkList;
-    procedure LoadScriptList;
+    //procedure LoadLinkList;
+    //procedure LoadScriptList;
   private
     { private declarations }
   public
@@ -88,28 +88,18 @@ begin
     chkStartCountDownAutomatically.Checked);
 end;
 
-//Get Path of File
-//*******************************
-function GetPathOfFile(Filename: String):String;
-var
-  sPath: String;
-begin
-  //Windows: make sure special charactars in path are treated correctly
-  sPath := WinCPToUTF8(GetAppConfigDir(False));
-  if not FileExists(sPath + Filename) then //create if does not exist
-    FileClose(FileCreate(sPath + Filename));
-  Result := sPath + Filename;
-end;
-
 //Create Text-File
 //***********************************
+{
 procedure CreateTextFile(Filename: String);
 begin
-  LinkList.SaveToFile(GetPathOfFile(Filename));
+  LinkList.SaveToFile(func.GetOSConfigPath(Filename));
 end;
+}
 
-//Load LinkList
+//Load WebsiteList
 //***********************************************
+{
 procedure TfOptionsForm.LoadLinkList;
 begin
   try
@@ -120,17 +110,19 @@ begin
     CreateTextFile('ListOfWebsites.txt');
   end;
 end;
+}
 
-//Edit LinkList
+//Edit WebsiteList
 procedure TfOptionsForm.btnEditLinkListClick(Sender: TObject);
 begin
   fListEdit.Caption := 'List of Websites';
-  fListEdit.SdfDataSet1.FileName := GetPathOfFile('ListOfWebsites.csv');
+  fListEdit.SdfDataSet1.FileName := func.GetOSConfigPath('ListOfWebsites.csv');
+  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath('ListOfWebsites.csv'),',',false);
   listedit.TEditSelect := edSelectedWebsite;
   listedit.sConfigListPath := 'WebsiteLink';
   listedit.sConfigSelectedItem := 'WebsiteLinkName';
+  listedit.sListFilename := 'ListOfWebsites.csv';
   fListEdit.Show;
-  //OpenDocument(GetPathOfFile('ListOfWebsites.txt'));
 end;
 
 //Enable LinkList DropDown
@@ -141,25 +133,30 @@ end;
 
 //Load ScriptList
 //**********************************************
+{
 procedure TfOptionsForm.LoadScriptList;
 begin
   try
-    ScriptList.LoadFromFile(GetPathOfFile('ListOfScripts.txt'));
+    ScriptList.LoadFromFile(func.GetOSConfigPath('ListOfScripts.txt'));
   except
     CreateTextFile('ListOfScripts.txt');
   end;
 end;
+}
 
 //Edit Script List
 procedure TfOptionsForm.btnEditScriptListClick(Sender: TObject);
+const
+  sListFileName : String = 'ListOfPrograms.csv';
 begin
   fListEdit.Caption := 'List of executable Programs';
-  fListEdit.SdfDataSet1.FileName := GetPathOfFile('ListOfPrograms.csv');
+  fListEdit.SdfDataSet1.FileName := GetOSConfigPath(sListFileName);
+  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
   listedit.TEditSelect := edSelectedScript;
   listedit.sConfigListPath := 'ExecuteAtStart';
   listedit.sConfigSelectedItem := 'ExecuteAtStartName';
+  listedit.sListFilename := sListFileName;
   fListEdit.Show;
-  //OpenDocument(GetPathOfFile('ListOfScripts.txt'));
 end;
 
 //Enable Script List Dropdown

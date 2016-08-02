@@ -12,6 +12,7 @@ uses
   function readConfig(sSection: String; sName: String; sValue: String):String;
   function readConfig(sSection: String; sName: String; iValue: Integer):Integer;
   function readConfig(sSection: String; sName: String; bValue: Boolean):Boolean;
+  function GetOSConfigPath(Filename: String):String;
 
 implementation
 
@@ -90,6 +91,19 @@ begin
   finally
     iniConfigFile.Free
   end;
+end;
+
+//Get Config Path of Operating System
+//*******************************
+function GetOSConfigPath(Filename: String):String;
+var
+  sPath: String;
+begin
+  //Windows: make sure special characters in path are treated correctly
+  sPath := WinCPToUTF8(GetAppConfigDir(False));
+  if not FileExists(sPath + Filename) then //create if file does not exist
+    FileClose(FileCreate(sPath + Filename));
+  Result := sPath + Filename;
 end;
 
 

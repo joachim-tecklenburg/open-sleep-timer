@@ -1,11 +1,11 @@
 object fListEdit: TfListEdit
-  Left = 41
+  Left = 530
   Height = 269
-  Top = 23
-  Width = 582
+  Top = 62
+  Width = 580
   Caption = 'fListEdit'
   ClientHeight = 269
-  ClientWidth = 582
+  ClientWidth = 580
   OnClose = FormClose
   OnShow = FormShow
   Position = poOwnerFormCenter
@@ -22,9 +22,9 @@ object fListEdit: TfListEdit
   end
   object DBGrid2: TDBGrid
     Left = 0
-    Height = 220
+    Height = 104
     Top = 0
-    Width = 582
+    Width = 580
     Align = alTop
     Color = clWindow
     Columns = <    
@@ -57,7 +57,7 @@ object fListEdit: TfListEdit
     TabOrder = 2
   end
   object btnChoose: TButton
-    Left = 489
+    Left = 487
     Height = 25
     Top = 233
     Width = 75
@@ -65,6 +65,30 @@ object fListEdit: TfListEdit
     Caption = 'Choose'
     OnClick = btnChooseClick
     TabOrder = 3
+  end
+  object StringGrid1: TStringGrid
+    Left = 0
+    Height = 100
+    Top = 120
+    Width = 584
+    ColCount = 2
+    Columns = <    
+      item
+        Title.Caption = 'Name'
+        Width = 283
+      end    
+      item
+        Title.Caption = 'Path'
+        Width = 283
+      end>
+    FixedCols = 0
+    Flat = True
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goSmoothScroll]
+    TabOrder = 4
+    ColWidths = (
+      283
+      283
+    )
   end
   object DataSource1: TDataSource
     DataSet = SdfDataSet1

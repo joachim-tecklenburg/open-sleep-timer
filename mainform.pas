@@ -250,7 +250,6 @@ begin
     sWebsiteLink := func.readConfig('options', 'WebsiteLink', '');
     if (sWebsiteLink <> '') then
       OpenURL(sWebsiteLink);
-      //OpenDocument(sWebsiteLink);
   end;
 
   //Start Program / Script
@@ -260,7 +259,6 @@ begin
     if (sProgramExecutedAtStart <> '') then
       try
         OpenDocument(sProgramExecutedAtStart);
-        //process.RunCommand(sProgramExecutedAtStart, s);
       except
         on Exception do
         showmessage('File not found. Go to Options and change selected Program.');

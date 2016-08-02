@@ -19,6 +19,7 @@ type
     DataSource1: TDataSource;
     DBGrid2: TDBGrid;
     SdfDataSet1: TSdfDataSet;
+    StringGrid1: TStringGrid;
     procedure btnAddClick(Sender: TObject);
     procedure btnChooseClick(Sender: TObject);
     procedure btnDeleteRowClick(Sender: TObject);
@@ -36,8 +37,9 @@ type
 var
   fListEdit: TfListEdit;
   TEditSelect: TEdit;
-  sConfigListPath: String;
-  sConfigSelectedItem: String;
+  sConfigListPath: String; //e.g. 'www.youtube.com' or 'programfiles/vlc/vlc.exe'
+  sConfigSelectedItem: String; //e.g. 'youtube' or 'vlc'
+  sListFilename: String; //e.g. 'ListOfWebsites.csv' or 'ListOfPrograms.csv'
 
 implementation
 
@@ -53,6 +55,12 @@ begin
   sdfDataSet1.Open;
   DBGrid2.Refresh;
   //DBGrid2.LoadFromCSVFile('WebsiteList.csv', ',', True);
+  if StringGrid1.ColCount = 0 then
+  begin
+    StringGrid1.Columns.Add;
+    StringGrid1.Columns.Add;
+    StringGrid1.Cols[0].Text := 'Name';
+  end;
 end;
 
 procedure TfListEdit.btnAddClick(Sender: TObject);
@@ -60,6 +68,7 @@ begin
   SdfDataSet1.Append;
   if not btnDeleteRow.Enabled then
     btnDeleteRow.Enabled := True;
+  StringGrid1.InsertColRow(false, 1);
 end;
 
 procedure TfListEdit.btnChooseClick(Sender: TObject);
@@ -69,6 +78,9 @@ var
 begin
   sLinkName := SdfDataSet1.FieldByName('Name').AsString;
   sLinkPath := SdfDataSet1.FieldByName('Path').AsString;
+
+  sLinkName := StringGrid1.Cells[0, StringGrid1.Row];
+  sLinkPath := StringGrid1.Cells[1, StringGrid1.Row];
 
   //update edit field optionsform
   TEditSelect.Text := sLinkName;
@@ -85,6 +97,14 @@ begin
   if not SdfDataSet1.IsEmpty then
   begin
     SdfDataSet1.Delete;
+  end
+  else begin
+    btnDeleteRow.Enabled := False;
+  end;
+
+  if StringGrid1.RowCount <=1 then
+  begin
+    StringGrid1.DeleteRow(StringGrid1.Row);
   end
   else begin
     btnDeleteRow.Enabled := False;
@@ -119,6 +139,7 @@ begin
   //SdfDataSet1.Post;
   SdfDataSet1.Close;
   //SdfDataSet1.Free;
+  StringGrid1.SaveToCSVFile(func.GetOsConfigPath(sListFilename), ',', false);
 end;
 
 
