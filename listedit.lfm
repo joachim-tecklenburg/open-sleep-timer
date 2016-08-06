@@ -1,11 +1,11 @@
 object fListEdit: TfListEdit
-  Left = 530
-  Height = 269
-  Top = 62
-  Width = 580
+  Left = 33
+  Height = 173
+  Top = -1122
+  Width = 606
   Caption = 'fListEdit'
-  ClientHeight = 269
-  ClientWidth = 580
+  ClientHeight = 173
+  ClientWidth = 606
   OnClose = FormClose
   OnShow = FormShow
   Position = poOwnerFormCenter
@@ -13,112 +13,58 @@ object fListEdit: TfListEdit
   object btnAdd: TButton
     Left = 16
     Height = 25
-    Top = 233
+    Top = 137
     Width = 75
     Anchors = [akLeft, akBottom]
     Caption = 'Add'
     OnClick = btnAddClick
     TabOrder = 0
   end
-  object DBGrid2: TDBGrid
-    Left = 0
-    Height = 104
-    Top = 0
-    Width = 580
-    Align = alTop
-    Color = clWindow
-    Columns = <    
-      item
-        Title.Caption = 'Name'
-        Width = 120
-        FieldName = 'Name'
-      end    
-      item
-        Title.Caption = 'Path'
-        Width = 430
-        FieldName = 'Path'
-      end>
-    DataSource = DataSource1
-    FixedCols = 0
-    Flat = True
-    Options = [dgEditing, dgTitles, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgRowHighlight]
-    Scrollbars = ssVertical
-    TabOrder = 1
-    OnMouseUp = ToggleChooseBtn
-  end
   object btnDeleteRow: TButton
     Left = 104
     Height = 25
-    Top = 233
+    Top = 137
     Width = 75
     Anchors = [akLeft, akBottom]
     Caption = 'Delete'
     OnClick = btnDeleteRowClick
-    TabOrder = 2
+    TabOrder = 1
   end
   object btnChoose: TButton
-    Left = 487
+    Left = 513
     Height = 25
-    Top = 233
+    Top = 137
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Choose'
     OnClick = btnChooseClick
-    TabOrder = 3
+    TabOrder = 2
   end
   object StringGrid1: TStringGrid
     Left = 0
-    Height = 100
-    Top = 120
-    Width = 584
+    Height = 125
+    Top = 0
+    Width = 606
+    Align = alTop
+    Anchors = [akTop, akLeft, akRight, akBottom]
     ColCount = 2
     Columns = <    
       item
         Title.Caption = 'Name'
-        Width = 283
+        Width = 150
       end    
       item
         Title.Caption = 'Path'
-        Width = 283
+        Width = 430
       end>
     FixedCols = 0
     Flat = True
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goSmoothScroll]
-    TabOrder = 4
+    TabOrder = 3
+    OnKeyUp = StringGrid1KeyUp
     ColWidths = (
-      283
-      283
+      150
+      430
     )
-  end
-  object DataSource1: TDataSource
-    DataSet = SdfDataSet1
-    left = 496
-    top = 48
-  end
-  object SdfDataSet1: TSdfDataSet
-    FileMustExist = True
-    ReadOnly = False
-    Schema.Strings = (
-      'Name'
-      'Path'
-    )
-    FieldDefs = <    
-      item
-        Name = 'Name'
-        Attributes = [faRequired]
-        DataType = ftString
-        Size = 255
-      end    
-      item
-        Name = 'Path'
-        DataType = ftString
-        Size = 10000
-      end>
-    AllowMultiLine = False
-    Delimiter = ','
-    FirstLineAsSchema = False
-    StripTrailingDelimiters = False
-    left = 432
-    top = 48
   end
 end

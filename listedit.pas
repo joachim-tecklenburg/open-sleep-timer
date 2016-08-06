@@ -5,8 +5,8 @@ unit listedit;
 interface
 
 uses
-  Classes, SysUtils, db, SdfData, FileUtil, RTTICtrls, Forms, Controls,
-  Graphics, Dialogs, DBGrids, DbCtrls, StdCtrls, Buttons, ButtonPanel, Menus, func, Grids;
+  Classes, SysUtils, FileUtil, RTTICtrls, Forms, Controls,
+  Graphics, Dialogs, DBGrids, DbCtrls, StdCtrls, Buttons, Menus, func, Grids;
 
 type
 
@@ -16,17 +16,13 @@ type
     btnAdd: TButton;
     btnDeleteRow: TButton;
     btnChoose: TButton;
-    DataSource1: TDataSource;
-    DBGrid2: TDBGrid;
-    SdfDataSet1: TSdfDataSet;
     StringGrid1: TStringGrid;
     procedure btnAddClick(Sender: TObject);
     procedure btnChooseClick(Sender: TObject);
     procedure btnDeleteRowClick(Sender: TObject);
-    procedure DBGrid2ColEnter(Sender: TObject);
-    procedure DBGrid2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure StringGrid1KeyUp(Sender: TObject);
     procedure ToggleChooseBtn;
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormClose(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     { private declarations }
@@ -36,7 +32,7 @@ type
 
 var
   fListEdit: TfListEdit;
-  TEditSelect: TEdit;
+  TEditSelect: TEdit; //Holds edSelectedScript / edSelectedWebsite from Optionsform
   sConfigListPath: String; //e.g. 'www.youtube.com' or 'programfiles/vlc/vlc.exe'
   sConfigSelectedItem: String; //e.g. 'youtube' or 'vlc'
   sListFilename: String; //e.g. 'ListOfWebsites.csv' or 'ListOfPrograms.csv'
@@ -50,35 +46,37 @@ uses
 
 { TfListEdit }
 
+//Form Show
+//******************************************************************************
 procedure TfListEdit.FormShow(Sender: TObject);
 begin
-  sdfDataSet1.Open;
-  DBGrid2.Refresh;
-  //DBGrid2.LoadFromCSVFile('WebsiteList.csv', ',', True);
+//Todo: complete this
   if StringGrid1.ColCount = 0 then
   begin
     StringGrid1.Columns.Add;
     StringGrid1.Columns.Add;
     StringGrid1.Cols[0].Text := 'Name';
   end;
+  if StringGrid1.FixedRows <= StringGrid1.RowCount - 1 then //If only 1 Row left
+    btnDeleteRow.Enabled := False;
 end;
 
+//Add-Button
+//******************************************************************************
 procedure TfListEdit.btnAddClick(Sender: TObject);
 begin
-  SdfDataSet1.Append;
   if not btnDeleteRow.Enabled then
     btnDeleteRow.Enabled := True;
   StringGrid1.InsertColRow(false, 1);
 end;
 
+//Choose-Button
+//******************************************************************************
 procedure TfListEdit.btnChooseClick(Sender: TObject);
 var
   sLinkName: String;
   sLinkPath: String;
 begin
-  sLinkName := SdfDataSet1.FieldByName('Name').AsString;
-  sLinkPath := SdfDataSet1.FieldByName('Path').AsString;
-
   sLinkName := StringGrid1.Cells[0, StringGrid1.Row];
   sLinkPath := StringGrid1.Cells[1, StringGrid1.Row];
 
@@ -92,17 +90,11 @@ begin
   fListEdit.Close;
 end;
 
+//Delete-Button
+//******************************************************************************
 procedure TfListEdit.btnDeleteRowClick(Sender: TObject);
 begin
-  if not SdfDataSet1.IsEmpty then
-  begin
-    SdfDataSet1.Delete;
-  end
-  else begin
-    btnDeleteRow.Enabled := False;
-  end;
-
-  if StringGrid1.RowCount <=1 then
+  if StringGrid1.FixedRows <= StringGrid1.RowCount - 1 then //If only 1 Row left
   begin
     StringGrid1.DeleteRow(StringGrid1.Row);
   end
@@ -111,34 +103,30 @@ begin
   end;
 end;
 
-procedure TfListEdit.DBGrid2ColEnter(Sender: TObject);
+//Key Up Event
+//******************************************************************************
+procedure TfListEdit.StringGrid1KeyUp(Sender: TObject);
 begin
-
+    ToggleChooseBtn;
 end;
 
-procedure TfListEdit.DBGrid2KeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  ToggleChooseBtn;
-end;
-
+//ToogleChoose Button - Deaktivate Choose Button if Path = ''
+//******************************************************************************
 procedure TfListEdit.ToggleChooseBtn;
 begin
-if SdfDataSet1.FieldByName('Path').AsString = '' then
-begin
-  btnChoose.Enabled := False;
-end
-else begin
-  btnChoose.Enabled := True;
-end;
+  if StringGrid1.Cells[1, StringGrid1.Row] = '' then
+  begin
+    btnChoose.Enabled := False;
+  end
+  else begin
+    btnChoose.Enabled := True;
+  end;
 end;
 
-
-procedure TfListEdit.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+//Form Close
+//******************************************************************************
+procedure TfListEdit.FormClose(Sender: TObject);
 begin
-  //SdfDataSet1.Post;
-  SdfDataSet1.Close;
-  //SdfDataSet1.Free;
   StringGrid1.SaveToCSVFile(func.GetOsConfigPath(sListFilename), ',', false);
 end;
 

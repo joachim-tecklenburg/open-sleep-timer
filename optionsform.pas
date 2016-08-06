@@ -116,7 +116,6 @@ end;
 procedure TfOptionsForm.btnEditLinkListClick(Sender: TObject);
 begin
   fListEdit.Caption := 'List of Websites';
-  fListEdit.SdfDataSet1.FileName := func.GetOSConfigPath('ListOfWebsites.csv');
   fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath('ListOfWebsites.csv'),',',false);
   listedit.TEditSelect := edSelectedWebsite;
   listedit.sConfigListPath := 'WebsiteLink';
@@ -150,9 +149,8 @@ const
   sListFileName : String = 'ListOfPrograms.csv';
 begin
   fListEdit.Caption := 'List of executable Programs';
-  fListEdit.SdfDataSet1.FileName := GetOSConfigPath(sListFileName);
   fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
-  listedit.TEditSelect := edSelectedScript;
+  listedit.TEditSelect := edSelectedScript; //hand over TEdit in Order to give back Selection
   listedit.sConfigListPath := 'ExecuteAtStart';
   listedit.sConfigSelectedItem := 'ExecuteAtStartName';
   listedit.sListFilename := sListFileName;
