@@ -394,26 +394,53 @@ end;
 //Stop CountDown
 //*************************************
 procedure TfMainform.StopCountDown(Sender: TObject);
-var
-  s: String;
+
+  procedure ExecuteAtCountdownEnd;
+  var
+    sScriptPath: String;
+    sWebsiteLink: String;
+    s: String;
+  begin
+    //Go to Standby(if checked)
+    if (chkStandby.Checked) then
+      process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState Standby', s);
+
+    //Open Website (if checked)
+    //TODO: Exctract Procedure to use also for start
+    if func.readConfig('options', 'WebsiteAtCountdownEndEnabled', false) then
+    begin
+      sWebsiteLink := func.readConfig('options', 'WebsiteAtCountdownEndPath', '');
+      if (sWebsiteLink <> '') then
+        OpenURL(sWebsiteLink);
+    end;
+
+    //Execute Program / Script (if checked)
+    if func.readConfig('options', 'ExecuteAtCountdownEndEnabled', false) then
+    begin
+      sScriptPath := func.readConfig('options', 'ExecuteAtCountdownEndPath', '');
+      if (sScriptPath <> '') then
+      OpenDocument(sScriptPath);
+    end;
+
+    //Show PopUp
+    fPopUp.Show;
+  end;
+
 begin
   tmrCountDown.Enabled := False;
-  fPopUp.Show;
   UpdateButtons;
 
-  //Go to Standby at the end (if checked)
-  if (chkStandby.Checked) AND (Sender <> btnStop) then
-    process.RunCommand('rundll32.exe powrprof.dll,SetSuspendState Standby', s);
+  if (Sender <> btnStop) then //don't execute this when stopped by user
+    ExecuteAtCountdownEnd;
+
+  if (Sender = btnStop) then //when stopped by user: reset volume immediately
+      fMainform.tbCurrentVolume.Position := Round(mainform.dVolumeLevelAtStart * 100);
 
   //Reset Counter
   iVolumeArrayCounter := 0;
   //Reset Titlebar
   fMainform.Caption := sTitlebarCaption;
-
-
 end;
-
-
 
 
 end.

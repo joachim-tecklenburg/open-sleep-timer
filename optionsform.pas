@@ -13,23 +13,31 @@ type
   { TfOptionsForm }
 
   TfOptionsForm = class(TForm)
-    btnEditLinkList: TButton;
-    btnEditScriptList: TButton;
-    chkWebsiteLinkAtStart: TCheckBox;
+    btnEditWebsiteCountdownStart: TButton;
+    btnEditWebsiteCountdownEnd: TButton;
+    btnEditScriptCountdownStart: TButton;
+    btnEditScriptCountdownEnd: TButton;
+    chkWebsiteCountdownEnd: TCheckBox;
+    chkScriptCountdownEnd: TCheckBox;
+    chkWebsiteCountdownStart: TCheckBox;
     chkStartCountdownAutomatically: TCheckBox;
-    cbSelectWebsite: TComboBox;
-    cbSelectScriptAtStart: TComboBox;
-    chkStartProgramAtStart: TCheckBox;
-    edSelectedWebsite: TEdit;
-    edSelectedScript: TEdit;
+    chkScriptCountdownStart: TCheckBox;
+    edScriptCountdownEnd: TEdit;
+    edWebsiteCountdownStart: TEdit;
+    edScriptCountdownStart: TEdit;
+    edWebsiteCountdownEnd: TEdit;
     Label1: TLabel;
-    procedure btnEditLinkListClick(Sender: TObject);
-    procedure btnEditScriptListClick(Sender: TObject);
+    lblExecuteAtCountdownEnd: TLabel;
+    procedure btnEditScriptCountdownEndClick(Sender: TObject);
+    procedure btnEditWebsiteCountdownEndClick(Sender: TObject);
+    procedure btnEditWebsiteCountdownStartClick(Sender: TObject);
+    procedure btnEditScriptCountdownStartClick(Sender: TObject);
+    procedure chkScriptCountdownEndChange(Sender: TObject);
     procedure chkStartCountdownAutomaticallyChange(Sender: TObject);
-    procedure chkStartProgramAtStartChange(Sender: TObject);
-    procedure chkWebsiteLinkAtStartChange(Sender: TObject);
+    procedure chkScriptCountdownStartChange(Sender: TObject);
+    procedure chkWebsiteCountdownEndChange(Sender: TObject);
+    procedure chkWebsiteCountdownStartChange(Sender: TObject);
     procedure FormClose(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     //procedure LoadLinkList;
     //procedure LoadScriptList;
@@ -44,7 +52,12 @@ var
   LinkList: TStringlist;
   ScriptList: TStringlist;
 
+//resourcestring
+
+
 implementation
+
+
 
 {$R *.lfm}
 
@@ -54,30 +67,18 @@ implementation
 //***********************************************
 procedure TfOptionsForm.FormShow(Sender: TObject);
 begin
+  //TODO: harmonise options parameter names
   //load options
   chkStartCountDownAutomatically.Checked :=
     func.readConfig('options', 'StartCountdownAutomatically', false);
-  edSelectedWebsite.Text := func.readConfig('options', 'WebsiteLinkName', '');
-  edSelectedScript.Text := func.readConfig('options', 'ExecuteAtStartName', '');
-  chkWebsiteLinkAtStart.Checked := func.readConfig('options', 'WebsiteLinkEnabled', False);
-  chkStartProgramAtStart.Checked := func.readConfig('options', 'ExecuteAtStartEnabled', False);
-  //load website-links
-  {LinkList := TStringlist.Create;
-  LoadLinkList;
-  cbSelectWebsite.Items.Assign(LinkList);
-  if cbSelectWebsite.Text = '' then
-  begin
-    cbSelectWebsite.Text := LinkList[0];
-  end;}
-
-  //load script-list
-  {ScriptList := TStringlist.Create;
-  LoadScriptList;
-  cbSelectScriptAtStart.Items.Assign(ScriptList);
-  if cbSelectScriptAtStart.Text = '' then
-  begin
-    cbSelectScriptAtStart.Text := ScriptList[0];
-  end;}
+  edWebsiteCountdownStart.Text := func.readConfig('options', 'WebsiteLinkName', '');
+  edScriptCountdownStart.Text := func.readConfig('options', 'ExecuteAtStartName', '');
+  edWebsiteCountdownEnd.Text := func.readConfig('options', 'WebsiteAtCountdownEndName', '');
+  edScriptCountdownEnd.Text := func.readConfig('options', 'ExecuteAtCountdownEndName', '');
+  chkWebsiteCountdownStart.Checked := func.readConfig('options', 'WebsiteLinkEnabled', False);
+  chkScriptCountdownStart.Checked := func.readConfig('options', 'ExecuteAtStartEnabled', False);
+  chkScriptCountdownEnd.Checked := func.readConfig('options', 'ExecuteAtCountdownEndEnabled', False);
+  chkWebsiteCountdownEnd.Checked := func.readConfig('options', 'WebsiteAtCountdownEndEnabled', False);
 end;
 
 //OnChange - Start Countdown automatically
@@ -88,80 +89,102 @@ begin
     chkStartCountDownAutomatically.Checked);
 end;
 
-//Create Text-File
-//***********************************
-{
-procedure CreateTextFile(Filename: String);
-begin
-  LinkList.SaveToFile(func.GetOSConfigPath(Filename));
-end;
-}
 
-//Load WebsiteList
-//***********************************************
-{
-procedure TfOptionsForm.LoadLinkList;
-begin
-  try
-    LinkList.LoadFromFile(GetPathOfFile('ListOfWebsites.txt'));
-  except
-    LinkList.Add('http://asoftmurmur.com/');
-    LinkList.Add('https://www.youtube.com/watch?v=eyU3bRy2x44');
-    CreateTextFile('ListOfWebsites.txt');
-  end;
-end;
-}
 
-//Edit WebsiteList
-procedure TfOptionsForm.btnEditLinkListClick(Sender: TObject);
+//Open List of Websites
+//******************************************************************************
+procedure OpenListOfWebsites;
+const
+  sListFileName: String = 'ListOfWebsites.csv';
 begin
   fListEdit.Caption := 'List of Websites';
-  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath('ListOfWebsites.csv'),',',false);
-  listedit.TEditSelect := edSelectedWebsite;
-  listedit.sConfigListPath := 'WebsiteLink';
-  listedit.sConfigSelectedItem := 'WebsiteLinkName';
-  listedit.sListFilename := 'ListOfWebsites.csv';
+  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
+  listedit.sListFilename := sListFileName;
   fListEdit.Show;
 end;
 
-//Enable LinkList DropDown
-procedure TfOptionsForm.chkWebsiteLinkAtStartChange(Sender: TObject);
+//Enable Website at Countdown Start TEdit
+//******************************************************************************
+procedure TfOptionsForm.chkWebsiteCountdownStartChange(Sender: TObject);
 begin
-  edSelectedWebsite.Enabled := chkWebsiteLinkAtStart.Checked;
+  edWebsiteCountdownStart.Enabled := chkWebsiteCountdownStart.Checked;
 end;
 
-//Load ScriptList
-//**********************************************
-{
-procedure TfOptionsForm.LoadScriptList;
+//Button Website at Countdown Start
+//******************************************************************************
+procedure TfOptionsForm.btnEditWebsiteCountdownStartClick(Sender: TObject);
 begin
-  try
-    ScriptList.LoadFromFile(func.GetOSConfigPath('ListOfScripts.txt'));
-  except
-    CreateTextFile('ListOfScripts.txt');
-  end;
+  listedit.TEditSelect := edWebsiteCountdownStart; //hand over TEdit in order to give back selection
+  listedit.sConfigListPath := 'WebsiteLink';
+  listedit.sConfigSelectedItem := 'WebsiteLinkName';
+  OpenListOfWebsites;
 end;
-}
 
-//Edit Script List
-procedure TfOptionsForm.btnEditScriptListClick(Sender: TObject);
+//Enable Website at Countdown End TEdit
+//******************************************************************************
+procedure TfOptionsForm.chkWebsiteCountdownEndChange(Sender: TObject);
+begin
+  edWebsiteCountdownEnd.Enabled := chkWebsiteCountdownEnd.Checked;
+end;
+
+//Button Website at Countdown End
+//******************************************************************************
+procedure TfOptionsForm.btnEditWebsiteCountdownEndClick(Sender: TObject);
+begin
+  listedit.TEditSelect := edWebsiteCountdownEnd; //hand over TEdit in order to give back selection
+  listedit.sConfigListPath := 'WebsiteAtCountdownEndPath';
+  listedit.sConfigSelectedItem := 'WebsiteAtCountdownEndName';
+  OpenListOfWebsites;
+end;
+
+
+
+//Open List of Scripts
+//******************************************************************************
+procedure OpenListOfScripts;
 const
   sListFileName : String = 'ListOfPrograms.csv';
 begin
   fListEdit.Caption := 'List of executable Programs';
   fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
-  listedit.TEditSelect := edSelectedScript; //hand over TEdit in Order to give back Selection
-  listedit.sConfigListPath := 'ExecuteAtStart';
-  listedit.sConfigSelectedItem := 'ExecuteAtStartName';
   listedit.sListFilename := sListFileName;
   fListEdit.Show;
 end;
 
-//Enable Script List Dropdown
-procedure TfOptionsForm.chkStartProgramAtStartChange(Sender: TObject);
+//Enable Script at Countdown Start TEdit
+//******************************************************************************
+procedure TfOptionsForm.chkScriptCountdownStartChange(Sender: TObject);
 begin
-  edSelectedScript.Enabled := chkStartProgramAtStart.Checked;
+  edScriptCountdownStart.Enabled := chkScriptCountdownStart.Checked;
 end;
+
+//Button Script at Countdown Start
+//******************************************************************************
+procedure TfOptionsForm.btnEditScriptCountdownStartClick(Sender: TObject);
+begin
+  listedit.TEditSelect := edScriptCountdownStart; //hand over TEdit in order to give back selection
+  listedit.sConfigListPath := 'ExecuteAtStart';
+  listedit.sConfigSelectedItem := 'ExecuteAtStartName';
+  OpenListOfScripts;
+end;
+
+//Enable Script at Countdown End TEdit
+//******************************************************************************
+procedure TfOptionsForm.chkScriptCountdownEndChange(Sender: TObject);
+begin
+  edScriptCountdownEnd.Enabled := chkScriptCountdownEnd.Checked;
+end;
+
+//Button Script at Countdown End
+//******************************************************************************
+procedure TfOptionsForm.btnEditScriptCountdownEndClick(Sender: TObject);
+begin
+  listedit.TEditSelect := edScriptCountdownEnd; //hand over TEdit in order to give back selection
+  listedit.sConfigListPath := 'ExecuteAtCountdownEndPath';
+  listedit.sConfigSelectedItem := 'ExecuteAtCountDownEndName';
+  OpenListOfScripts;
+end;
+
 
 
 //Form Close
@@ -170,15 +193,12 @@ procedure TfOptionsForm.FormClose(Sender: TObject);
 begin
   func.writeConfig('main', 'OptionsFormLeft', fOptionsForm.Left);
   func.writeConfig('main', 'OptionsFormTop', fOptionsForm.Top);
-  func.writeConfig('options', 'WebsiteLinkEnabled', chkWebsiteLinkAtStart.Checked);
-  func.writeConfig('options', 'ExecuteAtStartEnabled', chkStartProgramAtStart.Checked);
-end;
-
-procedure TfOptionsForm.FormCreate(Sender: TObject);
-begin
+  func.writeConfig('options', 'WebsiteLinkEnabled', chkWebsiteCountdownStart.Checked);
+  func.writeConfig('options', 'ExecuteAtStartEnabled', chkScriptCountdownStart.Checked);
+  func.writeConfig('options', 'ExecuteAtCountdownEndEnabled', chkScriptCountdownEnd.Checked);
+  func.writeConfig('options', 'WebsiteAtCountdownEndEnabled', chkScriptCountdownEnd.Checked);
 
 end;
-
 
 end.
 
