@@ -3,7 +3,7 @@ object fOptionsForm: TfOptionsForm
   Height = 369
   Top = 41
   Width = 320
-  Caption = 'Options'
+  Caption = 'Optionen'
   ClientHeight = 369
   ClientWidth = 320
   Color = clWhite

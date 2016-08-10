@@ -52,12 +52,11 @@ var
   LinkList: TStringlist;
   ScriptList: TStringlist;
 
-//resourcestring
-
+resourcestring
+  CaptionchkWebsite = 'Open selected Website:';
+  CaptionchkScript = 'Open selected Program:';
 
 implementation
-
-
 
 {$R *.lfm}
 
@@ -76,9 +75,15 @@ begin
   edWebsiteCountdownEnd.Text := func.readConfig('options', 'WebsiteAtCountdownEndName', '');
   edScriptCountdownEnd.Text := func.readConfig('options', 'ExecuteAtCountdownEndName', '');
   chkWebsiteCountdownStart.Checked := func.readConfig('options', 'WebsiteLinkEnabled', False);
+  chkWebsiteCountdownStart.Caption := CaptionchkWebsite;
   chkScriptCountdownStart.Checked := func.readConfig('options', 'ExecuteAtStartEnabled', False);
-  chkScriptCountdownEnd.Checked := func.readConfig('options', 'ExecuteAtCountdownEndEnabled', False);
+  chkScriptCountdownStart.Caption := CaptionchkScript;;
   chkWebsiteCountdownEnd.Checked := func.readConfig('options', 'WebsiteAtCountdownEndEnabled', False);
+  chkWebsiteCountdownEnd.Caption := CaptionchkWebsite;
+  chkScriptCountdownEnd.Checked := func.readConfig('options', 'ExecuteAtCountdownEndEnabled', False);
+  chkScriptCountdownEnd.Caption := CaptionchkScript;;
+
+
 end;
 
 //OnChange - Start Countdown automatically

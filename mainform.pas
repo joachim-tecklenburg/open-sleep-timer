@@ -15,6 +15,8 @@ type
   { TfMainform }
 
   TfMainform = class(TForm)
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     VolumeDown: TAction;
     VolumeUp: TAction;
     ActionList1: TActionList;
@@ -33,12 +35,10 @@ type
     lblMinutesUntilStart: TLabel;
     MenuItemOptions: TMenuItem;
     mnMainMenu: TMainMenu;
-    MenuItem1: TMenuItem;
-    MenuItem4: TMenuItem;
-    MenuItemAbout: TMenuItem;
     tbTargetVolume: TTrackBar;
     tbCurrentVolume: TTrackBar;
     tmrCountDown: TTimer;
+    procedure MenuItem2Click(Sender: TObject);
     procedure VolumeDownExecute(Sender: TObject);
     procedure VolumeUpExecute(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
@@ -275,6 +275,11 @@ end;
 procedure TfMainform.VolumeDownExecute(Sender: TObject);
 begin
   tbCurrentVolume.Position := tbCurrentVolume.Position - 1;
+end;
+
+procedure TfMainform.MenuItem2Click(Sender: TObject);
+begin
+
 end;
 
 //Stop Button

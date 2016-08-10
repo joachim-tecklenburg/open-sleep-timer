@@ -1,7 +1,7 @@
 object fListEdit: TfListEdit
-  Left = 33
+  Left = 268
   Height = 173
-  Top = -1122
+  Top = 53
   Width = 606
   Caption = 'fListEdit'
   ClientHeight = 173
