@@ -37,6 +37,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "C:\Users\User.TECKLENBURG-PC\Documents\Bitbucket\open-sleep-timer\opensleeptimer.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\User.TECKLENBURG-PC\Documents\Bitbucket\open-sleep-timer\locale\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\User.TECKLENBURG-PC\Documents\Bitbucket\open-sleep-timer\*.csv"; DestDir: "{localappdata}\opensleeptimer"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -178,7 +178,7 @@ procedure OpenListOfScripts;
 var
   sListFileName: String = 'ListOfPrograms.csv';
 begin
-  fListEdit.Caption := CaptionListeditWebsites;
+  fListEdit.Caption := CaptionListeditPrograms;
   fOptionsform.LoadFileIntoGrid(sListFileName);
   fListEdit.Show;
 end;

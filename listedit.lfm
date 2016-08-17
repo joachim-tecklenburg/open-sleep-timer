@@ -59,7 +59,7 @@ object fListEdit: TfListEdit
       end>
     FixedCols = 0
     Flat = True
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goSmoothScroll]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goRowSelect, goSmoothScroll]
     TabOrder = 3
     OnKeyUp = StringGrid1KeyUp
     ColWidths = (
