@@ -1,7 +1,7 @@
 object fAbout: TfAbout
-  Left = 638
+  Left = 944
   Height = 112
-  Top = 264
+  Top = 399
   Width = 320
   BorderStyle = bsDialog
   Caption = 'Über..'
@@ -10,32 +10,34 @@ object fAbout: TfAbout
   Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'
   object Label1: TLabel
-    Left = 45
+    Left = 40
     Height = 15
     Top = 25
-    Width = 226
+    Width = 237
     Alignment = taCenter
     Anchors = []
     Caption = 'Open Sleep Timer by Joachim Tecklenburg'
+    Font.Style = [fsBold]
     ParentColor = False
+    ParentFont = False
   end
   object ECLink1: TECLink
-    Left = 45
+    Left = 40
     Height = 15
     Top = 48
-    Width = 82
+    Width = 93
     Alignment = taCenter
-    Caption = 'Project Website'
+    Caption = '> Project Website'
     Link = 'http://tecklenburg.at/opensleeptimer'
     LinkType = eltWWW
   end
   object LinkToIcons8: TECLink
-    Left = 45
+    Left = 192
     Height = 15
-    Top = 72
-    Width = 103
+    Top = 80
+    Width = 111
     Alignment = taCenter
-    Caption = 'Icon by Icons8.com'
+    Caption = ' Icons by Icons8.com'
     Link = 'https://icons8.com'
     LinkType = eltWWW
   end
