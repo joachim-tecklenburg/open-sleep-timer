@@ -60,6 +60,10 @@ var
   sConfigSelectedItem: String; //e.g. 'youtube' or 'vlc'
   sListFilename: String; //e.g. 'ListOfWebsites.csv' or 'ListOfPrograms.csv'
 
+resourcestring
+  Grid1stColumnCaption = 'Name';
+  Grid2ndColumnCaption = 'Path / Address';
+
 implementation
 
 uses
@@ -73,15 +77,21 @@ uses
 //******************************************************************************
 procedure TfListEdit.FormShow(Sender: TObject);
 begin
-//Todo: complete this
+  //if grid is empty:
   if StringGrid1.ColCount = 0 then
   begin
     StringGrid1.Columns.Add;
     StringGrid1.Columns.Add;
-    StringGrid1.Cols[0].Text := 'Name';
+    StringGrid1.Columns[1].Width := 500;
   end;
-  if StringGrid1.FixedRows <= StringGrid1.RowCount - 1 then //If only 1 Row left
+
+  //If only 1 Row left:
+  if StringGrid1.FixedRows > StringGrid1.RowCount - 1 then
     btnDeleteRow.Enabled := False;
+
+  //Rename Column Titles with rescource strings (for translation):
+  StringGrid1.Columns[0].Title.Caption := Grid1stColumnCaption;
+  StringGrid1.Columns[1].Title.Caption := Grid2ndColumnCaption;
 end;
 
 //Add-Button
@@ -100,6 +110,7 @@ var
   sLinkName: String;
   sLinkPath: String;
 begin
+  //get values from selected row
   sLinkName := StringGrid1.Cells[0, StringGrid1.Row];
   sLinkPath := StringGrid1.Cells[1, StringGrid1.Row];
 

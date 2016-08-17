@@ -1,7 +1,7 @@
 object fPopUp: TfPopUp
-  Left = 132
+  Left = 201
   Height = 118
-  Top = 19
+  Top = 32
   Width = 228
   BorderStyle = bsDialog
   Caption = 'Time is Up!'
@@ -12,9 +12,9 @@ object fPopUp: TfPopUp
   LCLVersion = '1.6.0.4'
   object lblQuestion: TLabel
     Left = 16
-    Height = 13
+    Height = 15
     Top = 32
-    Width = 151
+    Width = 164
     Alignment = taCenter
     Caption = 'Stopped. Restore volume level?'
     ParentColor = False

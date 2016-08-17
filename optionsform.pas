@@ -51,6 +51,7 @@ type
     edWebsiteCountdownEnd: TEdit;
     Label1: TLabel;
     lblExecuteAtCountdownEnd: TLabel;
+    procedure LoadFileIntoGrid(sFilename: String);
     procedure btnEditScriptCountdownEndClick(Sender: TObject);
     procedure btnEditWebsiteCountdownEndClick(Sender: TObject);
     procedure btnEditWebsiteCountdownStartClick(Sender: TObject);
@@ -62,8 +63,6 @@ type
     procedure chkWebsiteCountdownStartChange(Sender: TObject);
     procedure FormClose(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    //procedure LoadLinkList;
-    //procedure LoadScriptList;
   private
     { private declarations }
   public
@@ -78,6 +77,8 @@ var
 resourcestring
   CaptionchkWebsite = 'Open selected Website:';
   CaptionchkScript = 'Open selected Program:';
+  CaptionListeditWebsites = 'List of Websites';
+  CaptionListeditPrograms = 'List of Programs';
 
 implementation
 
@@ -90,7 +91,8 @@ implementation
 procedure TfOptionsForm.FormShow(Sender: TObject);
 begin
   //TODO: harmonise options parameter names
-  //load options
+
+  //load options:
   chkStartCountDownAutomatically.Checked :=
     func.readConfig('options', 'StartCountdownAutomatically', false);
   edWebsiteCountdownStart.Text := func.readConfig('options', 'WebsiteLinkName', '');
@@ -105,8 +107,6 @@ begin
   chkWebsiteCountdownEnd.Caption := CaptionchkWebsite;
   chkScriptCountdownEnd.Checked := func.readConfig('options', 'ExecuteAtCountdownEndEnabled', False);
   chkScriptCountdownEnd.Caption := CaptionchkScript;;
-
-
 end;
 
 //OnChange - Start Countdown automatically
@@ -117,17 +117,22 @@ begin
     chkStartCountDownAutomatically.Checked);
 end;
 
-
+//Load File into Grid
+//******************************************************************************
+procedure TfOptionsForm.LoadFileIntoGrid(sFilename: String);
+begin
+  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sFileName),',',false);
+  listedit.sListFilename := sFileName;
+end;
 
 //Open List of Websites
 //******************************************************************************
 procedure OpenListOfWebsites;
-const
+var
   sListFileName: String = 'ListOfWebsites.csv';
 begin
-  fListEdit.Caption := 'List of Websites';
-  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
-  listedit.sListFilename := sListFileName;
+  fOptionsForm.LoadFileIntoGrid(sListFileName);
+  fListEdit.Caption := CaptionListeditWebsites;
   fListEdit.Show;
 end;
 
@@ -170,12 +175,11 @@ end;
 //Open List of Scripts
 //******************************************************************************
 procedure OpenListOfScripts;
-const
-  sListFileName : String = 'ListOfPrograms.csv';
+var
+  sListFileName: String = 'ListOfPrograms.csv';
 begin
-  fListEdit.Caption := 'List of executable Programs';
-  fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sListFileName),',',false);
-  listedit.sListFilename := sListFileName;
+  fListEdit.Caption := CaptionListeditWebsites;
+  fOptionsform.LoadFileIntoGrid(sListFileName);
   fListEdit.Show;
 end;
 

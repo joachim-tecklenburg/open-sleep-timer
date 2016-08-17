@@ -99,7 +99,7 @@ var
   iVolumeArrayCounter: Integer = 0;
   dPreviousVolume: Double;
   btbCurrentVolumeMouseDown: Boolean;
-  const sTitlebarCaption: String = 'Open Sleep Timer v0.4';
+  const sTitlebarCaption: String = 'Open Sleep Timer 1.0';
 
 
 implementation

@@ -1,9 +1,9 @@
 object fMainform: TfMainform
-  Left = 521
+  Left = 51
   Height = 341
-  Top = 350
+  Top = 348
   Width = 442
-  Caption = 'Open Sleep Timer v0.3'
+  Caption = 'Open Sleep Timer'
   ClientHeight = 321
   ClientWidth = 442
   Color = clWhite
@@ -35,8 +35,8 @@ object fMainform: TfMainform
   end
   object edMinutesDuration: TSpinEdit
     Left = 157
-    Height = 21
-    Top = 282
+    Height = 23
+    Top = 280
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000000
@@ -46,17 +46,17 @@ object fMainform: TfMainform
   end
   object lblMinutesUntilStop: TLabel
     Left = 16
-    Height = 13
-    Top = 286
-    Width = 93
+    Height = 15
+    Top = 284
+    Width = 108
     Anchors = [akLeft, akBottom]
     Caption = 'Duration in minutes:'
     ParentColor = False
   end
   object edMinutesDelay: TSpinEdit
     Left = 157
-    Height = 21
-    Top = 242
+    Height = 23
+    Top = 240
     Width = 61
     Anchors = [akLeft, akBottom]
     MaxValue = 1000
@@ -66,9 +66,9 @@ object fMainform: TfMainform
   end
   object lblMinutesUntilStart: TLabel
     Left = 16
-    Height = 13
-    Top = 246
-    Width = 98
+    Height = 15
+    Top = 244
+    Width = 111
     Anchors = [akLeft, akBottom]
     Caption = 'Delayed start in min.:'
     ParentColor = False
@@ -88,35 +88,35 @@ object fMainform: TfMainform
   end
   object lblTargetVolume: TLabel
     Left = 16
-    Height = 13
+    Height = 15
     Top = 15
-    Width = 71
+    Width = 80
     Caption = 'Target volume:'
     ParentColor = False
     ParentFont = False
   end
   object lblShowTargetVolume: TLabel
-    Left = 400
-    Height = 13
+    Left = 398
+    Height = 15
     Top = 15
-    Width = 20
+    Width = 22
     Anchors = [akTop, akRight]
     Caption = '20%'
     ParentColor = False
   end
   object lblCurrentVolume: TLabel
     Left = 16
-    Height = 13
+    Height = 15
     Top = 55
-    Width = 78
+    Width = 90
     Caption = 'Current Volume: '
     ParentColor = False
   end
   object lblShowCurrentVolume: TLabel
-    Left = 400
-    Height = 13
+    Left = 398
+    Height = 15
     Top = 55
-    Width = 20
+    Width = 22
     Anchors = [akTop, akRight]
     Caption = '50%'
     ParentColor = False
@@ -137,10 +137,10 @@ object fMainform: TfMainform
     TabOrder = 1
   end
   object chkStandby: TCheckBox
-    Left = 255
-    Height = 17
-    Top = 246
-    Width = 163
+    Left = 267
+    Height = 19
+    Top = 244
+    Width = 151
     Alignment = taLeftJustify
     Anchors = [akRight, akBottom]
     Caption = 'Go to Standby at the end'

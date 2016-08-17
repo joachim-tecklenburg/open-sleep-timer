@@ -17,8 +17,8 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <MinorVersionNr Value="3"/>
-      <StringTable CompanyName="Joachim Tecklenburg" LegalCopyright="MIT Lizenz" ProductName="Open Sleep Timer" ProductVersion=""/>
+      <MajorVersionNr Value="1"/>
+      <StringTable CompanyName="Joachim Tecklenburg" LegalCopyright="MIT License" ProductName="Open Sleep Timer" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -116,6 +116,9 @@
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>
