@@ -4,12 +4,12 @@
 
 ## What is it?
 
-This is a Clone of [Sweet Dreams](http://www.svenbader.de/downloads_software_sweet_dreams/) for Windows.
+This is a Open Source Clone of [Sweet Dreams](http://www.svenbader.de/downloads_software_sweet_dreams/) for Windows.
 It slowly fades out System Master Volume to help you fall asleep.
 
 ## Download
 
--> [Dowload Exe für Windows](https://www.dropbox.com/s/mdfv44qlsc0xy1z/opensleeptimer-latest.zip?dl=0)
+-> [Dowload Exe für Windows](https://dl.dropboxusercontent.com/s/n47vzx3bbnsgaeg/opensleeptimer-setup.exe)
 
 Now it works only on Windows, but versions für Mac & Linux are planned.
 
