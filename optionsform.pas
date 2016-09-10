@@ -51,6 +51,7 @@ type
     edWebsiteCountdownEnd: TEdit;
     Label1: TLabel;
     lblExecuteAtCountdownEnd: TLabel;
+    procedure FormCreate(Sender: TObject);
     procedure LoadFileIntoGrid(sFilename: String);
     procedure btnEditScriptCountdownEndClick(Sender: TObject);
     procedure btnEditWebsiteCountdownEndClick(Sender: TObject);
@@ -123,6 +124,11 @@ procedure TfOptionsForm.LoadFileIntoGrid(sFilename: String);
 begin
   fListEdit.StringGrid1.LoadFromCSVFile(func.GetOSConfigPath(sFileName),',',false);
   listedit.sListFilename := sFileName;
+end;
+
+procedure TfOptionsForm.FormCreate(Sender: TObject);
+begin
+
 end;
 
 //Open List of Websites

@@ -1,12 +1,13 @@
 object fListEdit: TfListEdit
-  Left = 405
+  Left = 122
   Height = 173
-  Top = 83
+  Top = 27
   Width = 606
   Caption = 'fListEdit'
   ClientHeight = 173
   ClientWidth = 606
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'
@@ -37,6 +38,7 @@ object fListEdit: TfListEdit
     Width = 75
     Anchors = [akRight, akBottom]
     Caption = 'Choose'
+    Enabled = False
     OnClick = btnChooseClick
     TabOrder = 2
   end
@@ -61,6 +63,7 @@ object fListEdit: TfListEdit
     Flat = True
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goRowSelect, goSmoothScroll]
     TabOrder = 3
+    OnClick = StringGrid1Click
     OnKeyUp = StringGrid1KeyUp
     ColWidths = (
       150

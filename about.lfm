@@ -1,10 +1,10 @@
 object fAbout: TfAbout
-  Left = 816
+  Left = 244
   Height = 112
-  Top = 407
+  Top = 123
   Width = 320
   BorderStyle = bsDialog
-  Caption = 'Über..'
+  Caption = 'About'
   ClientHeight = 112
   ClientWidth = 320
   Position = poOwnerFormCenter

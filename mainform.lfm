@@ -1,7 +1,7 @@
 object fMainform: TfMainform
-  Left = 51
+  Left = 18
   Height = 341
-  Top = 348
+  Top = 106
   Width = 442
   Caption = 'Open Sleep Timer'
   ClientHeight = 321
@@ -192,7 +192,7 @@ object fMainform: TfMainform
       OnClick = MenuItemOptionsClick
     end
     object MenuItem3: TMenuItem
-      Caption = 'Über..'
+      Caption = 'About'
       OnClick = MenuItemAboutClick
     end
   end

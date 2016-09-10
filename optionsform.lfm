@@ -1,13 +1,14 @@
 object fOptionsForm: TfOptionsForm
-  Left = 215
+  Left = 66
   Height = 369
-  Top = 41
+  Top = 14
   Width = 320
   Caption = 'Optionen'
   ClientHeight = 369
   ClientWidth = 320
   Color = clWhite
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.6.0.4'

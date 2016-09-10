@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Open Sleep Timer"
-#define MyAppVersion "0.4"
+#define MyAppVersion "1.0"
 #define MyAppPublisher "Joachim Tecklenburg"
 #define MyAppURL "http://tecklenburg.at/opensleeptimer"
 #define MyAppExeName "opensleeptimer.exe"

@@ -43,6 +43,8 @@ type
     procedure btnAddClick(Sender: TObject);
     procedure btnChooseClick(Sender: TObject);
     procedure btnDeleteRowClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure StringGrid1Click(Sender: TObject);
     procedure StringGrid1KeyUp(Sender: TObject);
     procedure ToggleChooseBtn;
     procedure FormClose(Sender: TObject);
@@ -137,11 +139,24 @@ begin
   end;
 end;
 
-//Key Up Event
+procedure TfListEdit.FormCreate(Sender: TObject);
+begin
+
+end;
+
+//Grid Mouse Click Event
+//******************************************************************************
+procedure TfListEdit.StringGrid1Click(Sender: TObject);
+begin
+  ToggleChooseBtn;
+end;
+
+
+//Grid Key Up Event
 //******************************************************************************
 procedure TfListEdit.StringGrid1KeyUp(Sender: TObject);
 begin
-    ToggleChooseBtn;
+  ToggleChooseBtn;
 end;
 
 //ToogleChoose Button - Deaktivate Choose Button if Path = ''

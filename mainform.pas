@@ -115,6 +115,7 @@ var
   bStartCountdownAutomatically: Boolean;
 begin
   loadSettings;
+  drawgraph;
 
   //Check if Countdown should start immedately
   bStartCountdownAutomatically := func.readConfig('options', 'StartCountdownAutomatically', False);
@@ -169,7 +170,7 @@ begin
   end;
 end;
 
-//Read Config File
+//Load Settings
 //******************************************
 procedure TfMainform.loadSettings;
 begin
@@ -180,7 +181,7 @@ begin
     edMinutesDelay.Increment:= func.readConfig('main', 'MinutesIncrement', 15);
     tbTargetVolume.Position := func.readConfig('main', 'TargetVolume', 10);
     tbCurrentVolume.Position := func.readConfig('main', 'DefaultVolume', 30);
-    chkStandby.Checked := func.readConfig('main', 'GoToStandby', False);
+    chkStandby.Checked := func.readConfig('main', 'GoToStandby', True);
     fMainform.Left := func.readConfig('main', 'MainformLeft', 300);
     fMainform.Top := func.readConfig('main', 'MainformTop', 200);
     fPopUp.Left := func.readConfig('main', 'PopUpLeft', 330);
@@ -189,7 +190,7 @@ begin
     fOptionsForm.Top := func.readConfig('main', 'OptionsFormTop', 300);
 end;
 
-//Save to Config File
+//Save Settings
 //*****************************************
 procedure TfMainform.saveSettings;
 begin
